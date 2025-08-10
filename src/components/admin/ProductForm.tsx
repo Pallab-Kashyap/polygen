@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { ProductType } from "@/types/product";
+import { Cross, X } from "lucide-react";
 
 interface Props {
   initial?: ProductType;
@@ -34,17 +35,18 @@ export default function ProductForm({ initial, onClose, onSave }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-6 bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-6 ">
+      <div className="h-screen w-screen bg-black opacity-25 absolute"></div>
       <form
         onSubmit={submit}
-        className="bg-white w-full max-w-2xl p-6 rounded shadow-lg"
+        className="relative bg-white w-full max-w-2xl p-6 rounded shadow-lg text-black"
       >
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold">
             {initial ? "Edit Product" : "Add Product"}
           </h2>
-          <button type="button" onClick={onClose} className="text-gray-500">
-            Close
+          <button type="button" onClick={onClose} className="hover:text-red-600 cursor-pointer">
+            <X />
           </button>
         </div>
 
