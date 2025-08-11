@@ -1,4 +1,3 @@
-// src/types/product.ts
 export interface SubCategoryType {
   id?: string;
   slug: string;

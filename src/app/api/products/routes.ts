@@ -29,10 +29,6 @@ function formatProduct(doc: any): ProductType {
   };
 }
 
-/**
- * GET /api/products
- * Public: returns all products (use pagination in future)
- */
 export async function GET() {
   await connectDB();
   const docs = await Product.find({}).lean();
@@ -40,14 +36,9 @@ export async function GET() {
   return NextResponse.json(products);
 }
 
-/**
- * POST /api/products
- * Protected: create a new product (admin only)
- */
 export async function POST(req: Request) {
   await connectDB();
 
-  // require admin (throws if invalid)
   try {
     requireAdminFromRequest(req);
   } catch (err) {
@@ -56,7 +47,6 @@ export async function POST(req: Request) {
 
   const body = await req.json();
 
-  // Minimal validation (extend with Zod in production)
   if (!body?.name || !body?.slug || !body?.categoryId) {
     return NextResponse.json(
       { error: "Missing required fields: name, slug, categoryId" },
@@ -64,7 +54,6 @@ export async function POST(req: Request) {
     );
   }
 
-  // prevent duplicate slug
   const exists = await Product.findOne({ slug: body.slug }).lean();
   if (exists) {
     return NextResponse.json({ error: "slug already exists" }, { status: 409 });

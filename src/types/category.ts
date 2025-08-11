@@ -1,14 +1,14 @@
 import { Types } from "mongoose";
 
 export interface SubCategoryType {
-  _id?: Types.ObjectId;
+  _id?: string;
   slug: string;
   name: string;
   description?: string;
 }
 
 export interface CategoryType {
-  _id?: Types.ObjectId;
+  _id?: string;
   slug: string;
   name: string;
   description?: string;

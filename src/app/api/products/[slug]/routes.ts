@@ -28,10 +28,6 @@ function formatProduct(doc: any): ProductType {
   };
 }
 
-/**
- * GET /api/products/:slug
- * Public: returns single product by slug
- */
 export async function GET(
   req: Request,
   { params }: { params: { slug: string } }
@@ -43,10 +39,6 @@ export async function GET(
   return NextResponse.json(formatProduct(doc));
 }
 
-/**
- * PUT /api/products/:slug
- * Protected: update product (admin)
- */
 export async function PUT(
   req: Request,
   { params }: { params: { slug: string } }
@@ -60,7 +52,6 @@ export async function PUT(
 
   const updates = await req.json();
 
-  // don't allow changing slug to an existing slug (basic check)
   if (updates.slug) {
     const current = await Product.findOne({ slug: params.slug }).lean();
     if (!current) {
@@ -90,10 +81,6 @@ export async function PUT(
   return NextResponse.json(formatProduct(updated));
 }
 
-/**
- * DELETE /api/products/:slug
- * Protected: delete product (admin)
- */
 export async function DELETE(
   req: Request,
   { params }: { params: { slug: string } }

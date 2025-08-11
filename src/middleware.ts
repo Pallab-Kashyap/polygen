@@ -1,4 +1,3 @@
-// src/middleware.ts
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminToken } from "@/lib/auth";
 
@@ -8,7 +7,6 @@ export function middleware(req: NextRequest) {
   // Protect admin UI (everything under /admin) except /admin/login
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
     const token = req.cookies.get("admin_token")?.value;
-    console.log('TOKEN', token)
     if (!token) {
       // redirect to login (client will land on login page)
       const url = req.nextUrl.clone();

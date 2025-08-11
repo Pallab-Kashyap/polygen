@@ -14,7 +14,7 @@ export function createAdminToken(payload: { adminId: string }) {
 }
 
 export async function verifyAdminToken(token: string) {
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+  const secret = new TextEncoder().encode(JWT_SECRET);
   const { payload } = await jwtVerify(token, secret);
   return payload as {
     adminId: string;
