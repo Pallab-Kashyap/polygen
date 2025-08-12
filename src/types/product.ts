@@ -1,16 +1,9 @@
-export interface SubCategoryType {
-  id?: string;
-  slug: string;
-  name: string;
-  description?: string;
-}
-
 export interface CategoryType {
   id?: string;
   slug: string;
   name: string;
   description?: string;
-  subCategories?: SubCategoryType[];
+  parentId?: string
 }
 
 export interface ProductParameter {
@@ -35,7 +28,6 @@ export interface ProductType {
   name: string;
   about?: string;
   categoryId: string;
-  subCategoryId?: string;
   parameters?: ProductParameter[];
   applications?: string[];
   description?: ProductDescriptionBlock[];

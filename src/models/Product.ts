@@ -51,10 +51,6 @@ const ProductSchema = new Schema<ProductDoc>(
     name: { type: String, required: true },
     about: { type: String },
     categoryId: { type: Schema.Types.ObjectId, ref: "Category" },
-    subCategoryId: {
-      type: Schema.Types.ObjectId,
-      ref: "Category.subCategories",
-    },
     parameters: { type: [ProductParameterSchema], default: [] },
     applications: { type: [String], default: [] },
     description: { type: [DescriptionBlockSchema], default: [] },
