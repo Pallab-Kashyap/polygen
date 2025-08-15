@@ -1,11 +1,3 @@
-export interface CategoryType {
-  id?: string;
-  slug: string;
-  name: string;
-  description?: string;
-  parentId?: string
-}
-
 export interface ProductParameter {
   label: string;
   values: string[];

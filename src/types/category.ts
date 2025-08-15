@@ -6,4 +6,5 @@ export interface CategoryType {
   parentId?: string
   createdAt?: Date;
   updatedAt?: Date;
+  children?: CategoryType[];
 }
