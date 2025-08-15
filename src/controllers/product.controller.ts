@@ -12,14 +12,38 @@ import * as XLSX from "xlsx";
 import { unlink } from "node:fs/promises";
 import validator from "validator";
 
-const ProductSchema = z.object({
+// Schema for a single product parameter
+const ProductParameterSchema = z.object({
+  label: z.string().min(1, "Parameter label cannot be empty"),
+  values: z.array(z.string()).min(1, "Parameter must have at least one value"),
+});
+
+// Schema for a single bullet point in the description
+const DescriptionBulletSchema = z.object({
+  highlight: z.string().optional(),
+  text: z.string().optional(),
+});
+
+// Schema for a block of description content
+const ProductDescriptionBlockSchema = z.object({
+  heading: z.string().optional(),
+  bulletPoints: z.array(DescriptionBulletSchema).optional(),
+  text: z.string().optional(),
+});
+
+// The main, updated Product Schema
+export const ProductSchema = z.object({
   slug: z.string().optional(),
   name: z.string().min(1, "Name is required"),
-  about: z.string().min(1, "About is required"),
-  categoryId: z.string().min(1, "Category ID is required"),
-  parameters: z.array(z.string()).optional(),
+  about: z.string().optional(), // Updated to be optional
+  categoryId: z.string().min(1, "Category is required"),
+
+  // Updated to use the new nested schemas
+  parameters: z.array(ProductParameterSchema).optional(),
+  description: z.array(ProductDescriptionBlockSchema).optional(),
+
+  // Unchanged fields
   applications: z.array(z.string()).optional(),
-  description: z.array(z.string()).optional(),
   images: z.array(z.string()).optional(),
   price: z.number().nullable().optional(),
   metadata: z.record(z.any(), z.any()).optional(),
@@ -49,8 +73,7 @@ function formatProduct(doc: any): ProductType {
 
 export const getAllProducts = asyncWrapper(async (req: NextRequest) => {
   await connectDB();
-  const docs = await Product.find({}).lean();
-  const products = docs.map(formatProduct);
+  const products = await Product.find();
   return APIResponse.success(products);
 });
 
@@ -84,7 +107,7 @@ export const getProductsByCategory = async (
   { params }: { params: { id: string } }
 ) => {
   try {
-    connectDB();
+    await connectDB();
 
     const id = params.id;
 
@@ -103,6 +126,7 @@ export const getProductsByCategory = async (
 export const createNewProduct = asyncWrapper(async (req: NextRequest) => {
   try {
     await requireAdminFromRequest(req);
+    await connectDB();
 
     const body = await req.json();
 
@@ -200,6 +224,7 @@ export const updateProduct = async (
 ) => {
   try {
     await requireAdminFromRequest(req);
+    await connectDB();
 
     const body = await req.json();
     const parsed = ProductSchema.partial().safeParse(body);
@@ -228,8 +253,8 @@ export const deleteProduct = async (
 ) => {
   try {
     await requireAdminFromRequest(req);
-
     await connectDB();
+
     const deleted = await Product.findByIdAndDelete(params.id);
     if (!deleted) throw APIError.notFound("Product not found");
 
@@ -240,21 +265,19 @@ export const deleteProduct = async (
 };
 
 export const bulkDeleteProducts = asyncWrapper(async (req: NextRequest) => {
+  await requireAdminFromRequest(req);
+  await connectDB();
 
-    await requireAdminFromRequest(req);
+  const { ids } = await req.json();
 
-    const { ids } = await req.json();
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw APIError.badRequest("Product IDs array is required");
+  }
 
-    if (!Array.isArray(ids) || ids.length === 0) {
-      throw  APIError.badRequest("Product IDs array is required");
-    }
+  const result = await Product.deleteMany({ _id: { $in: ids } });
 
-    const result = await Product.deleteMany({ _id: { $in: ids } });
-
-    return APIResponse.success(
-      { deletedCount: result.deletedCount },
-      `${result.deletedCount} product(s) deleted successfully`
-    );
-
-})
-
+  return APIResponse.success(
+    { deletedCount: result.deletedCount },
+    `${result.deletedCount} product(s) deleted successfully`
+  );
+});

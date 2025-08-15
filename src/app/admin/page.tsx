@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function AdminHomePage() {
   return (
-    <div className="text-center mt-20">
+    <div className="text-center">
       <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to the Admin Dashboard</h1>
       <p className="text-lg text-gray-600 mb-8">Select a section from the sidebar to manage your store.</p>
       <div className="flex justify-center gap-4">

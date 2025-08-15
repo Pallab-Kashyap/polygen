@@ -98,87 +98,134 @@ export default function ProductsPage() {
     const filteredProducts = products.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     return (
-        <div>
-            <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
-                <h1 className="text-3xl font-bold text-gray-800">Products</h1>
-                <div className="flex items-center gap-3">
-                    <button onClick={() => setIsUploadModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition">
-                        <Upload size={20} /> Bulk Upload
-                    </button>
-                    <button onClick={() => handleOpenModal()} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition">
-                        <Plus size={20} /> Add Product
-                    </button>
-                </div>
-            </div>
-
-            <div className="mb-4 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                    type="text"
-                    placeholder="Search products by name..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                />
-            </div>
-
-            {fetchLoading ? <Spinner /> : (
-                <div className="bg-white shadow-md rounded-lg overflow-x-auto">
-                    <table className="w-full text-sm text-left text-gray-500">
-                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                            <tr>
-                                <th scope="col" className="px-6 py-3">Name</th>
-                                <th scope="col" className="px-6 py-3">Category</th>
-                                <th scope="col" className="px-6 py-3">Price</th>
-                                <th scope="col" className="px-6 py-3">Slug</th>
-                                <th scope="col" className="px-6 py-3 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredProducts.map(product => (
-                                <tr key={product.id} className="bg-white border-b hover:bg-gray-50">
-                                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{product.name}</td>
-                                    <td className="px-6 py-4">{categoryMap[product.categoryId] || 'N/A'}</td>
-                                    <td className="px-6 py-4">${product.price?.toFixed(2) ?? 'N/A'}</td>
-                                    <td className="px-6 py-4">{product.slug}</td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <button onClick={() => handleOpenModal(product)} className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-100 rounded-full transition"><Edit size={16} /></button>
-                                            <button onClick={() => handleDeleteClick(product)} className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-100 rounded-full transition"><Trash2 size={16} /></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
-
-            <Modal isOpen={isModalOpen} onClose={handleCloseModal} title={editingProduct ? 'Edit Product' : 'Add New Product'}>
-                <ProductForm
-                    product={editingProduct}
-                    onSave={handleSaveProduct}
-                    onCancel={handleCloseModal}
-                    loading={saveLoading}
-                    categories={categories}
-                />
-            </Modal>
-
-            <FileUploadModal
-                isOpen={isUploadModalOpen}
-                onClose={() => setIsUploadModalOpen(false)}
-                onUpload={handleBulkUpload}
-                loading={uploadLoading}
-            />
-
-            <ConfirmationModal
-                isOpen={!!deletingProduct}
-                onClose={() => setDeletingProduct(null)}
-                onConfirm={handleConfirmDelete}
-                loading={deleteLoading}
-                title="Confirm Deletion"
-                message={`Are you sure you want to delete the product "${deletingProduct?.name}"? This action cannot be undone.`}
-            />
+      <div className="">
+        <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">Products</h1>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsUploadModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition"
+            >
+              <Upload size={20} /> Bulk Upload
+            </button>
+            <button
+              onClick={() => handleOpenModal()}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
+            >
+              <Plus size={20} /> Add Product
+            </button>
+          </div>
         </div>
+
+        <div className="mb-4 relative">
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            size={20}
+          />
+          <input
+            type="text"
+            placeholder="Search products by name..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {fetchLoading ? (
+          <Spinner />
+        ) : !filteredProducts ? (
+          // categories is null/undefined — show error
+          <div className="text-red-600">err</div>
+        ) : (
+          <div className="bg-white shadow-md rounded-lg overflow-x-auto">
+            <table className="w-full text-sm text-left text-gray-500">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    Name
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Category
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Price
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Slug
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-right">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredProducts.map((product) => (
+                  <tr
+                    key={product.id}
+                    className="bg-white border-b hover:bg-gray-50"
+                  >
+                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                      {product.name}
+                    </td>
+                    <td className="px-6 py-4">
+                      {categoryMap[product.categoryId] || "N/A"}
+                    </td>
+                    <td className="px-6 py-4">
+                      ${product.price?.toFixed(2) ?? "N/A"}
+                    </td>
+                    <td className="px-6 py-4">{product.slug}</td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => handleOpenModal(product)}
+                          className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-100 rounded-full transition"
+                        >
+                          <Edit size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(product)}
+                          className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-100 rounded-full transition"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        <Modal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          title={editingProduct ? "Edit Product" : "Add New Product"}
+        >
+          <ProductForm
+            product={editingProduct}
+            onSave={handleSaveProduct}
+            onCancel={handleCloseModal}
+            loading={saveLoading}
+            categories={categories}
+          />
+        </Modal>
+
+        <FileUploadModal
+          isOpen={isUploadModalOpen}
+          onClose={() => setIsUploadModalOpen(false)}
+          onUpload={handleBulkUpload}
+          loading={uploadLoading}
+        />
+
+        <ConfirmationModal
+          isOpen={!!deletingProduct}
+          onClose={() => setDeletingProduct(null)}
+          onConfirm={handleConfirmDelete}
+          loading={deleteLoading}
+          title="Confirm Deletion"
+          message={`Are you sure you want to delete the product "${deletingProduct?.name}"? This action cannot be undone.`}
+        />
+      </div>
     );
 };

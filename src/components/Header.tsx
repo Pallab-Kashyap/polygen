@@ -28,7 +28,7 @@ export default function Header() {
         </div>
         <div className="group relative">
           <Link
-            href="/about"
+            href="#about"
             className="hover:text-[#de1448] transition-colors"
           >
             About Us
@@ -38,7 +38,6 @@ export default function Header() {
 
         {/* Products Dropdown */}
         <div className="group relative">
-          {/* Main "Products" link now points to the all-products page */}
           <Link
             href="/products"
             className="hover:text-[#de1448] transition-colors flex items-center"
@@ -47,7 +46,7 @@ export default function Header() {
           </Link>
           <span className="absolute left-0 -bottom-1 h-[2px] w-0 group-hover:w-full bg-[#de1448] transition-all duration-300"></span>
 
-          {/* Dropdown Panel - Updated for multi-column flow */}
+          {/* Dropdown Panel */}
           <div
             className="absolute top-full left-1/2 -translate-x-1/2 pt-6 w-screen max-w-5xl
                        opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300"
@@ -62,7 +61,7 @@ export default function Header() {
                       href={`/products/${category.slug}`}
                       className="inline-block"
                     >
-                      <h3 className="text-lg font-bold text-[#de1448] mb-4 hover:underline">
+                      <h3 className="text-lg font-bold text-[#de1448] mb-4 hover:underline underline-offset-4">
                         {category.title}
                       </h3>
                     </Link>

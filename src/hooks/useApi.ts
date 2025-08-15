@@ -10,6 +10,7 @@ export function useApi<T, Args extends any[]>(apiFunction: (...args: Args) => Pr
       setError(null);
       return await apiFunction(...args);
     } catch (err: any) {
+      console.log('ERROR FROM HOOK', err)
       const message = err?.response?.data?.message || err?.message || "Something went wrong";
       setError(message);
       throw err;

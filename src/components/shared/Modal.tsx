@@ -14,7 +14,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
 
   return (
     <>
-      <BackgroundLayout z={"20"} />
+      <BackgroundLayout z={"50"} />
       <div className="fixed inset-0 z-50 flex justify-center items-center p-4">
         <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
           <div className="flex justify-between items-center p-4 border-b">
