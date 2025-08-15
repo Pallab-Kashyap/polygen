@@ -10,7 +10,7 @@ if (!JWT_SECRET) {
 }
 
 export function createAdminToken(payload: { adminId: string }) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: "10m" });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: "10d" });
 }
 
 export async function verifyAdminToken(token: string) {
@@ -29,7 +29,7 @@ export function setAuthCookie(token: string) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 10 * 60,
+    // maxAge: 10 * 60,
   });
 }
 

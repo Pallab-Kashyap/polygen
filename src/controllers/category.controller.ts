@@ -8,6 +8,7 @@ import { asyncWrapper } from "@/lib/asyncWrapper";
 import { errorHandler } from "@/lib/errorHandler";
 import { APIError, APIResponse } from "@/lib/ApiResponse";
 import { CategoryType } from "@/types/category";
+import { connectDB } from "@/lib/mongoose";
 
 const categorySchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -33,6 +34,7 @@ function buildHierarchy(
 }
 
 export const createCategory = asyncWrapper(async (req: NextRequest) => {
+  await connectDB();
   requireAdminFromRequest(req);
   const body = await req.json();
   const parsed = categorySchema.parse(body);
@@ -43,6 +45,7 @@ export const createCategory = asyncWrapper(async (req: NextRequest) => {
   }
 
   const category = await Category.create(parsed);
+  console.log("success");
   return APIResponse.success(category, "Category created successfully");
 });
 
@@ -51,6 +54,7 @@ export const updateCategory = async (
   { params }: { params: { id: string } }
 ) => {
   try {
+    await connectDB();
     requireAdminFromRequest(req);
     const body = await req.json();
     const parsed = categorySchema.partial().parse(body);
@@ -71,6 +75,7 @@ export const deleteCategory = async (
   { params }: { params: { id: string } }
 ) => {
   try {
+    await connectDB();
     requireAdminFromRequest(req);
     const deleted = await Category.findByIdAndDelete(params.id);
     if (!deleted) throw APIError.badRequest("Category not found");
@@ -83,9 +88,14 @@ export const deleteCategory = async (
 
 export const getCategories = async () => {
   try {
+    await connectDB();
     const categories = await Category.find();
-    const hierarchy = buildHierarchy(categories);
-    return APIResponse.success(hierarchy);
+    if (categories.length === 0) {
+      return APIResponse.success([]);
+    }
+    // const hierarchy = buildHierarchy(categories);
+    // return APIResponse.success(hierarchy);
+    return APIResponse.success(categories);
   } catch (error) {
     return errorHandler(error);
   }
@@ -96,6 +106,7 @@ export const getCategoryById = async (
   { params }: { params: { id: string } }
 ) => {
   try {
+    await connectDB();
     const category = await Category.findById(params.id);
     if (!category) throw APIError.badRequest("Category not found");
 

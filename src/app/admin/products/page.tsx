@@ -39,8 +39,8 @@ export default function ProductsPage() {
     }, [categories]);
 
     const loadData = useCallback(() => {
-        fetchProducts().then(data => setProducts(data?.data || [])).catch(() => setToast({ message: 'Failed to load products.', type: 'error' }));
-        fetchCategories().then(data => setCategories(data?.data || [])).catch(() => setToast({ message: 'Failed to load categories.', type: 'error' }));
+        fetchProducts().then(data => setProducts(data || [])).catch(() => setToast({ message: 'Failed to load products.', type: 'error' }));
+        fetchCategories().then(data => setCategories(data || [])).catch(() => setToast({ message: 'Failed to load categories.', type: 'error' }));
     }, [fetchProducts, fetchCategories, setToast]);
 
     useEffect(() => {

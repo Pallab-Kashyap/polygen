@@ -1,9 +1,46 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Loader2, Trash2 } from 'lucide-react';
-import { ProductType } from '@/types/product';
-import { CategoryType } from '@/types/category';
+import { Loader2, Trash2, Plus } from 'lucide-react';
 
+// --- TYPE DEFINITIONS (for context) ---
+export interface ProductParameter {
+    label: string;
+    values: string[];
+}
+
+export interface DescriptionBullet {
+    highlight?: string;
+    text?: string;
+}
+
+export interface ProductDescriptionBlock {
+    heading?: string;
+    bulletPoints?: DescriptionBullet[];
+    text?: string;
+}
+
+export interface ProductType {
+    _id?: string;
+    slug: string;
+    name: string;
+    about?: string;
+    categoryId: string;
+    parameters?: ProductParameter[];
+    applications?: string[];
+    description?: ProductDescriptionBlock[];
+    images?: string[];
+    price?: number | null;
+    metadata?: Record<string, any>;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface CategoryType {
+    _id: string;
+    name: string;
+}
+
+// --- COMPONENT PROPS ---
 interface ProductFormProps {
     product?: ProductType | null;
     onSave: (data: Partial<ProductType>) => void;
@@ -12,6 +49,7 @@ interface ProductFormProps {
     categories: CategoryType[];
 }
 
+// --- THE FORM COMPONENT ---
 const ProductForm = ({ product, onSave, onCancel, loading, categories }: ProductFormProps) => {
     const [formData, setFormData] = useState<Partial<ProductType>>({
         name: '', slug: '', about: '', categoryId: '', price: null,
@@ -32,6 +70,7 @@ const ProductForm = ({ product, onSave, onCancel, loading, categories }: Product
                 images: product.images || [],
             });
         } else {
+            // Reset form for new product
             setFormData({
                 name: '', slug: '', about: '', categoryId: '', price: null,
                 parameters: [], applications: [], description: [], images: []
@@ -39,10 +78,11 @@ const ProductForm = ({ product, onSave, onCancel, loading, categories }: Product
         }
     }, [product]);
 
+    // --- GENERAL & ARRAY HANDLERS ---
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         let newSlug = formData.slug;
-        if (name === 'name' && !product) {
+        if (name === 'name' && !product) { // Auto-generate slug only for new products
             newSlug = value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
         }
         setFormData(prev => ({ ...prev, [name]: value, slug: name === 'name' ? newSlug : prev.slug }));
@@ -66,72 +106,138 @@ const ProductForm = ({ product, onSave, onCancel, loading, categories }: Product
         setFormData(prev => ({ ...prev, [field]: (prev[field] || []).filter((_, i) => i !== index) }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const dataToSave = {
-            ...formData,
-            // price: formData.price === '' || formData.price === null ? null : Number(formData.price),
-            price: formData.price,
-        };
-        onSave(dataToSave);
+    // --- DESCRIPTION-SPECIFIC HANDLERS ---
+    const handleDescriptionChange = (blockIndex: number, field: 'heading' | 'text', value: string) => {
+        const newDescription = [...(formData.description || [])];
+        newDescription[blockIndex] = { ...newDescription[blockIndex], [field]: value };
+        setFormData(prev => ({ ...prev, description: newDescription }));
     };
 
+    const addDescriptionBlock = () => {
+        const newBlock: ProductDescriptionBlock = { heading: '', text: '', bulletPoints: [] };
+        setFormData(prev => ({ ...prev, description: [...(prev.description || []), newBlock] }));
+    };
+
+    const removeDescriptionBlock = (blockIndex: number) => {
+        setFormData(prev => ({ ...prev, description: (prev.description || []).filter((_, i) => i !== blockIndex) }));
+    };
+
+    const handleBulletPointChange = (blockIndex: number, pointIndex: number, field: 'highlight' | 'text', value: string) => {
+        const newDescription = [...(formData.description || [])];
+        const newBulletPoints = [...(newDescription[blockIndex].bulletPoints || [])];
+        newBulletPoints[pointIndex] = { ...newBulletPoints[pointIndex], [field]: value };
+        newDescription[blockIndex].bulletPoints = newBulletPoints;
+        setFormData(prev => ({ ...prev, description: newDescription }));
+    };
+
+    const addBulletPoint = (blockIndex: number) => {
+        const newDescription = [...(formData.description || [])];
+        const newBulletPoints = [...(newDescription[blockIndex].bulletPoints || []), { highlight: '', text: '' }];
+        newDescription[blockIndex].bulletPoints = newBulletPoints;
+        setFormData(prev => ({ ...prev, description: newDescription }));
+    };
+
+    const removeBulletPoint = (blockIndex: number, pointIndex: number) => {
+        const newDescription = [...(formData.description || [])];
+        newDescription[blockIndex].bulletPoints = (newDescription[blockIndex].bulletPoints || []).filter((_, i) => i !== pointIndex);
+        setFormData(prev => ({ ...prev, description: newDescription }));
+    };
+
+    // --- FORM SUBMISSION ---
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        onSave(formData);
+    };
+
+    // --- STYLES ---
+    const inputStyle = "block w-full rounded-lg border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition-colors";
+    const labelStyle = "block text-sm font-medium text-gray-800 mb-1";
+    const sectionContainerStyle = "space-y-4 p-4 border rounded-lg bg-white shadow-sm";
+    const buttonStyle = "flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-300 transition-all";
+
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 text-black">
+        <form onSubmit={handleSubmit} className="space-y-8 text-black bg-gray-50 p-6 rounded-xl">
+            {/* --- CORE PRODUCT INFO --- */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">Product Name</label>
-                    <input type="text" name="name" value={formData.name} onChange={handleChange} required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                    <label htmlFor="name" className={labelStyle}>Product Name</label>
+                    <input type="text" name="name" value={formData.name} onChange={handleChange} required className={inputStyle} />
                 </div>
                 <div>
-                    <label htmlFor="slug" className="block text-sm font-medium text-gray-700">Slug</label>
-                    <input type="text" name="slug" value={formData.slug} onChange={handleChange} required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                    <label htmlFor="slug" className={labelStyle}>Slug</label>
+                    <input type="text" name="slug" value={formData.slug} onChange={handleChange} required className={`${inputStyle} bg-gray-200`} readOnly={!product} />
                 </div>
                 <div>
-                    <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700">Category</label>
-                    <select name="categoryId" value={formData.categoryId} onChange={handleChange} required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <label htmlFor="categoryId" className={labelStyle}>Category</label>
+                    <select name="categoryId" value={formData.categoryId} onChange={handleChange} required className={inputStyle}>
                         <option value="">Select a category</option>
                         {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
                     </select>
                 </div>
                 <div>
-                    <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
-                    <input type="number" name="price" value={formData.price ?? ''} onChange={handleChange} placeholder="e.g., 29.99" step="0.01" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                    <label htmlFor="price" className={labelStyle}>Price</label>
+                    <input type="number" name="price" value={formData.price ?? ''} onChange={handleChange} placeholder="e.g., 29.99" step="0.01" className={inputStyle} />
                 </div>
             </div>
             <div>
-                <label htmlFor="about" className="block text-sm font-medium text-gray-700">About Product</label>
-                <textarea name="about" value={formData.about} onChange={handleChange} rows={4} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                <label htmlFor="about" className={labelStyle}>About Product (Short Summary)</label>
+                <textarea name="about" value={formData.about} onChange={handleChange} rows={3} className={inputStyle}></textarea>
             </div>
 
-            {/* Dynamic Fields: Parameters */}
-            <div className="space-y-2 p-4 border rounded-lg">
-                <h4 className="font-medium text-gray-800">Parameters</h4>
+            {/* --- DYNAMIC DESCRIPTION SECTION --- */}
+            <div className={sectionContainerStyle}>
+                <h3 className="text-lg font-semibold text-gray-900">Detailed Description</h3>
+                {formData.description?.map((block, blockIndex) => (
+                    <div key={blockIndex} className="p-4 border rounded-md bg-gray-50 space-y-4 relative">
+                        <button type="button" onClick={() => removeDescriptionBlock(blockIndex)} className="absolute top-2 right-2 p-1.5 text-red-500 hover:bg-red-100 rounded-full transition"><Trash2 size={16} /></button>
+                        <input type="text" placeholder="Section Heading (Optional)" value={block.heading} onChange={(e) => handleDescriptionChange(blockIndex, 'heading', e.target.value)} className={inputStyle} />
+                        <textarea placeholder="Section Text / Paragraph" value={block.text} onChange={(e) => handleDescriptionChange(blockIndex, 'text', e.target.value)} rows={4} className={inputStyle}></textarea>
+
+                        <div className="pl-4 border-l-2 border-indigo-200 space-y-2">
+                            <h5 className="font-medium text-sm text-gray-600">Bullet Points</h5>
+                            {block.bulletPoints?.map((point, pointIndex) => (
+                                <div key={pointIndex} className="flex items-center gap-2">
+                                    <input type="text" placeholder="Highlight (e.g., Feature:)" value={point.highlight} onChange={e => handleBulletPointChange(blockIndex, pointIndex, 'highlight', e.target.value)} className={`${inputStyle} w-1/3`} />
+                                    <input type="text" placeholder="Text (e.g., High-quality material)" value={point.text} onChange={e => handleBulletPointChange(blockIndex, pointIndex, 'text', e.target.value)} className={`${inputStyle} w-2/3`} />
+                                    <button type="button" onClick={() => removeBulletPoint(blockIndex, pointIndex)} className="p-2 text-red-500 hover:bg-red-100 rounded-full shrink-0"><Trash2 size={16} /></button>
+                                </div>
+                            ))}
+                            <button type="button" onClick={() => addBulletPoint(blockIndex)} className="text-sm text-indigo-600 hover:underline font-medium">Add Bullet Point</button>
+                        </div>
+                    </div>
+                ))}
+                <button type="button" onClick={addDescriptionBlock} className="flex items-center gap-1 text-sm text-indigo-600 hover:underline font-semibold mt-2"><Plus size={16} />Add Description Block</button>
+            </div>
+
+            {/* --- DYNAMIC PARAMETERS SECTION --- */}
+            <div className={sectionContainerStyle}>
+                 <h3 className="text-lg font-semibold text-gray-900">Parameters</h3>
                 {formData.parameters?.map((param, index) => (
-                    <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                        <input type="text" placeholder="Label (e.g., Color)" value={param.label} onChange={(e) => handleArrayChange('parameters', index, 'label', e.target.value)} className="flex-1 block w-full rounded-md border-gray-300 shadow-sm" />
-                        <input type="text" placeholder="Values (comma separated)" value={param.values.join(',')} onChange={(e) => handleArrayChange('parameters', index, 'values', e.target.value.split(','))} className="flex-1 block w-full rounded-md border-gray-300 shadow-sm" />
+                    <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-md">
+                        <input type="text" placeholder="Label (e.g., Color)" value={param.label} onChange={(e) => handleArrayChange('parameters', index, 'label', e.target.value)} className={inputStyle} />
+                        <input type="text" placeholder="Values (comma separated)" value={param.values.join(', ')} onChange={(e) => handleArrayChange('parameters', index, 'values', e.target.value.split(',').map(s => s.trim()))} className={inputStyle} />
                         <button type="button" onClick={() => removeArrayItem('parameters', index)} className="p-2 text-red-500 hover:bg-red-100 rounded-full"><Trash2 size={16} /></button>
                     </div>
                 ))}
-                <button type="button" onClick={() => addArrayItem('parameters', { label: '', values: [] })} className="text-sm text-blue-600 hover:underline">Add Parameter</button>
+                <button type="button" onClick={() => addArrayItem('parameters', { label: '', values: [] })} className="text-sm text-indigo-600 hover:underline font-medium"><Plus size={16} className="inline-block" /> Add Parameter</button>
             </div>
 
-            {/* Dynamic Fields: Applications */}
-            <div className="space-y-2 p-4 border rounded-lg">
-                <h4 className="font-medium text-gray-800">Applications</h4>
+            {/* --- DYNAMIC APPLICATIONS SECTION --- */}
+            <div className={sectionContainerStyle}>
+                <h3 className="text-lg font-semibold text-gray-900">Applications</h3>
                 {formData.applications?.map((app, index) => (
-                    <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                        <input type="text" placeholder="Application" value={app} onChange={(e) => handleArrayChange('applications', index, null, e.target.value)} className="flex-1 block w-full rounded-md border-gray-300 shadow-sm" />
+                    <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-md">
+                        <input type="text" placeholder="Application" value={app} onChange={(e) => handleArrayChange('applications', index, null, e.target.value)} className={inputStyle} />
                         <button type="button" onClick={() => removeArrayItem('applications', index)} className="p-2 text-red-500 hover:bg-red-100 rounded-full"><Trash2 size={16} /></button>
                     </div>
                 ))}
-                <button type="button" onClick={() => addArrayItem('applications', '')} className="text-sm text-blue-600 hover:underline">Add Application</button>
+                <button type="button" onClick={() => addArrayItem('applications', '')} className="text-sm text-indigo-600 hover:underline font-medium"><Plus size={16} className="inline-block" /> Add Application</button>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4">
-                <button type="button" onClick={onCancel} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">Cancel</button>
-                <button type="submit" disabled={loading} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2 disabled:bg-blue-400">
+            {/* --- FORM ACTIONS --- */}
+            <div className="flex justify-end gap-3 pt-4 border-t mt-8">
+                <button type="button" onClick={onCancel} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition font-semibold">Cancel</button>
+                <button type="submit" disabled={loading} className={buttonStyle}>
                     {loading && <Loader2 className="h-4 w-4 animate-spin" />}
                     Save Product
                 </button>

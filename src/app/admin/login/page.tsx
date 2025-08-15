@@ -24,7 +24,7 @@ export default function AdminLogin() {
       console.log(res)
 
       if (res.ok) {
-        router.push("/admin"); 
+        router.push("/admin");
       } else {
         const json = await res.json();
         setErr(json.error || "Login failed. Please check your credentials.");
@@ -37,7 +37,7 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="h-full bg-slate-100 flex flex-col justify-center  sm:px-6 lg:px-8">
       {/* Form Container */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
