@@ -2,12 +2,17 @@ import api from "@/lib/axios";
 import { ProductType } from "@/types/product";
 
 export const getProducts = async () => {
-  const res = await api.get<ProductType[]>('/products');
+  const res = await api.get<ProductType[]>("/products");
+  return res;
+};
+
+export const getProductById = async (id: string) => {
+  const res = await api.get<ProductType>(`/products/${id}`);
   return res;
 };
 
 export const createProduct = async (data: Partial<ProductType>) => {
-  const res = await api.post<ProductType>('/products', data);
+  const res = await api.post<ProductType>("/products", data);
   return res;
 };
 
@@ -22,6 +27,8 @@ export const deleteProduct = async (id: string) => {
 };
 
 export const bulkCreateProducts = async (formData: FormData) => {
-  const res = await api.post('/products/bulk', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+  const res = await api.post("/products/bulk", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return res;
 };

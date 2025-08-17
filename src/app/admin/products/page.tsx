@@ -23,7 +23,7 @@ export default function ProductsPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const { setToast } = useContext(ToastContext);
 
-    const { execute: fetchProducts, loading: fetchLoading } = useApi(productService.getProducts);
+    const { execute: fetchProducts, loading: fetchLoading } = useApi(productService.getAllProducts);
     const { execute: fetchCategories } = useApi(categoryService.getCategories);
     const { execute: saveProductApi, loading: saveLoading } = useApi(async (data: Partial<ProductType>) => {
         return editingProduct ? productService.updateProduct(editingProduct.id!, data) : productService.createProduct(data);

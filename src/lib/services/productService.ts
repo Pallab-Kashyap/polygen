@@ -2,7 +2,9 @@ import { ProductType } from "@/types/product";
 import axiosInstance from "../axios";
 
 export const productService = {
-  getProducts: (): Promise<ProductType[]> => axiosInstance.get("/products"),
+  getAllProducts: (): Promise<ProductType[]> => axiosInstance.get("/products"),
+  getProductById: (id: string) =>
+    axiosInstance.get<ProductType>(`/products/${id}`),
   createProduct: (data: Partial<ProductType>) =>
     axiosInstance.post("/products", data),
   updateProduct: (id: string, data: Partial<ProductType>) =>
