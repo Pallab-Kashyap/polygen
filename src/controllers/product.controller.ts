@@ -104,12 +104,12 @@ export const getProductById = async (
 
 export const getProductsByCategory = async (
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   try {
     await connectDB();
 
-    const id = params.id;
+    const { id } = await params;
 
     const products = await Product.find({ categoryId: id });
 
@@ -226,7 +226,7 @@ export const updateProduct = async (
     await requireAdminFromRequest(req);
     await connectDB();
 
-    const {id} = await params
+    const { id } = await params;
 
     const body = await req.json();
     const parsed = ProductSchema.partial().safeParse(body);
@@ -251,13 +251,14 @@ export const updateProduct = async (
 
 export const deleteProduct = async (
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   try {
     await requireAdminFromRequest(req);
     await connectDB();
 
-    const deleted = await Product.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const deleted = await Product.findByIdAndDelete(id);
     if (!deleted) throw APIError.notFound("Product not found");
 
     return APIResponse.success({ message: "Product deleted successfully" });
