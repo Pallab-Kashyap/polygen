@@ -51,15 +51,17 @@ export const createCategory = asyncWrapper(async (req: NextRequest) => {
 
 export const updateCategory = async (
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   try {
-    await connectDB();
     requireAdminFromRequest(req);
+    await connectDB();
     const body = await req.json();
     const parsed = categorySchema.partial().parse(body);
 
-    const updated = await Category.findByIdAndUpdate(params.id, parsed, {
+    const { id } = await params;
+
+    const updated = await Category.findByIdAndUpdate(id, parsed, {
       new: true,
     });
     if (!updated) throw APIError.notFound("Category not found");
@@ -72,12 +74,14 @@ export const updateCategory = async (
 
 export const deleteCategory = async (
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   try {
-    await connectDB();
     requireAdminFromRequest(req);
-    const deleted = await Category.findByIdAndDelete(params.id);
+    await connectDB();
+    const { id } = await params;
+
+    const deleted = await Category.findByIdAndDelete(id);
     if (!deleted) throw APIError.badRequest("Category not found");
 
     return APIResponse.success(null, "Category deleted successfully");
@@ -103,11 +107,13 @@ export const getCategories = async () => {
 
 export const getCategoryById = async (
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   try {
     await connectDB();
-    const category = await Category.findById(params.id);
+
+    const { id } = await params;
+    const category = await Category.findById(id);
     if (!category) throw APIError.badRequest("Category not found");
 
     return APIResponse.success(category);

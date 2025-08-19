@@ -6,6 +6,6 @@ import {
 
 export {
   deleteCategory as DELETE,
-  // getCategoryById as GET,
+  getCategoryById as GET,
   updateCategory as PUT,
 };

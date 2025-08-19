@@ -220,11 +220,13 @@ export const bulkCreateProducts = async (req: NextRequest) => {
 
 export const updateProduct = async (
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   try {
     await requireAdminFromRequest(req);
     await connectDB();
+
+    const {id} = await params
 
     const body = await req.json();
     const parsed = ProductSchema.partial().safeParse(body);
@@ -236,7 +238,7 @@ export const updateProduct = async (
     }
 
     await connectDB();
-    const updated = await Product.findByIdAndUpdate(params.id, parsed.data, {
+    const updated = await Product.findByIdAndUpdate(id, parsed.data, {
       new: true,
     });
 
