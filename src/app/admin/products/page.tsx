@@ -11,7 +11,7 @@ import Modal from '@/components/shared/Modal';
 import ConfirmationModal from '@/components/shared/ConfirmationModal';
 import ProductForm from '@/components/admin/ProductForm';
 import FileUploadModal from '@/components/admin/FileUploadModal';
-import { ToastContext } from '../layout';
+import { ToastContext } from '@/components/admin/AdminLayoutClient';
 
 export default function ProductsPage() {
     const [products, setProducts] = useState<ProductType[]>([]);

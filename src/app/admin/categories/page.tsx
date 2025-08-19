@@ -9,7 +9,7 @@ import Modal from "@/components/shared/Modal";
 import ConfirmationModal from "@/components/shared/ConfirmationModal";
 import CategoryForm from "@/components/admin/CategoryForm";
 import CategoryItem from "@/components/admin/CategoryItem";
-import { ToastContext } from "../layout";
+import { ToastContext } from "@/components/admin/AdminLayoutClient";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<CategoryType[]>([]);
