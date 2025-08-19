@@ -51,7 +51,7 @@ export const ProductSchema = z.object({
 
 function formatProduct(doc: any): ProductType {
   return {
-    id: doc._id?.toString(),
+    _id: doc._id?.toString(),
     slug: doc.slug,
     name: doc.name,
     about: doc.about,
@@ -79,7 +79,7 @@ export const getAllProducts = asyncWrapper(async (req: NextRequest) => {
 
 export const getProductById = async (
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   try {
     try {
@@ -88,7 +88,7 @@ export const getProductById = async (
       throw APIError.internal("DB connection error");
     }
 
-    const id = params.id;
+    const { id } = await params;
 
     const product = await Product.findById(id);
 

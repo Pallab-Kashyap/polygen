@@ -15,7 +15,7 @@ export interface ProductDescriptionBlock {
 }
 
 export interface ProductType {
-  id?: string;
+  _id?: string;
   slug: string;
   name: string;
   about?: string;

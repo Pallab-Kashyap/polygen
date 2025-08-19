@@ -6,7 +6,13 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.response.use(
-  (res) => res.data,
+  (res) => {
+    const payload = res.data;
+    if (payload && typeof payload === "object" && "data" in payload) {
+      return payload.data;
+    }
+    return payload;
+  },
   (err) => Promise.reject(err)
 );
 

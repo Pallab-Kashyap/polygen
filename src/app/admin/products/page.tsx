@@ -26,7 +26,7 @@ export default function ProductsPage() {
     const { execute: fetchProducts, loading: fetchLoading } = useApi(productService.getAllProducts);
     const { execute: fetchCategories } = useApi(categoryService.getCategories);
     const { execute: saveProductApi, loading: saveLoading } = useApi(async (data: Partial<ProductType>) => {
-        return editingProduct ? productService.updateProduct(editingProduct.id!, data) : productService.createProduct(data);
+        return editingProduct ? productService.updateProduct(editingProduct._id!, data) : productService.createProduct(data);
     });
     const { execute: deleteProductApi, loading: deleteLoading } = useApi(productService.deleteProduct);
     const { execute: bulkUploadApi, loading: uploadLoading } = useApi(productService.bulkCreateProducts);
@@ -75,7 +75,7 @@ export default function ProductsPage() {
     const handleConfirmDelete = async () => {
         if (!deletingProduct) return;
         try {
-            await deleteProductApi(deletingProduct.id!);
+            await deleteProductApi(deletingProduct._id!);
             setToast({ message: 'Product deleted successfully!', type: 'success' });
             setDeletingProduct(null);
             loadData();
@@ -161,7 +161,7 @@ export default function ProductsPage() {
               <tbody>
                 {filteredProducts.map((product) => (
                   <tr
-                    key={product.id}
+                    key={product._id}
                     className="bg-white border-b hover:bg-gray-50"
                   >
                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
