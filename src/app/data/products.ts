@@ -4,10 +4,12 @@ export interface ProductItem {
   name: string;
   imageUrl: string;
   slug: string;
+  parentId?: string
   disabled?: boolean;
 }
 
 export interface ProductCategory {
+  id?: string;
   title: string;
   slug: string;
   items: ProductItem[];
@@ -52,6 +54,11 @@ export const productCategories: ProductCategory[] = [
       {
         name: "No Volt Coil",
         slug: "no-volt-coil",
+        imageUrl: "/assets/products/contractor.png",
+      },
+      {
+        name: "4 Pati",
+        slug: "4-Pati",
         imageUrl: "/assets/products/contractor.png",
       },
     ],
@@ -101,21 +108,21 @@ export const productCategories: ProductCategory[] = [
         slug: "brass-fuse",
         imageUrl: "/assets/products/fuse.png",
       },
-      {
-        name: "Aluminum Fuse",
-        slug: "aluminum-fuse",
-        imageUrl: "/assets/products/fuse.png",
-      },
     ],
   },
   {
     title: "Amps & Volt Meter",
     slug: "amps-volt-meter",
     items: [
-      { name: "Analog - Coming Soon", slug: "#", imageUrl: "", disabled: true },
+      {
+        name: "Analog - Coming Soon",
+        slug: "Analog",
+        imageUrl: "",
+        disabled: true,
+      },
       {
         name: "Digital - Coming Soon",
-        slug: "#",
+        slug: "Digital",
         imageUrl: "",
         disabled: true,
       },
@@ -127,13 +134,23 @@ export const productCategories: ProductCategory[] = [
     items: [
       {
         name: "Single Pole - Coming Soon",
-        slug: "#",
+        slug: "single-pole",
         imageUrl: "",
         disabled: true,
       },
-      { name: "2 Pole - Coming Soon", slug: "#", imageUrl: "", disabled: true },
-      { name: "3 Pole - Coming Soon", slug: "#", imageUrl: "", disabled: true },
-      { name: "4 Pole - Coming Soon", slug: "#", imageUrl: "", disabled: true },
+      {
+        name: "2 Pole - Coming Soon",
+        slug: "2-Pole",
+        imageUrl: "",
+        disabled: true,
+      },
+      {
+        name: "3 Pole - Coming Soon",
+        slug: "3-Pole",
+        imageUrl: "",
+        disabled: true,
+      },
+      { name: "4 Pole - Coming Soon", slug: "4-pole", imageUrl: "", disabled: true },
     ],
   },
 ];

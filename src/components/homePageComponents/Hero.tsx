@@ -15,7 +15,6 @@ export default function Hero() {
 
   useEffect(() => {
     const videoEl = videoRef.current;
-    console.log(videoEl);
     if (!videoEl) return;
 
     const handleEnded = () => {

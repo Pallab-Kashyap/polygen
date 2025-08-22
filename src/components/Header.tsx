@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { productCategories } from "@/app/data/products";
+import CategoriesDropdown from "./CategoriesDropdown";
 
 export default function Header() {
   return (
@@ -47,52 +48,7 @@ export default function Header() {
           <span className="absolute left-0 -bottom-1 h-[2px] w-0 group-hover:w-full bg-[#de1448] transition-all duration-300"></span>
 
           {/* Dropdown Panel */}
-          <div
-            className="absolute top-full left-1/2 -translate-x-1/2 pt-6 w-screen max-w-5xl
-                       opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300"
-          >
-            <div className="bg-white rounded-lg shadow-2xl p-8">
-              {/* This container uses flexbox to create the flowing columns */}
-              <div className="flex flex-col flex-wrap h-[260px] gap-x-12">
-                {productCategories.map((category) => (
-                  <div key={category.title} className="mb-6 break-inside-avoid">
-                    {/* Category titles are now links */}
-                    <Link
-                      href={`/products/${category.slug}`}
-                      className="inline-block"
-                    >
-                      <h3 className="text-lg font-bold text-[#de1448] mb-4 hover:underline underline-offset-4">
-                        {category.title}
-                      </h3>
-                    </Link>
-                    <ul className="flex flex-col gap-y-2.5">
-                      {category.items.map((item) => (
-                        <li key={item.name}>
-                          <Link
-                            href={
-                              item.disabled
-                                ? "#"
-                                : `/products/${category.slug}/${item.slug}`
-                            }
-                            className={`
-                              text-base whitespace-nowrap text-gray-700 hover:text-black transition-colors
-                              ${
-                                item.disabled
-                                  ? "text-gray-400 cursor-not-allowed"
-                                  : ""
-                              }
-                            `}
-                          >
-                            {item.name}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <CategoriesDropdown />
         </div>
 
         <div className="group relative">

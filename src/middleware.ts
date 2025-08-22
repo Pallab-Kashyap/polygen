@@ -15,10 +15,8 @@ export function middleware(req: NextRequest) {
     }
     try {
       verifyAdminToken(token);
-      console.log('verfied')
       return NextResponse.next();
     } catch (err) {
-      console.log(err)
       const url = req.nextUrl.clone();
       url.pathname = "/admin/login";
       return NextResponse.redirect(url);

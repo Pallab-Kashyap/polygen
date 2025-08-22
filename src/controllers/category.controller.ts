@@ -21,17 +21,52 @@ interface CategoryWithChildren extends CategoryType {
   children?: CategoryWithChildren[];
 }
 
-function buildHierarchy(
-  categories: CategoryType[],
-  parentId: string | null = null
-): CategoryWithChildren[] {
-  return categories
-    .filter((cat) => (parentId ? cat.parentId === parentId : !cat.parentId))
-    .map((cat) => ({
-      ...cat,
-      children: buildHierarchy(categories, cat._id?.toString() || null),
-    }));
+const filterChildren = (categories: CategoryType[], parentId: string) =>
+  categories.filter((cat) => String(cat.parentId) === String(parentId));
+
+function buildHierarchy(categories: CategoryType[]): CategoryType[] {
+  const newCatList: CategoryType[] = []
+  categories.forEach((cat) => {
+    if (!cat.parentId) {
+      cat.children = filterChildren(categories, String(cat._id));
+      newCatList.push(cat)
+    }
+  });
+
+  return newCatList;
 }
+
+
+export const getCategories = async () => {
+  try {
+    await connectDB();
+    const categories = await Category.find().lean();;
+    if (categories.length === 0) {
+      return APIResponse.success([]);
+    }
+    const hierarchy = buildHierarchy(categories);
+    return APIResponse.success(hierarchy);
+  } catch (error) {
+    return errorHandler(error);
+  }
+};
+
+export const getCategoryById = async (
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) => {
+  try {
+    await connectDB();
+
+    const { id } = await params;
+    const category = await Category.findById(id);
+    if (!category) throw APIError.badRequest("Category not found");
+
+    return APIResponse.success(category);
+  } catch (error) {
+    return errorHandler(error);
+  }
+};
 
 export const createCategory = asyncWrapper(async (req: NextRequest) => {
   await connectDB();
@@ -45,7 +80,6 @@ export const createCategory = asyncWrapper(async (req: NextRequest) => {
   }
 
   const category = await Category.create(parsed);
-  console.log("success");
   return APIResponse.success(category, "Category created successfully");
 });
 
@@ -85,38 +119,6 @@ export const deleteCategory = async (
     if (!deleted) throw APIError.badRequest("Category not found");
 
     return APIResponse.success(null, "Category deleted successfully");
-  } catch (error) {
-    return errorHandler(error);
-  }
-};
-
-export const getCategories = async () => {
-  try {
-    await connectDB();
-    const categories = await Category.find();
-    if (categories.length === 0) {
-      return APIResponse.success([]);
-    }
-    // const hierarchy = buildHierarchy(categories);
-    // return APIResponse.success(hierarchy);
-    return APIResponse.success(categories);
-  } catch (error) {
-    return errorHandler(error);
-  }
-};
-
-export const getCategoryById = async (
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) => {
-  try {
-    await connectDB();
-
-    const { id } = await params;
-    const category = await Category.findById(id);
-    if (!category) throw APIError.badRequest("Category not found");
-
-    return APIResponse.success(category);
   } catch (error) {
     return errorHandler(error);
   }

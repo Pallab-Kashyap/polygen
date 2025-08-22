@@ -40,7 +40,6 @@ export default function CategoriesPage() {
   const loadCategories = useCallback(() => {
     fetchCategories()
       .then((data) => {
-        console.log(data);
         if (!data) return;
 
         const allCategories = data || [];

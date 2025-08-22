@@ -4,6 +4,7 @@ import TopSellers from "@/components/homePageComponents/TopSellerSection";
 import BlogSection from "@/components/homePageComponents/BlogSection";
 
 export default function HomePage() {
+
   return (
     <div>
       {/* <div className="relative flex flex-col h-screen"> */}

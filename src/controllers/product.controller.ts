@@ -123,6 +123,26 @@ export const getProductsByCategory = async (
   }
 };
 
+export const getProductsByCategorySlug = async ( req: NextRequest, {params}: {params: Promise<{slug: string}>}) => {
+  try {
+    try {
+      await connectDB()
+    } catch (error) {
+      throw APIError.internal('DB connection failed')
+    }
+
+    const {slug} = await params
+
+    if(!slug){
+      throw APIError.badRequest("Category slug needed")
+    }
+
+    const products = await Product.find()
+  } catch (error) {
+    errorHandler(error)
+  }
+}
+
 export const createNewProduct = asyncWrapper(async (req: NextRequest) => {
   try {
     await requireAdminFromRequest(req);

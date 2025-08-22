@@ -1,9 +1,9 @@
 import api from "@/lib/axios";
 import { CategoryType } from "@/types/category";
 
-export const getCategories = async () => {
-  const res = await api.get<CategoryType[]>('/categories');
-  return res;
+export const getCategories = async (): Promise<CategoryType[]>=> {
+  const res = await api.get('/categories');
+  return res as unknown as CategoryType[]
 };
 
 export const createCategory = async (data: Partial<CategoryType>) => {

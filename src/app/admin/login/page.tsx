@@ -21,8 +21,6 @@ export default function AdminLogin() {
         headers: { "Content-Type": "application/json" },
       });
 
-      console.log(res)
-
       if (res.ok) {
         router.push("/admin");
       } else {
