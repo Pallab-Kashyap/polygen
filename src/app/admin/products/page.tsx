@@ -40,7 +40,7 @@ export default function ProductsPage() {
 
     const loadData = useCallback(() => {
         fetchProducts().then(data => setProducts(data || [])).catch(() => setToast({ message: 'Failed to load products.', type: 'error' }));
-        fetchCategories().then(data => setCategories(data || [])).catch(() => setToast({ message: 'Failed to load categories.', type: 'error' }));
+        fetchCategories().then(data => setCategories(data?.flatMap(parent => [parent, ...(parent.children ?? [])]) || [])).catch(() => setToast({ message: 'Failed to load categories.', type: 'error' }));
     }, [fetchProducts, fetchCategories, setToast]);
 
     useEffect(() => {
@@ -207,7 +207,6 @@ export default function ProductsPage() {
             onSave={handleSaveProduct}
             onCancel={handleCloseModal}
             loading={saveLoading}
-            categories={categories}
           />
         </Modal>
 

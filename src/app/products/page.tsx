@@ -17,13 +17,13 @@ const ProductCard: React.FC<{ product: ProductType }> = ({
   return (
     <Link href={`/products/id/${product._id}`} className="block group">
       <div className="bg-white rounded-2xl border border-gray-200/80 p-2 shadow-md overflow-hidden space-y-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-        <div className="">
+        <div className="flex justify-center">
           <Image
             src={product.images?.[0] ?? "/placeholder.png"}
             alt={product.name ?? "Product image"}
-            width={250}
-            height={200}
-            className="h-[200px] w-[250px] object-cover rounded-lg drop-shadow-lg transition-transform duration-300 group-hover:scale-105"
+            width={350}
+            height={300}
+            className="h-[300px] w-[450px] object-cover rounded-lg drop-shadow-lg transition-transform duration-300 group-hover:scale-105"
           />
         </div>
         <div className="">

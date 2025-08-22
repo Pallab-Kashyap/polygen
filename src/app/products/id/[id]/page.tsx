@@ -63,7 +63,7 @@ function ProductView() {
 
   return (
     <div className="font-sans bg-white text-gray-800 mt-20">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className=" px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumbs */}
         <div className="text-sm text-gray-500 mb-6">
           <Link href="/products" className="hover:text-red-600">
@@ -80,7 +80,7 @@ function ProductView() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Image Gallery */}
-          <div className="relative">
+          <div className="relative ">
             <div className="aspect-square relative w-full overflow-hidden rounded-lg border border-gray-200">
               {images.length > 0 ? (
                 <Image
@@ -98,7 +98,7 @@ function ProductView() {
               )}
             </div>
             {images.length > 1 && (
-              <>
+              <div className="text-center mt-5">
                 <button
                   onClick={prevImage}
                   className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
@@ -113,15 +113,15 @@ function ProductView() {
                 >
                   <ChevronRight className="h-6 w-6 text-gray-800" />
                 </button>
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                <span className=" w-fit bg-black/60 text-white text-xs font-semibold px-5 py-3 rounded-full">
                   {currentImageIndex + 1} / {images.length}
-                </div>
-              </>
+                </span>
+              </div>
             )}
           </div>
 
           {/* Product Info */}
-          <div className="relative flex flex-col space-y-6">
+          <div className="relative flex flex-col space-y-6 shadow-2xl p-3">
             <div className="absolute top-0 right-0">
               <Image
                 src="/assets/redseal.svg"

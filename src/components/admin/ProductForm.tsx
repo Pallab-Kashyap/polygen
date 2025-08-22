@@ -1,15 +1,16 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import { ProductDescriptionBlock, ProductType } from "@/types/product";
 import { CategoryType } from "@/types/category";
+import { useApi } from "@/lib/hooks/useApi";
+import { categoryService } from "@/lib/services/categoryService";
 
 interface ProductFormProps {
   product?: ProductType | null;
   onSave: (data: Partial<ProductType>) => void;
   onCancel: () => void;
   loading: boolean;
-  categories: CategoryType[];
 }
 
 const ProductForm = ({
@@ -17,8 +18,8 @@ const ProductForm = ({
   onSave,
   onCancel,
   loading,
-  categories,
 }: ProductFormProps) => {
+  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [formData, setFormData] = useState<Partial<ProductType>>({
     name: "",
     slug: "",
@@ -31,7 +32,20 @@ const ProductForm = ({
     images: [],
   });
 
+  const { execute: fetchCategories } = useApi(categoryService.getCategories);
+
+  const loadData = useCallback(() => {
+    fetchCategories()
+      .then((data) =>
+        setCategories(
+          data?.flatMap((parent) => [parent, ...(parent.children ?? [])]) || []
+        )
+      )
+      .catch((err) => console.log(err));
+  }, [fetchCategories]);
+
   useEffect(() => {
+    loadData();
     if (product) {
       setFormData({
         name: product.name || "",
@@ -80,7 +94,7 @@ const ProductForm = ({
   };
 
   const handleArrayChange = (
-    field: "parameters" | "applications",
+    field: "parameters" | "applications" | "images",
     index: number,
     subField: string | null,
     value: any
@@ -94,7 +108,10 @@ const ProductForm = ({
     setFormData((prev) => ({ ...prev, [field]: newArray }));
   };
 
-  const addArrayItem = (field: "parameters" | "applications", newItem: any) => {
+  const addArrayItem = (
+    field: "parameters" | "applications" | "images",
+    newItem: any
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: [...(prev[field] || []), newItem],
@@ -102,7 +119,7 @@ const ProductForm = ({
   };
 
   const removeArrayItem = (
-    field: "parameters" | "applications",
+    field: "parameters" | "applications" | "images",
     index: number
   ) => {
     setFormData((prev) => ({
@@ -200,7 +217,9 @@ const ProductForm = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 text-black">
+      {/* Product Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Name */}
         <div>
           <label htmlFor="name" className={labelStyle}>
             Product Name
@@ -214,6 +233,8 @@ const ProductForm = ({
             className={inputStyle}
           />
         </div>
+
+        {/* Slug */}
         <div>
           <label htmlFor="slug" className={labelStyle}>
             Slug
@@ -227,6 +248,8 @@ const ProductForm = ({
             className={inputStyle}
           />
         </div>
+
+        {/* Category */}
         <div>
           <label htmlFor="categoryId" className={labelStyle}>
             Category
@@ -241,6 +264,7 @@ const ProductForm = ({
             <option value="">Select a category</option>
             {categories.map((c) => (
               <option key={c._id} value={c._id}>
+                {c.parentId ? "\u00A0\u00A0" : ""}
                 {c.name}
               </option>
             ))}
@@ -276,6 +300,42 @@ const ProductForm = ({
           rows={4}
           className={inputStyle}
         ></textarea>
+      </div>
+
+      {/* Dynamic Fields: Image URLs */}
+      <div className="space-y-2 p-4 border rounded-lg">
+        <h4 className="font-medium text-gray-800">Image URLs</h4>
+        {formData.images?.map((app, index) => (
+          <div
+            key={index}
+            className="flex items-center gap-2 p-2 bg-gray-50 rounded"
+          >
+            <input
+              type="text"
+              placeholder="https://example.com/image"
+              value={app}
+              onChange={(e) =>
+                handleArrayChange("images", index, null, e.target.value)
+              }
+              className={`flex-1 ${inputStyle}`}
+            />
+            <button
+              type="button"
+              onClick={() => removeArrayItem("images", index)}
+              className="p-2 text-red-500 hover:bg-red-100 rounded-full"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => addArrayItem("images", "")}
+          className="flex items-center gap-1 text-sm text-indigo-600 hover:underline font-semibold mt-2"
+        >
+          <Plus size={16} />
+          Add Image
+        </button>
       </div>
 
       {/* Dynamic Fields: Parameters */}
@@ -374,22 +434,24 @@ const ProductForm = ({
             key={blockIndex}
             className="p-4 border rounded-md bg-gray-50 space-y-4 relative"
           >
-            <button
-              type="button"
-              onClick={() => removeDescriptionBlock(blockIndex)}
-              className="absolute top-2 right-2 p-1.5 text-red-500 hover:bg-red-100 rounded-full transition"
-            >
-              <Trash2 size={16} />
-            </button>
-            <input
-              type="text"
-              placeholder="Section Heading (Optional)"
-              value={block.heading}
-              onChange={(e) =>
-                handleDescriptionChange(blockIndex, "heading", e.target.value)
-              }
-              className={inputStyle}
-            />
+            <div className={`${inputStyle} flex`}>
+              <input
+                type="text"
+                placeholder="Section Heading (Optional)"
+                value={block.heading}
+                onChange={(e) =>
+                  handleDescriptionChange(blockIndex, "heading", e.target.value)
+                }
+                className="flex-1 appearance-none outline-0"
+              />
+              <button
+                type="button"
+                onClick={() => removeDescriptionBlock(blockIndex)}
+                className=" right-2 p-1.5 text-red-500 hover:bg-red-100 rounded-full transition"
+              >
+                <Trash2 size={16} />
+              </button>
+            </div>
             <textarea
               placeholder="Section Text / Paragraph"
               value={block.text}
