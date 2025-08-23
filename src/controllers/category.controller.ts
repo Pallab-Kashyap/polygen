@@ -40,7 +40,7 @@ function buildHierarchy(categories: CategoryType[]): CategoryType[] {
 export const getCategories = async () => {
   try {
     await connectDB();
-    const categories = await Category.find().lean();;
+    const categories = await Category.find().lean<CategoryType[]>();;
     if (categories.length === 0) {
       return APIResponse.success([]);
     }

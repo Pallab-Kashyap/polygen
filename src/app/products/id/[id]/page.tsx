@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductType } from "@/types/product";
 import { notFound, useParams } from "next/navigation";
 import { useApi } from "@/hooks/useApi";
-import { productService } from "@/lib/services/productService";
+import { productService } from "@/services/productService";
 import Spinner from "@/components/shared/Spinner";
 
 function ProductView() {

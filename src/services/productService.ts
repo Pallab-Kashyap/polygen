@@ -1,34 +1,17 @@
-import api from "@/lib/axios";
 import { ProductType } from "@/types/product";
+import axiosInstance from "../lib/axios";
 
-export const getProducts = async () => {
-  const res = await api.get<ProductType[]>("/products");
-  return res;
-};
-
-export const getProductById = async (id: string) => {
-  const res = await api.get<ProductType>(`/products/${id}`);
-  return res;
-};
-
-export const createProduct = async (data: Partial<ProductType>) => {
-  const res = await api.post<ProductType>("/products", data);
-  return res;
-};
-
-export const updateProduct = async (id: string, data: Partial<ProductType>) => {
-  const res = await api.put<ProductType>(`/products/${id}`, data);
-  return res;
-};
-
-export const deleteProduct = async (id: string) => {
-  const res = await api.delete(`/products/${id}`);
-  return res;
-};
-
-export const bulkCreateProducts = async (formData: FormData) => {
-  const res = await api.post("/products/bulk", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
-  return res;
+export const productService = {
+  getAllProducts: (): Promise<ProductType[]> => axiosInstance.get("/products"),
+  getProductById: (id: string): Promise<ProductType> =>
+    axiosInstance.get(`/products/${id}`),
+  getProductsByCategorySlug: (slug: string): Promise<ProductType[]> =>
+    axiosInstance.get(`/products/category/slug/${slug}`),
+  createProduct: (data: Partial<ProductType>) =>
+    axiosInstance.post("/products", data),
+  updateProduct: (id: string, data: Partial<ProductType>) =>
+    axiosInstance.put(`/products/${id}`, data),
+  deleteProduct: (id: string) => axiosInstance.delete(`/products/${id}`),
+  bulkCreateProducts: (formData: FormData) =>
+    axiosInstance.post("/products/bulk", formData),
 };

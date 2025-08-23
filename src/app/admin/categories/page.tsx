@@ -2,8 +2,8 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import { Plus } from "lucide-react";
 import { CategoryType } from "@/types/category";
-import { useApi } from "@/lib/hooks/useApi";
-import { categoryService } from "@/lib/services/categoryService";
+import { useApi } from "@/hooks/useApi";
+import { categoryService } from "@/services/categoryService";
 import Spinner from "@/components/shared/Spinner";
 import Modal from "@/components/shared/Modal";
 import ConfirmationModal from "@/components/shared/ConfirmationModal";
@@ -44,13 +44,23 @@ export default function CategoriesPage() {
 
         const allCategories = data || [];
         setFlatCategories(allCategories);
-        const buildHierarchy = (items: CategoryType[], parentId: string | null = null): CategoryType[] => {
-            return items
-                .filter(item => (item.parentId || null) === parentId)
-                .map(item => ({ ...item, children: buildHierarchy(items, item._id!) }));
+        const buildHierarchy = (
+          items: CategoryType[],
+          parentId: string | null = null
+        ): CategoryType[] => {
+          return items
+            .filter((item) => (item.parentId || null) === parentId)
+            .map((item) => ({
+              ...item,
+              children: buildHierarchy(items, item._id!),
+            }));
         };
-        const isHierarchical = allCategories.some((c: CategoryType) => c.children);
-        setCategories(isHierarchical ? allCategories : buildHierarchy(allCategories));
+        const isHierarchical = allCategories.some(
+          (c: CategoryType) => c.children
+        );
+        setCategories(
+          isHierarchical ? allCategories : buildHierarchy(allCategories)
+        );
         // setCategories(data);
       })
       .catch((err) => setToast({ message: `err`, type: "error" }));

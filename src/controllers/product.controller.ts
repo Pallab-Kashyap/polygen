@@ -138,6 +138,8 @@ export const getProductsByCategorySlug = async ( req: NextRequest, {params}: {pa
     }
 
     const products = await Product.find()
+
+    return APIResponse.success(products)
   } catch (error) {
     errorHandler(error)
   }

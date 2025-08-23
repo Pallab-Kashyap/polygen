@@ -5,15 +5,13 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import Breadcrumb from "@/components/Breadcrumb";
 import { useApi } from "@/hooks/useApi";
-import { productService } from "@/lib/services/productService";
+import { productService } from "@/services/productService";
 import { ProductType } from "@/types/product";
 import Spinner from "@/components/shared/Spinner";
 
 // Reusable Product Card Component for this page
 // const ProductCard: React.FC<{ item: ProductItem; categorySlug: string }> = ({
-const ProductCard: React.FC<{ product: ProductType }> = ({
-  product,
-}) => {
+const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
   return (
     <Link href={`/products/id/${product._id}`} className="block group">
       <div className="bg-white rounded-2xl border border-gray-200/80 p-2 shadow-md overflow-hidden space-y-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
@@ -47,20 +45,25 @@ export default function page({}) {
   const [products, setProducts] = useState<ProductType[]>([]);
 
   useEffect(() => {
-    fetchProducts().then((data) => {
-      if(data){
-        setProducts(data);
-      }
-    }).catch(err => console.log(err))
+    fetchProducts()
+      .then((data) => {
+        if (data) {
+          setProducts(data);
+        }
+      })
+      .catch((err) => console.log(err));
   }, []);
 
-
-  if(isLoading){
-    return <div className="h-screen w-screen"><Spinner /></div>
+  if (isLoading) {
+    return (
+      <div className="h-screen w-screen">
+        <Spinner />
+      </div>
+    );
   }
 
-  if(!products || products.length === 0){
-    return <div className="text-black text-center">No product found</div>
+  if (!products || products.length === 0) {
+    return <div className="text-black text-center">No product found</div>;
   }
 
   return (
@@ -77,10 +80,7 @@ export default function page({}) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {products.map((product) => (
-            <ProductCard
-              key={product._id}
-              product={product}
-            />
+            <ProductCard key={product._id} product={product} />
           ))}
         </div>
       </div>

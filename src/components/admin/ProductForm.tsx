@@ -3,8 +3,8 @@ import { useState, useEffect, useCallback } from "react";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import { ProductDescriptionBlock, ProductType } from "@/types/product";
 import { CategoryType } from "@/types/category";
-import { useApi } from "@/lib/hooks/useApi";
-import { categoryService } from "@/lib/services/categoryService";
+import { useApi } from "@/hooks/useApi";
+import { categoryService } from "@/services/categoryService";
 
 interface ProductFormProps {
   product?: ProductType | null;
