@@ -25,22 +25,21 @@ const filterChildren = (categories: CategoryType[], parentId: string) =>
   categories.filter((cat) => String(cat.parentId) === String(parentId));
 
 function buildHierarchy(categories: CategoryType[]): CategoryType[] {
-  const newCatList: CategoryType[] = []
+  const newCatList: CategoryType[] = [];
   categories.forEach((cat) => {
     if (!cat.parentId) {
       cat.children = filterChildren(categories, String(cat._id));
-      newCatList.push(cat)
+      newCatList.push(cat);
     }
   });
 
   return newCatList;
 }
 
-
 export const getCategories = async () => {
   try {
     await connectDB();
-    const categories = await Category.find().lean<CategoryType[]>();;
+    const categories = await Category.find().lean<CategoryType[]>();
     if (categories.length === 0) {
       return APIResponse.success([]);
     }
@@ -72,7 +71,14 @@ export const createCategory = asyncWrapper(async (req: NextRequest) => {
   await connectDB();
   requireAdminFromRequest(req);
   const body = await req.json();
-  const parsed = categorySchema.parse(body);
+  // make parsed mutable so we can normalize fields
+  let parsed = categorySchema.parse(body);
+
+  // If parentId is an empty string (from the client select) remove it so Mongoose won't try to cast "" to an ObjectId
+  if (!parsed.parentId || parsed.parentId === "") {
+    // remove the property to let Mongoose treat it as undefined/null
+    delete (parsed as any).parentId;
+  }
 
   const exists = await Category.findOne({ slug: parsed.slug });
   if (exists) {
@@ -91,7 +97,16 @@ export const updateCategory = async (
     requireAdminFromRequest(req);
     await connectDB();
     const body = await req.json();
-    const parsed = categorySchema.partial().parse(body);
+    // make parsed mutable so we can normalize fields
+    let parsed = categorySchema.partial().parse(body);
+
+    // if parentId is provided as empty string, remove it to avoid cast errors
+    if (
+      Object.prototype.hasOwnProperty.call(parsed, "parentId") &&
+      (parsed as any).parentId === ""
+    ) {
+      delete (parsed as any).parentId;
+    }
 
     const { id } = await params;
 

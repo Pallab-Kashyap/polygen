@@ -1,3 +1,5 @@
+"use client";
+
 // /app/products/[...slug]/page.tsx
 import React from "react";
 import Image from "next/image";
@@ -11,8 +13,6 @@ import {
 import { ChevronRight } from "lucide-react";
 import Breadcrumb from "@/components/Breadcrumb";
 
-
-
 // Reusable Product Card Component for this page
 // const ProductCard: React.FC<{ item: ProductItem; categorySlug: string }> = ({
 const ProductCard: React.FC<{ categorySlug: string }> = ({
@@ -22,7 +22,7 @@ const ProductCard: React.FC<{ categorySlug: string }> = ({
   const item = {
     imageUrl: "/assets/product.svg",
     name: "Aluminium Service Cable",
-    slug: "slug"
+    slug: "slug",
   };
   return (
     <Link
@@ -40,9 +40,7 @@ const ProductCard: React.FC<{ categorySlug: string }> = ({
           />
         </div>
         <div className="">
-          <h3 className="text-2xl font-bold text-gray-900 ">
-            {item.name}
-          </h3>
+          <h3 className="text-2xl font-bold text-gray-900 ">{item.name}</h3>
           <div className="text-right mt-4">
             <span className="text-sm text-gray-500 group-hover:text-[#de1448] transition-colors">
               Explore to upgrade <ChevronRight className="inline h-4 w-4" />
@@ -56,7 +54,6 @@ const ProductCard: React.FC<{ categorySlug: string }> = ({
 
 // The main page component - now handles both all products and specific categories
 export default function ProductPage() {
-
   const { slug } = useParams<{ slug: string }>();
 
   const isAllProductsPage = !slug || slug.length === 0;
@@ -133,5 +130,3 @@ export default function ProductPage() {
     </main>
   );
 }
-
-

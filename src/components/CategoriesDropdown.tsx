@@ -1,6 +1,6 @@
 "use client"
 
-import { getCategories } from "@/services/categoryService";
+import { categoryService } from "@/services/categoryService";
 import { CategoryType } from "@/types/category";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -9,7 +9,9 @@ const CategoriesDropdown = () => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   useEffect(() => {
     (async () => {
-      const categories = await getCategories();
+      console.log('cat')
+      const categories = await categoryService.getCategories();
+      console.log(categories)
       setCategories(categories);
     })();
   }, []);
