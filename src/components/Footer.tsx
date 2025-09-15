@@ -29,24 +29,24 @@ const WhatsappIcon = (props: LucideProps) => (
 const Footer: React.FC = () => {
   return (
     <>
-      <section className="relative bg-gray-50 py-20 sm:py-24">
-        <div className="container mx-auto max-w-5xl px-4">
+      <section className="relative bg-gray-50 py-16 sm:py-20">
+        <div className="container mx-auto max-w-6xl px-4">
           {/* Main Heading */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+          <div className="text-center mb-12">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
               Contact Us
             </h1>
-            <div className="w-24 h-1 bg-[#de1448] mt-4 mx-auto rounded-full" />
+            <div className="w-20 h-1 bg-[#de1448] mt-3 mx-auto rounded-full" />
           </div>
 
-          {/* Grid Layout for the main content */}
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
+          {/* Grid Layout for the main content - adjusted proportions */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
             {/* Left Column: Contact Form Card */}
-            <div className="lg:col-span-3 bg-white p-8 sm:p-12 rounded-2xl shadow-lg">
-              <h2 className="text-4xl font-bold text-black mb-8">
+            <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg h-fit">
+              <h2 className="text-2xl md:text-3xl font-bold text-black mb-6">
                 Get In Touch
               </h2>
-              <form action="#" method="POST" className="space-y-6">
+              <form action="#" method="POST" className="space-y-4 text-black">
                 <div>
                   <label
                     htmlFor="full-name"
@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
                     name="full-name"
                     id="full-name"
                     placeholder="Rohan Singh"
-                    className="w-full px-4 py-3 border border-black rounded-lg"
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:border-[#de1448] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -67,14 +67,14 @@ const Footer: React.FC = () => {
                     htmlFor="email"
                     className="block text-sm font-medium text-gray-600 mb-1"
                   >
-                    E Mail
+                    E-Mail
                   </label>
                   <input
                     type="email"
                     name="email"
                     id="email"
                     placeholder="someone@some.com"
-                    className="w-full px-4 py-3 border border-black rounded-lg"
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:border-[#de1448] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -89,7 +89,7 @@ const Footer: React.FC = () => {
                     name="subject"
                     id="subject"
                     placeholder="Startup spotlight"
-                    className="w-full px-4 py-3 border border-black rounded-lg"
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:border-[#de1448] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -102,15 +102,15 @@ const Footer: React.FC = () => {
                   <textarea
                     name="message"
                     id="message"
-                    rows={4}
+                    rows={3}
                     placeholder="I want to know about...."
-                    className="w-full px-4 py-3 border border-black rounded-lg"
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm resize-none focus:border-[#de1448] focus:outline-none"
                   ></textarea>
                 </div>
-                <div>
+                <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full bg-[#de1448] text-white font-bold py-4 rounded-lg text-xl hover:bg-red-700 transition-colors shadow-md hover:shadow-lg"
+                    className="w-full bg-[#de1448] text-white font-bold py-3 rounded-lg text-lg hover:bg-red-700 transition-colors shadow-md hover:shadow-lg"
                   >
                     Submit
                   </button>
@@ -119,62 +119,61 @@ const Footer: React.FC = () => {
             </div>
 
             {/* Right Column: Social Media and Map */}
-            <div className="lg:col-span-2 flex flex-col gap-8">
+            <div className="flex flex-col gap-6">
               {/* Follow Us Card */}
-              <div className="bg-white p-8 rounded-2xl shadow-lg">
-                <h3 className="text-2xl font-bold text-gray-800 mb-6">
+              <div className="bg-white p-6 rounded-2xl shadow-lg">
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
                   Follow us on
                 </h3>
                 <div className="flex items-center justify-around">
                   <a
                     href="#"
                     aria-label="Instagram"
-                    className="text-gray-500 hover:text-black transition-colors"
+                    className="text-gray-400 hover:text-pink-600 transition-colors"
                   >
                     <Instagram className="h-8 w-8" />
                   </a>
                   <a
                     href="#"
                     aria-label="Twitter"
-                    className="text-gray-500 hover:text-black transition-colors"
+                    className="text-gray-400 hover:text-blue-400 transition-colors"
                   >
                     <Twitter className="h-8 w-8" />
                   </a>
                   <a
                     href="#"
                     aria-label="WhatsApp"
-                    className="text-gray-500 hover:text-green-500 transition-colors"
+                    className="text-gray-400 hover:text-green-500 transition-colors"
                   >
                     <WhatsappIcon className="h-8 w-8" />
                   </a>
                   <a
                     href="#"
                     aria-label="LinkedIn"
-                    className="text-gray-500 hover:text-blue-600 transition-colors"
+                    className="text-gray-400 hover:text-blue-600 transition-colors"
                   >
                     <Linkedin className="h-8 w-8" />
                   </a>
                   <a
                     href="#"
                     aria-label="Facebook"
-                    className="text-gray-500 hover:text-blue-800 transition-colors"
+                    className="text-gray-400 hover:text-blue-800 transition-colors"
                   >
                     <Facebook className="h-8 w-8" />
                   </a>
                 </div>
               </div>
 
-              {/* Reach Us Card */}
-              <div className="bg-white p-8 rounded-2xl shadow-lg">
-                <h3 className="text-2xl font-bold text-gray-800 mb-6">
+              {/* Reach Us Card - Larger map */}
+              <div className="flex flex-col bg-white p-6 rounded-2xl shadow-lg flex-1">
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4 ">
                   Reach us at
                 </h3>
-                <div className="rounded-lg overflow-hidden border border-gray-200">
+                <div className="rounded-lg overflow-hidden border border-gray-200 flex-1">
                   <iframe
-                    // NOTE: The src URL has been updated to a valid Google Maps embed link for demonstration.
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d111624.23438812674!2d75.64799984335937!3d29.144415500000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391232d807664687%3A0x7dfe694665457a6!2sHisar%2C%20Haryana!5e0!3m2!1sen!2sin!4v1722953282421!5m2!1sen!2sin"
                     width="100%"
-                    height="250"
+                    height="100%"
                     style={{ border: 0 }}
                     allowFullScreen={true}
                     loading="lazy"
@@ -186,12 +185,12 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Floating Red Seal Icon */}
-          <div className="absolute top-16 right-4 sm:right-8 lg:right-16 hidden md:block">
+          <div className="absolute top-[12vh] right-4 sm:right-[8vh] lg:right-16 hidden md:block">
             <Image
-              src="/assets/redseal.svg" // Replace with your Red Seal icon path
+              src="/assets/redseal.svg"
               alt="Red Seal Quality"
-              width={120}
-              height={120}
+              width={110}
+              height={110}
             />
           </div>
         </div>
@@ -200,15 +199,15 @@ const Footer: React.FC = () => {
       {/* Bottom Footer Bar */}
       <footer className="bg-[#de1448] text-white py-4">
         <div className="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
-          <div className="mb-4 sm:mb-0">
+          <div className="mb-2 sm:mb-0">
             <Image
-              src="/assets/logo-white.svg" // Replace with your white logo path
+              src="/assets/logo-white.svg"
               alt="Polygen Logo"
-              width={150}
+              width={200}
               height={35}
             />
           </div>
-          <div className="text-xs sm:text-sm space-y-1 sm:space-y-0">
+          <div className="text-md space-y-1 sm:space-y-0 sm:text-right">
             <p>Developed by Pallab Kashyap Designed By Rohit Tiwari</p>
             <p>All rights reserved by Mataji Agencies</p>
           </div>

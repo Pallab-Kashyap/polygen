@@ -11,5 +11,5 @@ const CategorySchema = new Schema<CategoryType>(
   { timestamps: true }
 );
 
-export default models.Category ||
+export default models?.Category ||
   model<CategoryType>("Category", CategorySchema);

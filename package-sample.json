@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "populate-sample": "npx ts-node --compiler-options='{\"module\":\"commonjs\"}' src/scripts/populateSampleData.ts"
+  }
+}

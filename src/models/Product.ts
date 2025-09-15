@@ -62,7 +62,7 @@ const ProductSchema = new Schema<ProductDoc>(
 );
 
 
-const Product: Model<ProductDoc> = mongoose.models.Product
+const Product: Model<ProductDoc> = mongoose.models?.Product
   ? (mongoose.models.Product as Model<ProductDoc>)
   : mongoose.model<ProductDoc>("Product", ProductSchema);
 

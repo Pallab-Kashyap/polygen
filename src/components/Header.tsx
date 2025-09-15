@@ -1,10 +1,8 @@
-// /components/Header.tsx
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
-import { productCategories } from "@/app/data/products";
 import CategoriesDropdown from "./CategoriesDropdown";
 
 export default function Header() {

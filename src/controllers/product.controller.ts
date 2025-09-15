@@ -123,27 +123,58 @@ export const getProductsByCategory = async (
   }
 };
 
-export const getProductsByCategorySlug = async ( req: NextRequest, {params}: {params: Promise<{slug: string}>}) => {
+export const getProductsByCategorySlug = async (
+  req: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) => {
   try {
     try {
-      await connectDB()
+      await connectDB();
     } catch (error) {
-      throw APIError.internal('DB connection failed')
+      throw APIError.internal("DB connection failed");
     }
 
-    const {slug} = await params
+    const { slug } = await params;
 
-    if(!slug){
-      throw APIError.badRequest("Category slug needed")
+    if (!slug) {
+      throw APIError.badRequest("Category slug needed");
     }
 
-    const products = await Product.find()
+    // First, find the category by slug
+    const Category = await import("@/models/Category").then((m) => m.default);
+    const category = await Category.findOne({ slug });
 
-    return APIResponse.success(products)
+    if (!category) {
+      throw APIError.notFound("Category not found");
+    }
+
+    // Get all subcategories recursively
+    const getAllSubcategoryIds = async (
+      parentId: string
+    ): Promise<string[]> => {
+      const subcategories = await Category.find({ parentId });
+      let allIds = [parentId];
+
+      for (const subcat of subcategories) {
+        const subIds = await getAllSubcategoryIds(subcat._id.toString());
+        allIds = allIds.concat(subIds);
+      }
+
+      return allIds;
+    };
+
+    const categoryIds = await getAllSubcategoryIds(category._id.toString());
+
+    // Find products in this category and all its subcategories
+    const products = await Product.find({
+      categoryId: { $in: categoryIds },
+    }).populate("categoryId");
+
+    return APIResponse.success(products);
   } catch (error) {
-    errorHandler(error)
+    return errorHandler(error);
   }
-}
+};
 
 export const createNewProduct = asyncWrapper(async (req: NextRequest) => {
   try {

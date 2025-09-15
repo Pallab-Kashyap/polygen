@@ -20,16 +20,12 @@ function ProductView() {
   const [product, setProduct] = useState<ProductType>();
   const [l, setL] = useState<boolean>(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  // const [selectedSize, setSelectedSize] = useState("");
 
   useEffect(() => {
     getProduct(id)
       .then((data) => {
         if (data) {
           setProduct(data);
-          // Set initial selected size safely
-          // const initialSize = data.parameters?.[0]?.values?.[0] || "";
-          // setSelectedSize(initialSize);
         }
       })
       .catch((err) => console.log("ERR", err))
@@ -40,7 +36,7 @@ function ProductView() {
 
   if (l)
     return (
-      <div className="h-screen w-screen bg-whtie">
+      <div className="h-screen w-screen bg-white">
         <Spinner />;
       </div>
     );
@@ -63,14 +59,13 @@ function ProductView() {
 
   return (
     <div className="font-sans bg-white text-gray-800 mt-20">
-      <main className=" px-4 sm:px-6 lg:px-8 py-8">
+      <main className="px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumbs */}
         <div className="text-sm text-gray-500 mb-6">
           <Link href="/products" className="hover:text-red-600">
             Products
           </Link>
           <span className="mx-2">/</span>
-          {/* You can make these dynamic based on product category */}
           <Link href="/products/wires-cables" className="hover:text-red-600">
             Wires & Cables
           </Link>
@@ -80,7 +75,7 @@ function ProductView() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Image Gallery */}
-          <div className="relative ">
+          <div className="relative">
             <div className="aspect-square relative w-full overflow-hidden rounded-lg border border-gray-200">
               {images.length > 0 ? (
                 <Image
@@ -113,7 +108,7 @@ function ProductView() {
                 >
                   <ChevronRight className="h-6 w-6 text-gray-800" />
                 </button>
-                <span className=" w-fit bg-black/60 text-white text-xs font-semibold px-5 py-3 rounded-full">
+                <span className="w-fit bg-black/60 text-white text-xs font-semibold px-5 py-3 rounded-full">
                   {currentImageIndex + 1} / {images.length}
                 </span>
               </div>
@@ -121,8 +116,8 @@ function ProductView() {
           </div>
 
           {/* Product Info */}
-          <div className="relative flex flex-col space-y-6 shadow-2xl p-3">
-            <div className="absolute top-0 right-0">
+          <div className="relative flex flex-col rounded-2xl space-y-6 shadow-2xl p-6">
+            <div className="absolute top-4 right-4">
               <Image
                 src="/assets/redseal.svg"
                 alt="Brand Logo"
@@ -135,98 +130,113 @@ function ProductView() {
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">
                 {product.name}
               </h1>
-              {/* You can add a subheading here if it exists in your data */}
             </div>
 
-            {product.about && (
+            {/* About Product */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                About Product
+              </h2>
+              <p className="text-gray-600 leading-relaxed">
+                {product.about ||
+                  `The ${product.name} is designed for reliable performance across various applications.`}
+              </p>
+            </div>
+
+            {/* Available Sizes */}
+            {product.parameters && product.parameters.length > 0 && (
               <div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                  About Product
-                </h2>
-                <p className="text-gray-600 leading-relaxed">{product.about}</p>
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                  Available Options
+                </h3>
+                {product.parameters.map((param, index) => (
+                  <div key={index} className="mb-4">
+                    <h4 className="text-md font-medium text-gray-700 mb-2">
+                      {param.label}
+                    </h4>
+                    <div className="flex flex-wrap gap-3">
+                      {param.values.map((value, valueIndex) => (
+                        <div
+                          key={valueIndex}
+                          className={`px-4 py-2 text-sm font-medium border rounded-md transition-colors
+                              border-red-500 ring-1 ring-red-300
+                          `}
+                        >
+                          {value}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
 
-            {product.parameters?.map((param) => (
-              <div key={param.label}>
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                  {param.label}
-                </h3>
-                <div className="flex flex-wrap gap-3">
-                  {param.values.map((value) => (
-                    <button
-                      key={value}
-                      // onClick={() => setSelectedSize(value)}
-                      className={`px-4 py-2 text-sm font-medium border rounded-md transition-colors ${
-                        // selectedSize === value
-                        " border-red-500  ring-1 ring-red-300"
-                        // : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                      }`}
-                    >
-                      {value}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-
+            {/* Applications */}
             {product.applications && product.applications.length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   Applications
                 </h3>
                 <ul className="list-disc list-inside space-y-1 text-gray-600">
-                  {product.applications.map((app, index) => (
-                    <li key={index}>{app}</li>
+                  {product.applications.map((application, index) => (
+                    <li key={index}>{application}</li>
                   ))}
                 </ul>
               </div>
             )}
 
-            <button className="w-full bg-red-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mt-4">
+            <button className="w-full justify-self-end bg-red-600 text-white font-bold py-4 px-6 rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mt-auto">
               Request pricing & details
             </button>
           </div>
         </div>
 
         {/* Description Section */}
-        <div className="mt-16 pt-10 border-t border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Description</h2>
-          {product.description?.map((block, index) => (
-            <div key={index} className="mb-8">
-              {block.heading && (
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  {block.heading}
-                </h3>
-              )}
-              {block.text && (
-                <p className="text-gray-600 leading-relaxed mb-4">
-                  {block.text}
-                </p>
-              )}
-              {block.bulletPoints && (
-                <ul className="space-y-4">
-                  {block.bulletPoints.map((point, pointIndex) => (
-                    <li
-                      key={pointIndex}
-                      className="text-gray-600 leading-relaxed flex items-start"
-                    >
-                      <span className="text-red-500 mr-2 mt-1">&#8226;</span>
-                      <span>
-                        {point.highlight && (
-                          <strong className="font-semibold text-gray-800">
-                            {point.highlight}:
-                          </strong>
-                        )}{" "}
-                        {point.text}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
-        </div>
+        {product.description && product.description.length > 0 && (
+          <div className="mt-16 pt-10 border-t border-gray-200">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Description
+            </h2>
+
+            {product.description.map((block, blockIndex) => (
+              <div key={blockIndex} className="mb-8">
+                {block.heading && (
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">
+                    {block.heading}
+                  </h3>
+                )}
+
+                {block.text && (
+                  <p className="text-gray-600 leading-relaxed mb-4">
+                    {block.text}
+                  </p>
+                )}
+
+                {block.bulletPoints && block.bulletPoints.length > 0 && (
+                  <ul className="space-y-4">
+                    {block.bulletPoints.map((bullet, bulletIndex) => (
+                      <li
+                        key={bulletIndex}
+                        className="text-gray-600 leading-relaxed flex items-start"
+                      >
+                        <span className="text-black mr-2 mt-1">&#8226;</span>
+                        <span>
+                          {bullet.highlight && (
+                            <strong className="font-semibold text-gray-800">
+                              {bullet.highlight}:
+                            </strong>
+                          )}
+                          {bullet.highlight && bullet.text && " "}
+                          {bullet.text}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );
@@ -239,4 +249,3 @@ export interface ProductParameter {
   label: string;
   values: string[];
 }
-// ... rest of your interfaces
