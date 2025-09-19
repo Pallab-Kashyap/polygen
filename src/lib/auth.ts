@@ -3,10 +3,10 @@ import jwt from "jsonwebtoken";
 import { serialize, parse } from "cookie";
 import { jwtVerify } from "jose";
 
-// Ensure JWT_SECRET is always a string at runtime
-const JWT_SECRET = process.env.NEXT_PUBLIC_JWT_SECRET as string;
+// Use server-side only JWT secret (no NEXT_PUBLIC_ prefix)
+const JWT_SECRET = process.env.JWT_SECRET as string;
 if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET must be set in env");
+  throw new Error("JWT_SECRET must be set in environment variables");
 }
 
 export function createAdminToken(payload: { adminId: string }) {
@@ -29,7 +29,7 @@ export function setAuthCookie(token: string) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    // maxAge: 10 * 60,
+    maxAge: 10 * 24 * 60 * 60, // 10 days in seconds
   });
 }
 

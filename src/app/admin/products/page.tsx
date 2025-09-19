@@ -226,6 +226,16 @@ export default function ProductsPage() {
                     </span>
                   </div>
                   <div className="flex justify-between">
+                    <span>Top Seller:</span>
+                    <span
+                      className={`font-medium text-xs ${
+                        product.isTopSeller ? "text-green-600" : "text-gray-500"
+                      }`}
+                    >
+                      {product.isTopSeller ? "Yes" : "No"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
                     <span>Slug:</span>
                     <span className="font-medium text-xs break-all">
                       {product.slug}
@@ -251,6 +261,9 @@ export default function ProductsPage() {
                     Price
                   </th>
                   <th scope="col" className="px-6 py-3">
+                    Top Seller
+                  </th>
+                  <th scope="col" className="px-6 py-3">
                     Slug
                   </th>
                   <th scope="col" className="px-6 py-3 text-right">
@@ -272,6 +285,17 @@ export default function ProductsPage() {
                     </td>
                     <td className="px-6 py-4">
                       ${product.price?.toFixed(2) ?? "N/A"}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          product.isTopSeller
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {product.isTopSeller ? "Yes" : "No"}
+                      </span>
                     </td>
                     <td className="px-6 py-4">{product.slug}</td>
                     <td className="px-6 py-4 text-right">

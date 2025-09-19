@@ -15,6 +15,7 @@ export interface ProductDoc extends Document {
   description: DescBlockType[];
   images: string[];
   price?: number | null;
+  isTopSeller?: boolean;
   metadata?: any;
   createdAt: Date;
   updatedAt: Date;
@@ -56,11 +57,11 @@ const ProductSchema = new Schema<ProductDoc>(
     description: { type: [DescriptionBlockSchema], default: [] },
     images: { type: [String], default: [] },
     price: { type: Number, default: null },
+    isTopSeller: { type: Boolean, default: false },
     metadata: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true }
 );
-
 
 const Product: Model<ProductDoc> = mongoose.models?.Product
   ? (mongoose.models.Product as Model<ProductDoc>)

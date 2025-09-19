@@ -1,6 +1,13 @@
 "use client";
 import { useState } from "react";
-import { ChevronDown, ChevronRight, Edit, Trash2 } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Edit,
+  Trash2,
+  Copy,
+  Check,
+} from "lucide-react";
 import { CategoryType } from "@/types/category";
 
 interface CategoryItemProps {
@@ -17,7 +24,20 @@ const CategoryItem = ({
   onDelete,
 }: CategoryItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const hasChildren = category.children && category.children.length > 0;
+
+  const handleCopyId = async () => {
+    if (category._id) {
+      try {
+        await navigator.clipboard.writeText(category._id);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error("Failed to copy category ID:", err);
+      }
+    }
+  };
 
   return (
     <div className="my-1">
@@ -51,6 +71,17 @@ const CategoryItem = ({
           </div>
         </div>
         <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 ml-2">
+          <button
+            onClick={handleCopyId}
+            className="p-1.5 sm:p-2 text-gray-500 hover:text-green-600 hover:bg-green-100 rounded-full transition"
+            title="Copy Category ID"
+          >
+            {copied ? (
+              <Check size={14} className="sm:w-4 sm:h-4 text-green-600" />
+            ) : (
+              <Copy size={14} className="sm:w-4 sm:h-4" />
+            )}
+          </button>
           <button
             onClick={() => onEdit(category)}
             className="p-1.5 sm:p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-100 rounded-full transition"

@@ -26,6 +26,7 @@ const ProductForm = ({
     about: "",
     categoryId: "",
     price: null,
+    isTopSeller: false,
     parameters: [],
     applications: [],
     description: [],
@@ -53,6 +54,7 @@ const ProductForm = ({
         about: product.about || "",
         categoryId: product.categoryId || "",
         price: product.price ?? null,
+        isTopSeller: product.isTopSeller ?? false,
         parameters: product.parameters || [],
         applications: product.applications || [],
         description: product.description || [],
@@ -65,6 +67,7 @@ const ProductForm = ({
         about: "",
         categoryId: "",
         price: null,
+        isTopSeller: false,
         parameters: [],
         applications: [],
         description: [],
@@ -78,7 +81,7 @@ const ProductForm = ({
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     let newSlug = formData.slug;
     if (name === "name" && !product) {
       newSlug = value
@@ -86,9 +89,14 @@ const ProductForm = ({
         .replace(/\s+/g, "-")
         .replace(/[^a-z0-9-]/g, "");
     }
+
+    // Handle checkbox input
+    const inputValue =
+      type === "checkbox" ? (e.target as HTMLInputElement).checked : value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: inputValue,
       slug: name === "name" ? newSlug : prev.slug,
     }));
   };
@@ -285,6 +293,21 @@ const ProductForm = ({
             step="0.01"
             className={inputStyle}
           />
+        </div>
+
+        {/* Top Seller Toggle */}
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            name="isTopSeller"
+            id="isTopSeller"
+            checked={formData.isTopSeller ?? false}
+            onChange={handleChange}
+            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          />
+          <label htmlFor="isTopSeller" className={`ml-2 ${labelStyle}`}>
+            Mark as Top Seller
+          </label>
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminToken } from "@/lib/auth";
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Protect admin UI (everything under /admin) except /admin/login
@@ -14,17 +14,28 @@ export function middleware(req: NextRequest) {
       return NextResponse.redirect(url);
     }
     try {
-      verifyAdminToken(token);
+      await verifyAdminToken(token);
       return NextResponse.next();
     } catch (err) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/admin/login";
-      return NextResponse.redirect(url);
+      console.error("Token verification failed:", err);
+      // Clear the invalid token
+      const response = NextResponse.redirect(new URL("/admin/login", req.url));
+      response.cookies.set("admin_token", "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 0,
+      });
+      return response;
     }
   }
 
-  // Protect mutating product APIs: POST, PUT, DELETE under /api/products
-  if (pathname.startsWith("/api/products")) {
+  // Protect mutating APIs: POST, PUT, DELETE under /api/products and /api/categories
+  if (
+    pathname.startsWith("/api/products") ||
+    pathname.startsWith("/api/categories")
+  ) {
     const method = req.method.toUpperCase();
     if (method !== "GET") {
       const token = req.cookies.get("admin_token")?.value;
@@ -34,7 +45,7 @@ export function middleware(req: NextRequest) {
         });
       }
       try {
-        verifyAdminToken(token);
+        await verifyAdminToken(token);
         return NextResponse.next();
       } catch {
         return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
@@ -48,5 +59,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/products/:path*"],
+  matcher: ["/admin/:path*", "/api/products/:path*", "/api/categories/:path*"],
 };

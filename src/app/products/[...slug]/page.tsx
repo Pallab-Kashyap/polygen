@@ -41,7 +41,7 @@ const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
   );
 };
 
-export function Banner({ category }: { category: CategoryType }) {
+function Banner({ category }: { category: CategoryType }) {
   return (
     <>
       <section className="relative pt-32 w-full h-fit bg-gray-900 text-white">

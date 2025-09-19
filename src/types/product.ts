@@ -25,6 +25,7 @@ export interface ProductType {
   description?: ProductDescriptionBlock[];
   images?: string[];
   price?: number | null;
+  isTopSeller?: boolean;
   metadata?: Record<string, any>;
   createdAt?: string;
   updatedAt?: string;

@@ -46,6 +46,7 @@ export const ProductSchema = z.object({
   applications: z.array(z.string()).optional(),
   images: z.array(z.string()).optional(),
   price: z.number().nullable().optional(),
+  isTopSeller: z.boolean().optional(),
   metadata: z.record(z.any(), z.any()).optional(),
 });
 
@@ -61,6 +62,7 @@ function formatProduct(doc: any): ProductType {
     description: doc.description ?? [],
     images: doc.images ?? [],
     price: typeof doc.price === "number" ? doc.price : null,
+    isTopSeller: doc.isTopSeller ?? false,
     metadata: doc.metadata ?? {},
     createdAt: doc.createdAt
       ? new Date(doc.createdAt).toISOString()
@@ -74,6 +76,12 @@ function formatProduct(doc: any): ProductType {
 export const getAllProducts = asyncWrapper(async (req: NextRequest) => {
   await connectDB();
   const products = await Product.find();
+  return APIResponse.success(products);
+});
+
+export const getTopSellerProducts = asyncWrapper(async (req: NextRequest) => {
+  await connectDB();
+  const products = await Product.find({ isTopSeller: true });
   return APIResponse.success(products);
 });
 
@@ -238,20 +246,69 @@ export const bulkCreateProducts = async (req: NextRequest) => {
     const errors: any[] = [];
 
     sheetData.forEach((row: any, index: number) => {
-      // Optional: sanitize all string fields
-      Object.keys(row).forEach((key) => {
-        if (typeof row[key] === "string") {
-          row[key] = validator.escape(row[key].trim());
-        }
-      });
+      try {
+        // Sanitize all string fields
+        Object.keys(row).forEach((key) => {
+          if (typeof row[key] === "string") {
+            row[key] = validator.escape(row[key].trim());
+          }
+        });
 
-      const parseResult = ProductSchema.safeParse(row);
-      if (parseResult.success) {
-        validProducts.push(parseResult.data);
-      } else {
+        // Map 'category' field to 'categoryId' if present
+        if (row.category && !row.categoryId) {
+          row.categoryId = row.category;
+          delete row.category; // Remove the category field since we have categoryId
+        }
+
+        // Parse arrays from strings if needed
+        if (row.applications && typeof row.applications === "string") {
+          row.applications = row.applications
+            .split(",")
+            .map((s: string) => s.trim())
+            .filter(Boolean);
+        }
+
+        if (row.images && typeof row.images === "string") {
+          row.images = row.images
+            .split(",")
+            .map((s: string) => s.trim())
+            .filter(Boolean);
+        }
+
+        // Handle boolean fields
+        if (row.isTopSeller !== undefined) {
+          if (typeof row.isTopSeller === "string") {
+            row.isTopSeller =
+              row.isTopSeller.toLowerCase() === "true" ||
+              row.isTopSeller === "1";
+          }
+        }
+
+        // Generate slug if not provided
+        if (!row.slug && row.name) {
+          row.slug = row.name
+            .toLowerCase()
+            .replace(/\s+/g, "-")
+            .replace(/[^a-z0-9-]/g, "");
+        }
+
+        const parseResult = ProductSchema.safeParse(row);
+        if (parseResult.success) {
+          validProducts.push(parseResult.data);
+        } else {
+          errors.push({
+            row: index + 2,
+            issues: parseResult.error.issues.map((issue) => issue.message),
+          });
+        }
+      } catch (error) {
         errors.push({
           row: index + 2,
-          issues: parseResult.error.issues,
+          issues: [
+            `Processing error: ${
+              error instanceof Error ? error.message : "Unknown error"
+            }`,
+          ],
         });
       }
     });
@@ -265,6 +322,7 @@ export const bulkCreateProducts = async (req: NextRequest) => {
     return APIResponse.success({
       inserted: validProducts.length,
       errors,
+      totalProcessed: sheetData.length,
     });
   } catch (error) {
     return errorHandler(error);
