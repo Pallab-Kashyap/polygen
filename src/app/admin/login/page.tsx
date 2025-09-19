@@ -22,7 +22,7 @@ export default function AdminLogin() {
       });
 
       if (res.ok) {
-        router.push("/admin");
+        router.push("/admin/products");
       } else {
         const json = await res.json();
         setErr(json.error || "Login failed. Please check your credentials.");
