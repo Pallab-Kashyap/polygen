@@ -1,26 +1,20 @@
 import React from "react";
 import { ChevronRight, MoveRight } from "lucide-react"; // Icon for the button
+import Heading from "../shared/Heading";
 
 const AboutSection: React.FC = () => {
   return (
     <section
       id="about"
       // Subtle gradient from a light grey to a light pink, as seen in the image
-      className=" relative bg-white py-20 sm:py-24 overflow-hidden"
+      className=" relative bg-white py-10 sm:py-24 overflow-hidden"
     >
       <div className="relative container mx-auto max-w px-4 flex flex-col items-center text-center z-10">
         {/* Main Heading */}
-        <div className="flex flex-col items-center">
-          <h2 className="text-4xl md:text-6xl font-bold text-gray-900">
-            About Us
-          </h2>
-
-          {/* Red Underline */}
-          <div className="w-3/4 h-1 bg-[#de1448] mt-3 mb-8 rounded-full" />
-        </div>
+          <Heading>About Us</Heading>
 
         {/* Introductory Paragraph */}
-        <p className="text-2xl text-gray-700 leading-relaxed ">
+        <p className="text-lg md:text-2xl text-gray-700 leading-relaxed ">
           Founded in 2023, Polygen brings precision and reliability to
           irrigation systems through a curated range of essential products —
           from wires and multistrand cables to DOL starters, Kitkat fuses, and
@@ -31,10 +25,10 @@ const AboutSection: React.FC = () => {
 
         {/* Red Seal Quality Section */}
         <div className="mt-16 w-full">
-          <h3 className="text-4xl font-black text-[#de1448] ">
+          <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-[#de1448] ">
             RED SEAL QUALITY
           </h3>
-          <div className="mt-8 space-y-6 text-2xl text-gray-700 leading-relaxed  mx-auto">
+          <div className="mt-8 space-y-6 text-lg md:text-2xl text-gray-700 leading-relaxed  mx-auto">
             <p>
               At Polygen, quality isn’t left to chance — it’s built in from the
               start. Red Seal Quality is our signature mark, symbolizing a
@@ -53,9 +47,9 @@ const AboutSection: React.FC = () => {
         </div>
 
         {/* "Explore to upgrade" Button */}
-        <div className="mt-12 w-full flex justify-end ">
+        <div className="mt-6 md:mt-12 w-full flex justify-around md:justify-end ">
           <button
-            className="group flex items-center gap-2 px-5 py-3 border border-gray-400 rounded-lg text-2xl font-medium text-black
+            className="group flex items-center gap-2 px-5 py-3 border border-gray-400 rounded-lg text-lg md:text-2xl font-medium text-black
                        hover:bg-[#de1448]  transition-all duration-500"
           >
             <span>Explore to upgrade</span>

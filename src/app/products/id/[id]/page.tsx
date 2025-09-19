@@ -5,10 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductType } from "@/types/product";
+import { CategoryType } from "@/types/category";
 import { notFound, useParams } from "next/navigation";
 import { useApi } from "@/hooks/useApi";
 import { productService } from "@/services/productService";
+import { categoryService } from "@/services/categoryService";
 import Spinner from "@/components/shared/Spinner";
+import Breadcrumb, { BreadcrumbType } from "@/components/Breadcrumb";
 
 function ProductView() {
   const { id } = useParams<{ id: string }>();
@@ -16,28 +19,53 @@ function ProductView() {
   const { execute: getProduct, loading: isLoading } = useApi(
     productService.getProductById
   );
+  const { execute: getCategory, loading: categoryLoading } = useApi(
+    categoryService.getCategoryById
+  );
+  const { execute: getCategories, loading: categoriesLoading } = useApi(
+    categoryService.getCategories
+  );
 
   const [product, setProduct] = useState<ProductType>();
+  const [category, setCategory] = useState<CategoryType | null>(null);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [l, setL] = useState<boolean>(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
-    getProduct(id)
-      .then((data) => {
-        if (data) {
-          setProduct(data);
+    const fetchData = async () => {
+      try {
+        const productData = await getProduct(id);
+        if (productData) {
+          setProduct(productData);
+
+          // Fetch category and all categories for breadcrumb
+          const [categoryData, categoriesData] = await Promise.all([
+            getCategory(productData.categoryId),
+            getCategories()
+          ]);
+
+          if (categoryData) {
+            setCategory(categoryData);
+          }
+          if (categoriesData) {
+            setCategories(categoriesData);
+          }
         }
-      })
-      .catch((err) => console.log("ERR", err))
-      .finally(() => {
+      } catch (err) {
+        console.log("ERR", err);
+      } finally {
         setL(false);
-      });
-  }, [id, getProduct]);
+      }
+    };
+
+    fetchData();
+  }, [id, getProduct, getCategory, getCategories]);
 
   if (l)
     return (
       <div className="h-screen w-screen bg-white">
-        <Spinner />;
+        <Spinner />
       </div>
     );
 
@@ -46,6 +74,45 @@ function ProductView() {
   }
 
   const images = product.images || [];
+
+  // Build breadcrumb items
+  const buildBreadcrumbs = (): BreadcrumbType[] => {
+    const breadcrumbs: BreadcrumbType[] = [
+      { name: "All Products", link: "/products" }
+    ];
+
+    if (category && categories.length > 0) {
+      // Find parent hierarchy
+      const findParentChain = (cat: CategoryType): CategoryType[] => {
+        if (!cat.parentId) return [cat];
+
+        const parent = categories.find((c) => c._id === cat.parentId);
+        if (parent) {
+          return [...findParentChain(parent), cat];
+        }
+        return [cat];
+      };
+
+      const hierarchy = findParentChain(category);
+
+      hierarchy.forEach((cat) => {
+        breadcrumbs.push({
+          name: cat.name,
+          link: `/products/${cat.slug}`,
+        });
+      });
+    }
+
+    // Add current product
+    breadcrumbs.push({
+      name: product.name,
+      link: `/products/id/${product._id}`,
+    });
+
+    return breadcrumbs;
+  };
+
+  const breadcrumbs = buildBreadcrumbs();
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -61,17 +128,7 @@ function ProductView() {
     <div className="font-sans bg-white text-gray-800 mt-20">
       <main className="px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumbs */}
-        <div className="text-sm text-gray-500 mb-6">
-          <Link href="/products" className="hover:text-red-600">
-            Products
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/products/wires-cables" className="hover:text-red-600">
-            Wires & Cables
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-gray-800 font-medium">{product.name}</span>
-        </div>
+        <Breadcrumb items={breadcrumbs} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Image Gallery */}
@@ -117,27 +174,29 @@ function ProductView() {
 
           {/* Product Info */}
           <div className="relative flex flex-col rounded-2xl space-y-6 shadow-2xl p-6">
-            <div className="absolute top-4 right-4">
+            <div className="absolute top-8 right-4">
               <Image
                 src="/assets/redseal.svg"
                 alt="Brand Logo"
                 width={80}
                 height={80}
+                className="h-[60px] w-[60px] md:h-[100px] md:w-[100px]"
+                // className="h-[80px] w-[80px]"
               />
             </div>
 
             <div>
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">
+              <h1 className="text-2xl md:text-4xl font-bold text-gray-900 max-w-[80%] break-words whitespace-normal">
                 {product.name}
               </h1>
             </div>
 
             {/* About Product */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              <h2 className="text-lg md:text-2xl font-semibold text-gray-800 mb-2">
                 About Product
               </h2>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 text- leading-relaxed">
                 {product.about ||
                   `The ${product.name} is designed for reliable performance across various applications.`}
               </p>

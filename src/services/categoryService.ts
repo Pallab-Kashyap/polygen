@@ -4,6 +4,8 @@ import axiosInstance from "../lib/axios";
 export const categoryService = {
   getCategories: (): Promise<CategoryType[]> =>
     axiosInstance.get("/categories"),
+  getCategoryById: (id: string): Promise<CategoryType> =>
+    axiosInstance.get(`/categories/${id}`),
   getCategoryBySlug: (slug: string): Promise<CategoryType> =>
     axiosInstance.get(`/categories/slug/${slug}`),
   createCategory: (data: Partial<CategoryType>) =>

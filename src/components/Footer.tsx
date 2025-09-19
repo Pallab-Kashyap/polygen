@@ -7,6 +7,7 @@ import {
   Facebook,
   LucideProps,
 } from "lucide-react";
+import Heading from "./shared/Heading";
 
 // A simple Whatsapp icon component as it's not in lucide-react by default
 const WhatsappIcon = (props: LucideProps) => (
@@ -29,15 +30,10 @@ const WhatsappIcon = (props: LucideProps) => (
 const Footer: React.FC = () => {
   return (
     <>
-      <section className="relative bg-gray-50 py-16 sm:py-20">
+      <section className="relative bg-[#F2F1F2] py-16 sm:py-20">
         <div className="container mx-auto max-w-6xl px-4">
           {/* Main Heading */}
-          <div className="text-center mb-12">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Contact Us
-            </h1>
-            <div className="w-20 h-1 bg-[#de1448] mt-3 mx-auto rounded-full" />
-          </div>
+            <Heading>Contact Us</Heading>
 
           {/* Grid Layout for the main content - adjusted proportions */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
@@ -198,7 +194,7 @@ const Footer: React.FC = () => {
 
       {/* Bottom Footer Bar */}
       <footer className="bg-[#de1448] text-white py-4">
-        <div className="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
+        <div className="container md:mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center sm:text-left">
           <div className="mb-2 sm:mb-0">
             <Image
               src="/assets/logo-white.svg"
@@ -207,8 +203,10 @@ const Footer: React.FC = () => {
               height={35}
             />
           </div>
-          <div className="text-md space-y-1 sm:space-y-0 sm:text-right">
-            <p>Developed by Pallab Kashyap Designed By Rohit Tiwari</p>
+          <div className="text-sm md:text-md space-y-1 sm:space-y-0 sm:text-right">
+            <p className="hidden md:block">
+              Developed by Pallab Kashyap Designed By Rohit Tiwari
+            </p>
             <p>All rights reserved by Mataji Agencies</p>
           </div>
         </div>

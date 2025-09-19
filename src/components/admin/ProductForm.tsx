@@ -344,7 +344,7 @@ const ProductForm = ({
         {formData.parameters?.map((param, index) => (
           <div
             key={index}
-            className="flex items-center gap-2 p-2 bg-gray-50 rounded"
+            className="md:flex items-center gap-2 p-2 bg-gray-50 rounded"
           >
             <input
               type="text"
@@ -467,7 +467,7 @@ const ProductForm = ({
                 Bullet Points
               </h5>
               {block.bulletPoints?.map((point, pointIndex) => (
-                <div key={pointIndex} className="flex items-center gap-2">
+                <div key={pointIndex} className="md:flex items-center gap-2">
                   <input
                     type="text"
                     placeholder="Highlight (e.g., Feature:)"

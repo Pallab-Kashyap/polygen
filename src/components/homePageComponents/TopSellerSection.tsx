@@ -1,5 +1,6 @@
 import React from "react";
 import ProductCard from "../ProductCard"; // Import the card component
+import Heading from "../shared/Heading";
 
 // Sample data for the products. Replace imageUrls with your actual asset paths.
 const topSellersData = [
@@ -30,15 +31,12 @@ const TopSellers: React.FC = () => {
     <section className="bg-[#F2F1F2] py-20 sm:py-20">
       <div className="container mx-auto  px-4">
         {/* Section Heading */}
-        <div className="flex flex-col items-center mb-16">
-          <h2 className="text-5xl md:text-6xl font-extrabold text-black">
-            Our Top Sellers
-          </h2>
-          <div className="w-1/4 h-1 bg-[#de1448] mt-3 mx-auto rounded-full" />
-        </div>
+
+        <Heading>Our Top Sellers</Heading>
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* <div className="hide-scrollbar flex overflow-x-scroll md:overflow-x-visible sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"> */}
           {topSellersData.map((product) => (
             <ProductCard key={product.name} product={product} />
           ))}

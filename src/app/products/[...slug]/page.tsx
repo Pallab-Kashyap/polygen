@@ -12,6 +12,7 @@ import { categoryService } from "@/services/categoryService";
 import { ProductType } from "@/types/product";
 import { CategoryType } from "@/types/category";
 import Spinner from "@/components/shared/Spinner";
+import Heading from "@/components/shared/Heading";
 
 // Reusable Product Card Component
 const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
@@ -40,6 +41,65 @@ const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
   );
 };
 
+export function Banner({ category }: { category: CategoryType }) {
+  return (
+    <>
+      <section className="relative pt-32 w-full h-fit bg-gray-900 text-white">
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <img
+            src="/assets/blog.svg" // replace with your background
+            alt="Background"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#5c1c2e]/90 to-black/90"></div>
+        </div>
+
+        {/* Foreground (all visible content) */}
+        <div className="relative z-10">
+          {/* Main content */}
+          <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-6 py-12 md:py-20">
+            {/* Left text */}
+            <div className="max-w-xl text-center md:text-left">
+              <h1 className="text-3xl md:text-5xl font-bold text-white">
+                {category.name}
+              </h1>
+              <p className="mt-4 text-lg md:text-xl text-gray-200">
+                {category.description &&
+                  category.description.split("/")[0].trim()}
+                {category.description?.includes("/") && (
+                  <span className="font-semibold text-red-500">
+                    {" "}
+                    {category.description.split("/")[1].trim().toUpperCase()}
+                  </span>
+                )}
+              </p>
+            </div>
+
+            {/* Red Seal Badge */}
+            <div className="absolute hidden md:block md:top-20 md:right-16 h-[80px] w-[80px] md:h-[120px] md:w-[120px] transform -translate-y-1/2 z-20">
+              <Image
+                src="/assets/redseal.svg"
+                alt="Red Seal"
+                fill
+                className="object-contain"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* Bottom strip */}
+      <div className="bg-red-600 text-center px-4 py-3">
+        <p className="text-sm md:text-base font-medium text-white">
+          <span className="font-semibold">RED SEAL QUALITY</span>: Every product
+          is tested, certified, and stamped with our Red Seal Quality promise —
+          built to last through seasons, fields, and every challenge.
+        </p>
+      </div>
+    </>
+  );
+}
+
 // Main page component for category-specific products
 export default function CategoryProductsPage() {
   const { slug } = useParams<{ slug: string[] }>();
@@ -61,7 +121,6 @@ export default function CategoryProductsPage() {
   );
 
   useEffect(() => {
-
     if (!slug || slug.length === 0) {
       console.log("No slug found, calling notFound");
       notFound();
@@ -134,7 +193,9 @@ export default function CategoryProductsPage() {
   }
 
   if (!category) {
-    return <div className="h-screen w-screen tex-9xl text-black">NOT FOUND</div>
+    return (
+      <div className="h-screen w-screen tex-9xl text-black">NOT FOUND</div>
+    );
     // notFound();
     // return null;
   }
@@ -142,20 +203,13 @@ export default function CategoryProductsPage() {
   const breadcrumbs = buildBreadcrumbs();
 
   return (
-    <main className="bg-gray-50 pt-32 pb-20">
-      <div className="container mx-auto px-4">
+    <main className="bg-gray-50 pb-20">
+      <Banner category={category} />
+      <div className="container mx-auto px-4 pt-4">
         <Breadcrumb items={breadcrumbs} />
 
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-            {category.name}
-          </h1>
-          {category.description && (
-            <p className="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
-              {category.description}
-            </p>
-          )}
-          <div className="w-24 h-1 bg-[#de1448] mt-4 mx-auto rounded-full" />
+          <Heading>{category.name}</Heading>
         </div>
 
         {!products || products.length === 0 ? (

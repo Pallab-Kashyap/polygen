@@ -1,5 +1,6 @@
 import React from "react";
 import BlogPostCard from "./BlogPostCard";
+import Heading from "../shared/Heading";
 
 // Sample data for the blog posts. Replace with your actual data from a CMS or API.
 const blogPostsData = [
@@ -43,12 +44,7 @@ const BlogSection: React.FC = () => {
     <section className="bg-gray-50 py-20 sm:py-24">
       <div className="container mx-auto  px-4">
         {/* Section Heading */}
-        <div className="flex flex-col items-center mb-16">
-          <h2 className="text-5xl md:text-6xl font-extrabold text-black">
-            Our Blogs
-          </h2>
-          <div className="w-1/6 h-1 bg-[#de1448] mt-3 mx-auto rounded-full" />
-        </div>
+          <Heading>Blogs</Heading>
 
         {/* Blog Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

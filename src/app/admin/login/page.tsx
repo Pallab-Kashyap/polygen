@@ -35,10 +35,10 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="h-full bg-slate-100 flex flex-col justify-center  sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-100 flex flex-col justify-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
       {/* Form Container */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="mt-6 text-center text-2xl sm:text-3xl font-extrabold text-gray-900">
           Admin Panel Login
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
@@ -47,7 +47,7 @@ export default function AdminLogin() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
+        <div className="bg-white py-6 sm:py-8 px-4 sm:px-10 shadow-lg rounded-lg">
           <form onSubmit={submit} className="space-y-6">
             {/* Username Input */}
             <div>

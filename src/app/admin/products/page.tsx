@@ -140,21 +140,27 @@ export default function ProductsPage() {
   );
 
   return (
-    <div className="">
-      <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Products</h1>
-        <div className="flex items-center gap-3">
+    <div className="px-2 sm:px-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+          Products
+        </h1>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
           <button
             onClick={() => setIsUploadModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition text-sm sm:text-base"
           >
-            <Upload size={20} /> Bulk Upload
+            <Upload size={18} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Bulk Upload</span>
+            <span className="sm:hidden">Upload</span>
           </button>
           <button
             onClick={() => handleOpenModal()}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition text-sm sm:text-base"
           >
-            <Plus size={20} /> Add Product
+            <Plus size={18} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Add Product</span>
+            <span className="sm:hidden">Add</span>
           </button>
         </div>
       </div>
@@ -179,63 +185,116 @@ export default function ProductsPage() {
         // categories is null/undefined — show error
         <div className="text-red-600">err</div>
       ) : (
-        <div className="bg-white shadow-md rounded-lg overflow-x-auto">
-          <table className="w-full text-sm text-left text-gray-500">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Category
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Price
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Slug
-                </th>
-                <th scope="col" className="px-6 py-3 text-right">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredProducts.map((product) => (
-                <tr
-                  key={product._id}
-                  className="bg-white border-b hover:bg-gray-50"
-                >
-                  <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+          {/* Mobile Card View */}
+          <div className="block sm:hidden">
+            {filteredProducts.map((product) => (
+              <div
+                key={product._id}
+                className="border-b border-gray-200 p-4 hover:bg-gray-50"
+              >
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-medium text-gray-900 text-sm pr-2 flex-1">
                     {product.name}
-                  </td>
-                  <td className="px-6 py-4">
-                    {categoryMap[product.categoryId] || "N/A"}
-                  </td>
-                  <td className="px-6 py-4">
-                    ${product.price?.toFixed(2) ?? "N/A"}
-                  </td>
-                  <td className="px-6 py-4">{product.slug}</td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => handleOpenModal(product)}
-                        className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-100 rounded-full transition"
-                      >
-                        <Edit size={16} />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteClick(product)}
-                        className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-100 rounded-full transition"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
+                  </h3>
+                  <div className="flex gap-1 flex-shrink-0">
+                    <button
+                      onClick={() => handleOpenModal(product)}
+                      className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-100 rounded-full transition"
+                    >
+                      <Edit size={14} />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(product)}
+                      className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-100 rounded-full transition"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+                <div className="text-xs text-gray-500 space-y-1">
+                  <div className="flex justify-between">
+                    <span>Category:</span>
+                    <span className="font-medium">
+                      {categoryMap[product.categoryId] || "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Price:</span>
+                    <span className="font-medium">
+                      ${product.price?.toFixed(2) ?? "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Slug:</span>
+                    <span className="font-medium text-xs break-all">
+                      {product.slug}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden sm:block overflow-x-auto">
+            <table className="w-full text-sm text-left text-gray-500">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    Name
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Category
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Price
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Slug
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-right">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredProducts.map((product) => (
+                  <tr
+                    key={product._id}
+                    className="bg-white border-b hover:bg-gray-50"
+                  >
+                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                      {product.name}
+                    </td>
+                    <td className="px-6 py-4">
+                      {categoryMap[product.categoryId] || "N/A"}
+                    </td>
+                    <td className="px-6 py-4">
+                      ${product.price?.toFixed(2) ?? "N/A"}
+                    </td>
+                    <td className="px-6 py-4">{product.slug}</td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => handleOpenModal(product)}
+                          className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-100 rounded-full transition"
+                        >
+                          <Edit size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(product)}
+                          className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-100 rounded-full transition"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
