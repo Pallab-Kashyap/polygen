@@ -64,7 +64,7 @@ function ProductView() {
 
   if (l)
     return (
-      <div className="h-screen w-screen bg-white">
+      <div className="h-screen w-screen flex items-center justify-center">
         <Spinner />
       </div>
     );

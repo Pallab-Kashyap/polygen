@@ -161,8 +161,8 @@ const Footer: React.FC = () => {
               </div>
 
               {/* Reach Us Card - Larger map */}
-              <div className="flex flex-col bg-white p-6 rounded-2xl shadow-lg flex-1">
-                <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4 ">
+              <div className="flex flex-col bg-white p-3 md:p-6 rounded-2xl shadow-lg flex-1">
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 md:mb-4 ">
                   Reach us at
                 </h3>
                 <div className="rounded-lg overflow-hidden border border-gray-200 flex-1">

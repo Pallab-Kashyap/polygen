@@ -62,7 +62,7 @@ const CategoryItem = ({
             <div className="w-4 sm:w-6 mr-2 flex-shrink-0"></div>
           )}
           <div className="min-w-0 flex-1">
-            <span className="font-medium text-gray-800 text-sm sm:text-base block truncate">
+            <span className="font-medium text-gray-800 text-sm sm:text-base truncate">
               {category.name}
             </span>
             <span className="text-xs sm:text-sm text-gray-500 block sm:inline sm:ml-3">

@@ -25,7 +25,7 @@ const AboutSection: React.FC = () => {
 
         {/* Red Seal Quality Section */}
         <div className="mt-16 w-full">
-          <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-[#de1448] ">
+          <h3 className="text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-black text-[#de1448] ">
             RED SEAL QUALITY
           </h3>
           <div className="mt-8 space-y-6 text-lg md:text-2xl text-gray-700 leading-relaxed  mx-auto">

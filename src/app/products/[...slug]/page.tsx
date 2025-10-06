@@ -44,27 +44,34 @@ const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
 function Banner({ category }: { category: CategoryType }) {
   return (
     <>
-      <section className="relative pt-32 w-full h-fit bg-gray-900 text-white">
+      <section className="relative pt-32 w-full h-fit bg-gray-900 text-white overflow-hidden">
         {/* Background image */}
         <div className="absolute inset-0">
+          {/* Mobile image */}
           <img
-            src="/assets/blog.svg" // replace with your background
+            src="/assets/Mobile/product-banner.png"
             alt="Background"
-            className="w-full h-full object-cover"
+            className="md:hidden "
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#5c1c2e]/90 to-black/90"></div>
+          {/* Desktop image */}
+          <img
+            src="/assets/Product/banner.jpeg"
+            alt="Background"
+            className="hidden md:block w-full h-full object-contain"
+          />
+          <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-[#5c1c2e]/80 to-transparent"></div>
         </div>
 
         {/* Foreground (all visible content) */}
         <div className="relative z-10">
           {/* Main content */}
-          <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-6 py-12 md:py-20">
+          <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl md:mx-[4vw] px-6 py-12 md:py-20">
             {/* Left text */}
-            <div className="max-w-xl text-center md:text-left">
+            <div className="max-w-xl text-center md:text-left ">
               <h1 className="text-3xl md:text-5xl font-bold text-white">
                 {category.name}
               </h1>
-              <p className="mt-4 text-lg md:text-xl text-gray-200">
+              <p className="hidden md:block mt-4 text-lg md:text-xl text-gray-200">
                 {category.description &&
                   category.description.split("/")[0].trim()}
                 {category.description?.includes("/") && (
@@ -89,7 +96,7 @@ function Banner({ category }: { category: CategoryType }) {
         </div>
       </section>
       {/* Bottom strip */}
-      <div className="bg-red-600 text-center px-4 py-3">
+      <div className="bg-red-600 md:text-center px-4 py-3">
         <p className="text-sm md:text-base font-medium text-white">
           <span className="font-semibold">RED SEAL QUALITY</span>: Every product
           is tested, certified, and stamped with our Red Seal Quality promise —
@@ -203,7 +210,7 @@ export default function CategoryProductsPage() {
   const breadcrumbs = buildBreadcrumbs();
 
   return (
-    <main className="bg-gray-50 pb-20">
+    <main className="bg-gray-50 pb-20 mt-20">
       <Banner category={category} />
       <div className="container mx-auto px-4 pt-4">
         <Breadcrumb items={breadcrumbs} />

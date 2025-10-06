@@ -5,10 +5,23 @@ import React from "react";
 function page() {
   return (
     <div className="min-h-screen bg-white mt-20">
+
+        <div className="h-full w-full">
+          <img
+            src="/assets/About/about-banner.png"
+            alt="Background"
+            className="w-full h-full"
+          />
+        </div>
+
+
+
       {/* Header Section */}
       <section className="relative bg-white py-6 sm:py-10 overflow-hidden">
         <div className="relative container mx-auto max-w px-4 flex flex-col items-center text-center z-10">
-          <Heading className="text-lg">The Reliability Your Irrigation System Needs</Heading>
+          <Heading className="">
+            The Reliability Your Irrigation System Needs
+          </Heading>
           <p className="text-lg md:text-2xl text-gray-700 leading-relaxed">
             Founded in 2023, Polygen brings precision and reliability to
             irrigation systems through a curated range of essential products —
@@ -23,7 +36,7 @@ function page() {
       {/* Red Seal Quality Section */}
       <section className="relative bg-white py-6 sm:py-10 overflow-hidden">
         <div className="relative container mx-auto max-w px-4 flex flex-col items-center text-center z-10">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-[#de1448] mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#de1448] mb-6">
             RED SEAL QUALITY
           </h2>
 
@@ -114,7 +127,7 @@ function page() {
       </section>
 
       {/* Quality Priority Section with Dark Background */}
-      <section className="relative bg-gradient-to-r from-red-900 via-red-800 to-black py-16 overflow-hidden">
+      <section className="relative py-16 overflow-hidden">
         <div className="relative container mx-auto max-w px-4 z-10">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="text-white text-center lg:text-left">
@@ -125,17 +138,16 @@ function page() {
                 Priority
               </h2>
             </div>
-
-            {/* Product Image */}
-            <div className="w-96 h-64 relative flex items-center justify-center">
-              <Image
-                src="/assets/About/quality-priority.png"
-                alt="Quality Priority - Cable/Wire Product"
-                fill
-                className="object-contain"
-              />
-            </div>
           </div>
+        </div>
+        {/* Product Image */}
+        <div className="w-full h-full absolute inset-0 flex items-center justify-center">
+          <Image
+            src="/assets/About/mid-banner-about-us.jpeg"
+            alt="Quality Priority - Cable/Wire Product"
+            fill
+            className="w-full h-full "
+          />
         </div>
       </section>
 
@@ -154,43 +166,43 @@ function page() {
           <div className="flex justify-center items-center gap-8 flex-wrap">
             {/* Polygen Logo 1 */}
             <div className="w-12 h-10 md:w-36 md:h-20 relative">
-            <Image
-              src="/assets/logo.svg"
-              alt="Polygen Logo"
-              fill
-              className="object-contain"
+              <Image
+                src="/assets/logo.svg"
+                alt="Polygen Logo"
+                fill
+                className="object-contain"
               />
-              </div>
+            </div>
 
             {/* Polygen Logo 2 */}
             <div className="w-12 h-10 md:w-36 md:h-20 relative">
-            <Image
-              src="/assets/logo.svg"
-              alt="Polygen Logo"
-              fill
-              className="object-contain"
+              <Image
+                src="/assets/logo.svg"
+                alt="Polygen Logo"
+                fill
+                className="object-contain"
               />
-              </div>
+            </div>
 
             {/* Yogyata Logo 1 */}
             <div className="w-12 h-10 md:w-36 md:h-20 relative">
-            <Image
-              src="/assets/About/yogyata.png"
-              alt="Yogyata Logo"
-              fill
-              className="object-contain"
+              <Image
+                src="/assets/About/yogyata.png"
+                alt="Yogyata Logo"
+                fill
+                className="object-contain"
               />
-              </div>
+            </div>
 
             {/* Yogyata Logo 2 */}
             <div className="w-12 h-10 md:w-36 md:h-20 relative">
-            <Image
-              src="/assets/About/yogyata.png"
-              alt="Yogyata Logo"
-              fill
-              className="object-contain"
+              <Image
+                src="/assets/About/yogyata.png"
+                alt="Yogyata Logo"
+                fill
+                className="object-contain"
               />
-              </div>
+            </div>
           </div>
         </div>
       </section>
