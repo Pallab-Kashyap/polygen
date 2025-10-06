@@ -220,7 +220,7 @@ export default function Header() {
             </li>
             <li>
               <Link
-                href="#about"
+                href="/about"
                 onClick={handleNavigate}
                 className="block py-3 text-lg font-semibold hover:text-[#de1448]"
               >

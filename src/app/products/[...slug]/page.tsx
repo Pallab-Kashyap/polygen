@@ -65,9 +65,9 @@ function Banner({ category }: { category: CategoryType }) {
         {/* Foreground (all visible content) */}
         <div className="relative z-10">
           {/* Main content */}
-          <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl md:mx-[4vw] px-6 py-12 md:py-20">
+          <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl md:mx-[4vw] px-6 pt-32 md:py-20">
             {/* Left text */}
-            <div className="max-w-xl text-center md:text-left ">
+            <div className="max-w-xl text-center md:text-left mt-auto md:mt-0 bg-black/50 md:bg-transparent p-4 md:p-0 rounded-lg md:rounded-none w-full md:w-auto">
               <h1 className="text-3xl md:text-5xl font-bold text-white">
                 {category.name}
               </h1>

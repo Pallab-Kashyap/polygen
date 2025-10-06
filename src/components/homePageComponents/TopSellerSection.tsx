@@ -28,15 +28,14 @@ const topSellersData = [
 
 const TopSellers: React.FC = () => {
   return (
-    <section className="bg-[#F2F1F2] py-20 sm:py-20">
+    <section className="bg-[#F2F1F2] py-10 sm:py-20">
       <div className="container mx-auto  px-4">
         {/* Section Heading */}
 
         <Heading>Our Top Sellers</Heading>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {/* <div className="hide-scrollbar flex overflow-x-scroll md:overflow-x-visible sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"> */}
+        <div className="hide-scrollbar flex overflow-x-auto gap-4 pb-3 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-8 md:overflow-visible md:pb-0">
           {topSellersData.map((product) => (
             <ProductCard key={product.name} product={product} />
           ))}

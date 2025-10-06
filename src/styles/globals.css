@@ -32,5 +32,5 @@ button {
 
 
 .hide-scrollbar::-webkit-scrollbar { display: none; } /* Chrome, Safari */
-.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; } /* IE/Firefox */
+
 

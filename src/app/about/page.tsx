@@ -10,7 +10,7 @@ function page() {
           <img
             src="/assets/About/about-banner.png"
             alt="Background"
-            className="w-full h-full"
+            className="w-full h-[20vh] md:h-full"
           />
         </div>
 
@@ -129,12 +129,12 @@ function page() {
       {/* Quality Priority Section with Dark Background */}
       <section className="relative py-16 overflow-hidden">
         <div className="relative container mx-auto max-w px-4 z-10">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-            <div className="text-white text-center lg:text-left">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-2">
+          <div className="flex flex-col lg:flex-row mx-[4vw] md:mx-auto md:items-center justify-between gap-8">
+            <div className="text-white text-left md:text-center lg:text-left">
+              <h2 className="text-xl md:text-5xl lg:text-6xl font-black mb-2">
                 Quality is No.1
               </h2>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black">
+              <h2 className="text-xl md:text-5xl lg:text-6xl font-black">
                 Priority
               </h2>
             </div>
