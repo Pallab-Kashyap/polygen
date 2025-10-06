@@ -27,7 +27,12 @@ export default function AdminLogin() {
 
       if (res.ok) {
         console.log("Login successful, redirecting...");
-        router.push("/admin/products");
+
+        // Small delay to ensure cookie is set before navigation
+        setTimeout(() => {
+          // Force a page reload to ensure middleware picks up the new cookie
+          window.location.href = "/admin/products";
+        }, 100);
       } else {
         console.log("Login failed with status:", res.status);
         let errorMessage = "Login failed. Please check your credentials.";

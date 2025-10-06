@@ -102,6 +102,23 @@ export default function AdminLayoutClient({
           <nav className="space-y-2 flex flex-col">
             <NavLink href="/admin/products" label="Products" />
             <NavLink href="/admin/categories" label="Categories" />
+
+            {/* Logout Button */}
+            <button
+              onClick={async () => {
+                try {
+                  await fetch("/api/admin/logout", { method: "POST" });
+                  window.location.href = "/admin/login";
+                } catch (error) {
+                  console.error("Logout failed:", error);
+                  // Force logout even if API fails
+                  window.location.href = "/admin/login";
+                }
+              }}
+              className="w-full text-left px-4 py-2.5 rounded-lg transition text-red-600 hover:bg-red-50 border-t border-gray-200 mt-4 pt-4"
+            >
+              Logout
+            </button>
           </nav>
         </aside>
 
