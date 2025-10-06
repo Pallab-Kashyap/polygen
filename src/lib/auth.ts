@@ -10,7 +10,15 @@ if (!JWT_SECRET) {
 }
 
 export function createAdminToken(payload: { adminId: string }) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: "10d" });
+  try {
+    console.log("Creating JWT token for admin:", payload.adminId);
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "10d" });
+    console.log("JWT token created successfully");
+    return token;
+  } catch (error) {
+    console.error("Failed to create JWT token:", error);
+    throw error;
+  }
 }
 
 export async function verifyAdminToken(token: string) {
@@ -24,13 +32,19 @@ export async function verifyAdminToken(token: string) {
 }
 
 export function setAuthCookie(token: string) {
-  return serialize("admin_token", token, {
+  const isProduction = process.env.NODE_ENV === "production";
+  console.log("Setting auth cookie, production mode:", isProduction);
+
+  const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: "lax" as const,
     path: "/",
     maxAge: 10 * 24 * 60 * 60, // 10 days in seconds
-  });
+  };
+
+  console.log("Cookie options:", cookieOptions);
+  return serialize("admin_token", token, cookieOptions);
 }
 
 export function clearAuthCookie() {

@@ -249,7 +249,7 @@ export default function ProductsPage() {
           {/* Desktop Table View */}
           <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-sm text-left text-gray-500">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-300">
                 <tr>
                   <th scope="col" className="px-6 py-3">
                     Name

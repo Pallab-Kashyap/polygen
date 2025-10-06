@@ -15,20 +15,41 @@ export default function AdminLogin() {
     setIsLoading(true);
 
     try {
+      console.log("Starting login request...");
       const res = await fetch("/api/admin/login", {
         method: "POST",
         body: JSON.stringify({ username, password }),
         headers: { "Content-Type": "application/json" },
       });
 
+      console.log("Response status:", res.status);
+      console.log("Response ok:", res.ok);
+
       if (res.ok) {
+        console.log("Login successful, redirecting...");
         router.push("/admin/products");
       } else {
-        const json = await res.json();
-        setErr(json.error || "Login failed. Please check your credentials.");
+        console.log("Login failed with status:", res.status);
+        let errorMessage = "Login failed. Please check your credentials.";
+
+        try {
+          const json = await res.json();
+          errorMessage = json.error || errorMessage;
+          console.log("Error response:", json);
+        } catch (jsonError) {
+          console.error("Failed to parse error response:", jsonError);
+          errorMessage = `Login failed with status ${res.status}`;
+        }
+
+        setErr(errorMessage);
       }
     } catch (error) {
-      setErr("An unexpected error occurred. Please try again.");
+      console.error("Login request failed:", error);
+      setErr(
+        `Network error: ${
+          error instanceof Error ? error.message : "Unknown error occurred"
+        }`
+      );
     } finally {
       setIsLoading(false);
     }
