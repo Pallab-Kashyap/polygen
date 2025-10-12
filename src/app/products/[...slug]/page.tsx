@@ -6,6 +6,7 @@ import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import Breadcrumb from "@/components/Breadcrumb";
+import Container from "@/components/shared/Container";
 import { useApi } from "@/hooks/useApi";
 import { productService } from "@/services/productService";
 import { categoryService } from "@/services/categoryService";
@@ -17,22 +18,33 @@ import Heading from "@/components/shared/Heading";
 // Reusable Product Card Component
 const ProductCard: React.FC<{ product: ProductType }> = ({ product }) => {
   return (
-    <Link href={`/products/id/${product._id}`} className="block group">
-      <div className="bg-white rounded-2xl border border-gray-200/80 p-2 shadow-md overflow-hidden space-y-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-        <div className="flex justify-center">
+    <Link href={`/products/id/${product._id}`} className="block group h-full">
+      <div className="bg-white rounded-2xl border border-gray-200/80 p-4 shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 h-full flex flex-col">
+        {/* Image container with fixed aspect ratio */}
+        <div className="relative w-full aspect-square mb-4 overflow-hidden rounded-lg bg-gray-50">
           <Image
             src={product.images?.[0] ?? "/assets/product.svg"}
             alt={product.name ?? "Product image"}
-            width={350}
-            height={300}
-            className="h-[300px] w-[350px] object-cover rounded-lg drop-shadow-lg transition-transform duration-300 group-hover:scale-105"
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
           />
         </div>
-        <div className="">
-          <h3 className="text-2xl font-bold text-gray-900">{product.name}</h3>
-          <div className="text-right mt-4">
-            <span className="text-sm text-gray-500 group-hover:text-[#de1448] transition-colors">
-              Explore to upgrade <ChevronRight className="inline h-4 w-4" />
+
+        {/* Content area - grows to fill space */}
+        <div className="flex flex-col flex-1">
+          {/* Product name with 2-line truncation */}
+          <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 line-clamp-2 min-h-[3.5rem]">
+            {product.name}
+          </h3>
+
+          {/* Spacer to push button to bottom */}
+          <div className="flex-1"></div>
+
+          {/* Explore link at bottom */}
+          <div className="text-right">
+            <span className="text-sm text-gray-500 group-hover:text-[#de1448] transition-colors inline-flex items-center">
+              Explore to upgrade <ChevronRight className="ml-1 h-4 w-4" />
             </span>
           </div>
         </div>
@@ -65,7 +77,7 @@ function Banner({ category }: { category: CategoryType }) {
         {/* Foreground (all visible content) */}
         <div className="relative z-10">
           {/* Main content */}
-          <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl md:mx-[4vw] px-6 pt-32 md:py-20">
+          <Container className="relative flex flex-col md:flex-row items-center justify-between pt-32 md:py-20">
             {/* Left text */}
             <div className="max-w-xl text-center md:text-left mt-auto md:mt-0 bg-black/50 md:bg-transparent p-4 md:p-0 rounded-lg md:rounded-none w-full md:w-auto">
               <h1 className="text-3xl md:text-5xl font-bold text-white">
@@ -84,7 +96,7 @@ function Banner({ category }: { category: CategoryType }) {
             </div>
 
             {/* Red Seal Badge */}
-            <div className="absolute hidden md:block md:top-20 md:right-16 h-[80px] w-[80px] md:h-[120px] md:w-[120px] transform -translate-y-1/2 z-20">
+            <div className="absolute hidden md:block md:top-20 right-0 h-[80px] w-[80px] md:h-[120px] md:w-[120px] transform -translate-y-1/2 z-20">
               <Image
                 src="/assets/redseal.svg"
                 alt="Red Seal"
@@ -92,16 +104,19 @@ function Banner({ category }: { category: CategoryType }) {
                 className="object-contain"
               />
             </div>
-          </div>
+          </Container>
         </div>
       </section>
-      {/* Bottom strip */}
-      <div className="bg-red-600 md:text-center px-4 py-3">
-        <p className="text-sm md:text-base font-medium text-white">
-          <span className="font-semibold">RED SEAL QUALITY</span>: Every product
-          is tested, certified, and stamped with our Red Seal Quality promise —
-          built to last through seasons, fields, and every challenge.
-        </p>
+      {/* Bottom strip - Full width background with constrained text */}
+      <div className="bg-red-600 py-3">
+        <Container>
+          <p className="text-sm md:text-base font-medium text-white md:text-cente">
+            <span className="font-semibold">RED SEAL QUALITY</span>: Every
+            product is tested, certified, and stamped with our Red Seal Quality
+            promise — built to last through seasons, fields, and every
+            challenge.
+          </p>
+        </Container>
       </div>
     </>
   );
@@ -212,7 +227,7 @@ export default function CategoryProductsPage() {
   return (
     <main className="bg-gray-50 pb-20 mt-20">
       <Banner category={category} />
-      <div className="container mx-auto px-4 pt-4">
+      <Container className="pt-4">
         <Breadcrumb items={breadcrumbs} />
 
         <div className="text-center mb-16">
@@ -230,13 +245,13 @@ export default function CategoryProductsPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
             {products.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
           </div>
         )}
-      </div>
+      </Container>
     </main>
   );
 }

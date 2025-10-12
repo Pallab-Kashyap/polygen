@@ -4,29 +4,37 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, Menu, X } from "lucide-react";
 import CategoriesDropdown from "./CategoriesDropdown";
+import Container from "./shared/Container";
 import React, { useEffect, useState } from "react";
 import { categoryService } from "@/services/categoryService";
 import { usePathname } from "next/navigation";
+import cachedCategories from "@/data/categories.json";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>(cachedCategories);
   const [catsOpen, setCatsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isBlackHeader, setIsBlackHeader] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
-    console.log("useEFfedce");
-    // load categories only when mobile menu opens to avoid unnecessary requests
+    // Load categories from cache immediately, then update with fresh data
     if (!menuOpen) return;
+
+    // If cached categories are empty, we already have them from import
+    if (categories.length === 0) {
+      setCategories(cachedCategories);
+    }
+
+    // Fetch fresh categories in background to update cache
     (async () => {
       try {
         const data = await categoryService.getCategories();
-        console.log(data);
         setCategories(data || []);
       } catch (e) {
         console.error("Failed to load categories for mobile menu", e);
-        setCategories([]);
+        // Keep cached categories on error
       }
     })();
   }, [menuOpen]);
@@ -36,12 +44,20 @@ export default function Header() {
     // If not on home page, always show white header
     if (pathname !== "/") {
       setIsScrolled(true);
+      setIsBlackHeader(false);
       return;
     }
 
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       const windowHeight = window.innerHeight;
+
+      // First scroll: turn black (after scrolling a bit, e.g., 50px)
+      if (scrollPosition > 50) {
+        setIsBlackHeader(true);
+      } else {
+        setIsBlackHeader(false);
+      }
 
       // Try to find the About section element
       const aboutSection =
@@ -51,10 +67,10 @@ export default function Header() {
 
       if (aboutSection instanceof HTMLElement) {
         const aboutTop = aboutSection.offsetTop;
-        // Change header when About section is near the top (within 100px)
+        // Change header to white when About section is near the top (within 100px)
         setIsScrolled(scrollPosition >= aboutTop - 100);
       } else {
-        // Fallback: change when scrolled past full viewport height
+        // Fallback: change to white when scrolled past full viewport height
         setIsScrolled(scrollPosition >= windowHeight);
       }
     };
@@ -100,83 +116,91 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 w-full flex items-center justify-between px-2 md:px-10 py-4 z-40 transition-all duration-300 shadow-md ${
+      className={`fixed top-0 w-full z-40 transition-all duration-300 shadow-md ${
         isScrolled
           ? "bg-white text-black bg-opacity-100"
+          : isBlackHeader
+          ? "bg-black text-white bg-opacity-95"
           : "bg-transparent text-white bg-opacity-95"
       }`}
     >
-      <div className="flex items-center gap-2">
-        <Link href="/" onClick={() => setMenuOpen(false)}>
-          <Image
-            src={isScrolled ? "/assets/logo.svg" : "/assets/logo-white.svg"}
-            alt="Polygen Logo"
-            width={150}
-            height={40}
-          />
+      <Container className="flex items-center justify-between py-4">
+        <div className="flex items-center gap-2">
+          <Link href="/" onClick={() => setMenuOpen(false)}>
+            <Image
+              src={
+                isScrolled
+                  ? "/assets/logo.svg"
+                  : isBlackHeader
+                  ? "/assets/logo-white.svg"
+                  : "/assets/logo-white.svg"
+              }
+              alt="Polygen Logo"
+              width={150}
+              height={40}
+            />
+          </Link>
+        </div>
+
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center gap-10 text-lg font-semibold">
+          <div className="group relative">
+            <Link href="/" className="hover:text-[#de1448] transition-colors">
+              Home
+            </Link>
+            <span className="absolute left-0 -bottom-1 h-[2px] w-0 group-hover:w-full bg-[#de1448] transition-all duration-300"></span>
+          </div>
+          <div className="group relative">
+            <Link
+              href="/about"
+              className="hover:text-[#de1448] transition-colors"
+            >
+              About Us
+            </Link>
+            <span className="absolute left-0 -bottom-1 h-[2px] w-0 group-hover:w-full bg-[#de1448] transition-all duration-300"></span>
+          </div>
+
+          {/* Products Dropdown */}
+          <div className="group relative">
+            <Link
+              href="/products"
+              className="hover:text-[#de1448] transition-colors flex items-center"
+            >
+              Products <ChevronDown className="inline ml-1 h-5 w-5" />
+            </Link>
+            <span className="absolute left-0 -bottom-1 h-[2px] w-0 group-hover:w-full bg-[#de1448] transition-all duration-300"></span>
+
+            {/* Dropdown Panel */}
+            <CategoriesDropdown />
+          </div>
+
+          <div className="group relative">
+            <button className="hover:text-[#de1448] transition-colors flex items-center">
+              Brands <ChevronDown className="inline ml-1 h-5 w-5" />
+            </button>
+            <span className="absolute left-0 -bottom-1 h-[2px] w-0 group-hover:w-full bg-[#de1448] transition-all duration-300"></span>
+          </div>
+        </nav>
+
+        <Link
+          href="/contact"
+          className="hidden md:inline-block bg-[#de1448] text-white px-6 py-2.5 rounded-lg hover:bg-red-700 transition-colors text-lg font-semibold"
+        >
+          Contact us
         </Link>
-      </div>
 
-      {/* Desktop nav */}
-      <nav className="hidden md:flex items-center gap-10 text-lg font-semibold">
-        <div className="group relative">
-          <Link href="/" className="hover:text-[#de1448] transition-colors">
-            Home
-          </Link>
-          <span className="absolute left-0 -bottom-1 h-[2px] w-0 group-hover:w-full bg-[#de1448] transition-all duration-300"></span>
-        </div>
-        <div className="group relative">
-          <Link
-            href="/about"
-            className="hover:text-[#de1448] transition-colors"
-          >
-            About Us
-          </Link>
-          <span className="absolute left-0 -bottom-1 h-[2px] w-0 group-hover:w-full bg-[#de1448] transition-all duration-300"></span>
-        </div>
-
-        {/* Products Dropdown */}
-        <div className="group relative">
-          <Link
-            href="/products"
-            className="hover:text-[#de1448] transition-colors flex items-center"
-          >
-            Products <ChevronDown className="inline ml-1 h-5 w-5" />
-          </Link>
-          <span className="absolute left-0 -bottom-1 h-[2px] w-0 group-hover:w-full bg-[#de1448] transition-all duration-300"></span>
-
-          {/* Dropdown Panel */}
-          <CategoriesDropdown />
-        </div>
-
-        <div className="group relative">
-          <button className="hover:text-[#de1448] transition-colors flex items-center">
-            Brands <ChevronDown className="inline ml-1 h-5 w-5" />
-          </button>
-          <span className="absolute left-0 -bottom-1 h-[2px] w-0 group-hover:w-full bg-[#de1448] transition-all duration-300"></span>
-        </div>
-      </nav>
-
-      <Link
-        href="/contact"
-        className="hidden md:inline-block bg-[#de1448] text-white px-6 py-2.5 rounded-lg hover:bg-red-700 transition-colors text-lg font-semibold"
-      >
-        Contact us
-      </Link>
-
-      {/* Mobile menu button */}
-      <button
-        aria-label={menuOpen ? "Close menu" : "Open menu"}
-        aria-expanded={menuOpen}
-        onClick={() => setMenuOpen((s) => !s)}
-        className={`md:hidden ml-4 p-2 rounded-md transition-colors ${
-          isScrolled
-            ? "text-black"
-            : " text-white"
-        }`}
-      >
-        {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-      </button>
+        {/* Mobile menu button */}
+        <button
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((s) => !s)}
+          className={`md:hidden ml-4 p-2 rounded-md transition-colors ${
+            isScrolled ? "text-black" : "text-white"
+          }`}
+        >
+          {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+      </Container>
 
       {/* Mobile menu overlay */}
       <div

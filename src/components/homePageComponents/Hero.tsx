@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Container from "../shared/Container";
 
 const videos = [
   "assets/Laptop/Hero_Section_Video/video1.mp4",
@@ -63,35 +64,42 @@ export default function Hero() {
       />
 
       {/* Content */}
-      <div className="relative z-20 md:h-full  flex  md:items-center px-6 md:px-20 order-1 ">
-        <div className="w-full  space-y-8 pt-20">
-          <h1 className="text-4xl md:text-7xl font-bold">Designed For You</h1>
-          <div>
-            <p className="text-sm md:text-2xl max-w-[40rem] whitespace-pre-wrap md:whitespace-normal">
-              Step into the world of innovative electrical equipment, designed
-              to explore new possibilities
-            </p>
-            {/* <p className="md:text-2xl inline">
+      <div className="relative z-20 md:h-full flex md:items-center order-1">
+        <Container className="relative w-full h-full flex items-center pt-20">
+          <div className="relative w-full space-y-8 ">
+            <h1 className="text-4xl md:text-7xl font-bold">Designed For You</h1>
+            <div>
+              <p className="text-sm md:text-2xl max-w-[40rem] whitespace-pre-wrap md:whitespace-normal">
+                Step into the world of innovative electrical equipment, designed
+                to explore new possibilities
+              </p>
+              {/* <p className="md:text-2xl inline">
               designed toexplore new possibilities
             </p> */}
-          </div>
-          <button className="w-full md:w-max bg-white text-xl md:text-2xl text-black  px-4 md:px-8 py-3 md:py-5 rounded-2xl font-medium hover:bg-red-700 hover:text-white transition-all duration-500  cursor-pointer">
-            Explore to upgrade
-          </button>
-        </div>
-        <div className=" absolute z-20 bottom-16">
-          <p className=" hidden md:block font-bold text-lg">WIRES & CABLES</p>
-        </div>
-      </div>
+            </div>
+            <button className="w-full md:w-max bg-white text-xl md:text-2xl text-black  px-4 md:px-8 py-3 md:py-5 rounded-2xl font-medium hover:bg-red-700 hover:text-white transition-all duration-500  cursor-pointer">
+              Explore to upgrade
+            </button>
 
-      {/* Red Seal Badge */}
-      <div className="absolute bottom-56 right-4 md:top-56 md:right-16 h-[80px] w-[80px] md:h-[120px] md:w-[120px] transform -translate-y-1/2 z-20">
-        <Image
-          src="/assets/redseal.svg"
-          alt="Red Seal"
-          fill
-          className="object-contain"
-        />
+
+            {/* Red Seal Badge - positioned within container margins */}
+            <div className="absolute botto-56 -right-3 md:-top-[16vh] h-[80px] w-[80px] md:h-[140px] md:w-[140px] transform md:-translate-y-1/2">
+              <Image
+                src="/assets/redseal.svg"
+                alt="Red Seal"
+                fill
+                className="object-contain"
+                />
+            </div>
+          </div>
+
+      {/* WIRES & CABLES text - positioned within container margins */}
+          <div className="absolute bottom-4">
+            <p className="hidden md:block font-bold text-lg text-white">
+              WIRES & CABLES
+            </p>
+          </div>
+        </Container>
       </div>
     </section>
   );

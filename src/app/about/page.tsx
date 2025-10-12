@@ -1,24 +1,22 @@
 import Heading from "@/components/shared/Heading";
+import Container from "@/components/shared/Container";
 import Image from "next/image";
 import React from "react";
 
 function page() {
   return (
     <div className="min-h-screen bg-white mt-20">
-
-        <div className="h-full w-full">
-          <img
-            src="/assets/About/about-banner.png"
-            alt="Background"
-            className="w-full h-[20vh] md:h-full"
-          />
-        </div>
-
-
+      <div className="h-full w-full">
+        <img
+          src="/assets/About/about-banner.png"
+          alt="Background"
+          className="w-full h-[20vh] md:h-full"
+        />
+      </div>
 
       {/* Header Section */}
       <section className="relative bg-white py-6 sm:py-10 overflow-hidden">
-        <div className="relative container mx-auto max-w px-4 flex flex-col items-center text-center z-10">
+        <Container className="relative flex flex-col items-center text-center z-10">
           <Heading className="">
             The Reliability Your Irrigation System Needs
           </Heading>
@@ -30,12 +28,12 @@ function page() {
             ammeters, and voltmeters, all driven by a simple vision: to deliver
             quality that keeps farms running and fields thriving.
           </p>
-        </div>
+        </Container>
       </section>
 
       {/* Red Seal Quality Section */}
       <section className="relative bg-white py-6 sm:py-10 overflow-hidden">
-        <div className="relative container mx-auto max-w px-4 flex flex-col items-center text-center z-10">
+        <Container className="relative flex flex-col items-center text-center z-10">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#de1448] mb-6">
             RED SEAL QUALITY
           </h2>
@@ -70,13 +68,13 @@ function page() {
               />
             </div>
           </div>
-        </div>
+        </Container>
         {/* <div className="absolute -bottom-40 -right-40 h-[60vh] w-[68vh] shadow-red-500 sh blur-3xl opacity-20 bg-red-500 rounded-full"></div> */}
       </section>
 
       {/* Certified Section */}
       <section className="relative  py-6 sm:py-10 overflow-hidden">
-        <div className="relative container mx-auto max-w px-4 flex flex-col items-center text-center z-10">
+        <Container className="relative flex flex-col items-center text-center z-10">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6">
             Certified for a Higher Standard
           </h2>
@@ -122,13 +120,13 @@ function page() {
               />
             </div>
           </div>
-        </div>
+        </Container>
         <div className="absolute -bottom-40 -left-40 h-[60vh] w-[68vh] shadow-red-500 sh blur-3xl opacity-20 bg-red-500 rounded-full"></div>
       </section>
 
       {/* Quality Priority Section with Dark Background */}
       <section className="relative py-16 overflow-hidden">
-        <div className="relative container mx-auto max-w px-4 z-10">
+        <Container className="relative z-10">
           <div className="flex flex-col lg:flex-row mx-[4vw] md:mx-auto md:items-center justify-between gap-8">
             <div className="text-white text-left md:text-center lg:text-left">
               <h2 className="text-xl md:text-5xl lg:text-6xl font-black mb-2">
@@ -139,7 +137,7 @@ function page() {
               </h2>
             </div>
           </div>
-        </div>
+        </Container>
         {/* Product Image */}
         <div className="w-full h-full absolute inset-0 flex items-center justify-center">
           <Image
@@ -153,7 +151,7 @@ function page() {
 
       {/* Our Family of Brands Section */}
       <section className="relative bg-white py-10 sm:py-24 overflow-hidden">
-        <div className="relative container mx-auto max-w px-4 flex flex-col items-center text-center z-10">
+        <Container className="relative flex flex-col items-center text-center z-10">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-4">
             Our Family of Brands
           </h2>
@@ -204,7 +202,7 @@ function page() {
               />
             </div>
           </div>
-        </div>
+        </Container>
       </section>
     </div>
   );

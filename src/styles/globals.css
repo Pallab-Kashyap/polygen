@@ -30,7 +30,31 @@ button {
   cursor: pointer;
 }
 
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+} /* Chrome, Safari */
 
-.hide-scrollbar::-webkit-scrollbar { display: none; } /* Chrome, Safari */
+/* Custom scrollbar styles for product details */
+.product-details-scroll::-webkit-scrollbar {
+  width: 6px;
+}
 
+.product-details-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
 
+.product-details-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.product-details-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Firefox scrollbar */
+.product-details-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f1f1;
+}

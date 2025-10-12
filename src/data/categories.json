@@ -1,0 +1,248 @@
+[
+  {
+    "_id": "68a80015d54c7da9fee4476f",
+    "slug": "starter-and-spares",
+    "name": "Starter & Spares",
+    "parentId": null,
+    "createdAt": "2025-08-22T05:28:53.586Z",
+    "updatedAt": "2025-08-22T05:28:53.586Z",
+    "__v": 0,
+    "children": [
+      {
+        "_id": "68a80016d54c7da9fee44773",
+        "slug": "single-phase-starter",
+        "name": "Single Phase Starter",
+        "parentId": "68a80015d54c7da9fee4476f",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:54.676Z",
+        "updatedAt": "2025-08-22T05:28:54.676Z"
+      },
+      {
+        "_id": "68a80016d54c7da9fee44778",
+        "slug": "no-volt-coil",
+        "name": "No Volt Coil",
+        "parentId": "68a80015d54c7da9fee4476f",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:54.676Z",
+        "updatedAt": "2025-08-22T05:28:54.676Z"
+      },
+      {
+        "_id": "68a80016d54c7da9fee44772",
+        "slug": "dol-motor-starter",
+        "name": "DOL Motor Starter",
+        "parentId": "68a80015d54c7da9fee4476f",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:54.676Z",
+        "updatedAt": "2025-08-22T05:28:54.676Z"
+      },
+      {
+        "_id": "68a80016d54c7da9fee44779",
+        "slug": "4-Pati",
+        "name": "4 Pati",
+        "parentId": "68a80015d54c7da9fee4476f",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:54.676Z",
+        "updatedAt": "2025-08-22T05:28:54.676Z"
+      },
+      {
+        "_id": "68a80016d54c7da9fee44775",
+        "slug": "contractor",
+        "name": "Contractor",
+        "parentId": "68a80015d54c7da9fee4476f",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:54.676Z",
+        "updatedAt": "2025-08-22T05:28:54.676Z"
+      },
+      {
+        "_id": "68a80016d54c7da9fee44774",
+        "slug": "contractor-with-relay",
+        "name": "Contractor with Relay",
+        "parentId": "68a80015d54c7da9fee4476f",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:54.676Z",
+        "updatedAt": "2025-08-22T05:28:54.676Z"
+      },
+      {
+        "_id": "68a80016d54c7da9fee44777",
+        "slug": "spare-contact-kit",
+        "name": "Spare Contact Kit",
+        "parentId": "68a80015d54c7da9fee4476f",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:54.676Z",
+        "updatedAt": "2025-08-22T05:28:54.676Z"
+      },
+      {
+        "_id": "68a80016d54c7da9fee44776",
+        "slug": "overload-relay",
+        "name": "Overload Relay",
+        "parentId": "68a80015d54c7da9fee4476f",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:54.676Z",
+        "updatedAt": "2025-08-22T05:28:54.676Z"
+      }
+    ]
+  },
+  {
+    "_id": "68a80016d54c7da9fee4477b",
+    "slug": "wires-and-cables",
+    "name": "Wires & cables",
+    "parentId": null,
+    "createdAt": "2025-08-22T05:28:54.900Z",
+    "updatedAt": "2025-09-19T08:13:32.139Z",
+    "__v": 0,
+    "description": "Wired for trust. Built for fields. Certified by/ RED SEAL QUALITY.",
+    "children": [
+      {
+        "_id": "68a80017d54c7da9fee44780",
+        "slug": "round-flex-wires",
+        "name": "Round Flex Cables",
+        "parentId": "68a80016d54c7da9fee4477b",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:55.103Z",
+        "updatedAt": "2025-08-22T05:28:55.103Z"
+      },
+      {
+        "_id": "68a80017d54c7da9fee4477d",
+        "slug": "aluminum-service-cables",
+        "name": "Aluminum Service Cables",
+        "parentId": "68a80016d54c7da9fee4477b",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:55.103Z",
+        "updatedAt": "2025-09-19T08:13:21.465Z",
+        "description": "Wired for trust. Built for fields. Certified by/ RED SEAL QUALITY."
+      },
+      {
+        "_id": "68a80017d54c7da9fee4477e",
+        "slug": "multistrand-cables",
+        "name": "Multistrand Wires",
+        "parentId": "68a80016d54c7da9fee4477b",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:55.103Z",
+        "updatedAt": "2025-08-22T05:28:55.103Z"
+      },
+      {
+        "_id": "68a80017d54c7da9fee44781",
+        "slug": "vir-copper",
+        "name": "VIR Copper",
+        "parentId": "68a80016d54c7da9fee4477b",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:55.103Z",
+        "updatedAt": "2025-08-22T05:28:55.103Z"
+      },
+      {
+        "_id": "68a80017d54c7da9fee4477f",
+        "slug": "submersible-cables",
+        "name": "Submersible Cables",
+        "parentId": "68a80016d54c7da9fee4477b",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:55.103Z",
+        "updatedAt": "2025-08-22T05:28:55.103Z"
+      }
+    ]
+  },
+  {
+    "_id": "68a80017d54c7da9fee44783",
+    "slug": "kit-kat-fuse",
+    "name": "Kit Kat Fuse",
+    "parentId": null,
+    "createdAt": "2025-08-22T05:28:55.308Z",
+    "updatedAt": "2025-08-22T05:28:55.308Z",
+    "__v": 0,
+    "children": [
+      {
+        "_id": "68a80017d54c7da9fee44785",
+        "slug": "fuse-63a",
+        "name": "Polygen Fuse 63A",
+        "parentId": "68a80017d54c7da9fee44783",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:55.513Z",
+        "updatedAt": "2025-08-22T05:28:55.513Z"
+      },
+      {
+        "_id": "68a80017d54c7da9fee44786",
+        "slug": "brass-fuse",
+        "name": "Brass Fuse",
+        "parentId": "68a80017d54c7da9fee44783",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:55.514Z",
+        "updatedAt": "2025-08-22T05:28:55.514Z"
+      }
+    ]
+  },
+  {
+    "_id": "68a80017d54c7da9fee44788",
+    "slug": "amps-volt-meter",
+    "name": "Amps & Volt Meter",
+    "parentId": null,
+    "createdAt": "2025-08-22T05:28:55.717Z",
+    "updatedAt": "2025-08-22T05:28:55.717Z",
+    "__v": 0,
+    "children": [
+      {
+        "_id": "68a80017d54c7da9fee4478a",
+        "slug": "Analog",
+        "name": "Analog - Coming Soon",
+        "parentId": "68a80017d54c7da9fee44788",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:55.827Z",
+        "updatedAt": "2025-08-22T05:28:55.827Z"
+      },
+      {
+        "_id": "68a80017d54c7da9fee4478b",
+        "slug": "Digital",
+        "name": "Digital - Coming Soon",
+        "parentId": "68a80017d54c7da9fee44788",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:55.827Z",
+        "updatedAt": "2025-08-22T05:28:55.827Z"
+      }
+    ]
+  },
+  {
+    "_id": "68a80017d54c7da9fee4478d",
+    "slug": "mcb",
+    "name": "MCB",
+    "parentId": null,
+    "createdAt": "2025-08-22T05:28:55.892Z",
+    "updatedAt": "2025-08-22T05:28:55.892Z",
+    "__v": 0,
+    "children": [
+      {
+        "_id": "68a80017d54c7da9fee4478f",
+        "slug": "single-pole",
+        "name": "Single Pole - Coming Soon",
+        "parentId": "68a80017d54c7da9fee4478d",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:56.002Z",
+        "updatedAt": "2025-08-22T05:28:56.002Z"
+      },
+      {
+        "_id": "68a80018d54c7da9fee44790",
+        "slug": "2-Pole",
+        "name": "2 Pole - Coming Soon",
+        "parentId": "68a80017d54c7da9fee4478d",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:56.002Z",
+        "updatedAt": "2025-08-22T05:28:56.002Z"
+      },
+      {
+        "_id": "68a80018d54c7da9fee44791",
+        "slug": "3-Pole",
+        "name": "3 Pole - Coming Soon",
+        "parentId": "68a80017d54c7da9fee4478d",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:56.002Z",
+        "updatedAt": "2025-08-22T05:28:56.002Z"
+      },
+      {
+        "_id": "68a80018d54c7da9fee44792",
+        "slug": "4-pole",
+        "name": "4 Pole - Coming Soon",
+        "parentId": "68a80017d54c7da9fee4478d",
+        "__v": 0,
+        "createdAt": "2025-08-22T05:28:56.002Z",
+        "updatedAt": "2025-08-22T05:28:56.002Z"
+      }
+    ]
+  }
+]

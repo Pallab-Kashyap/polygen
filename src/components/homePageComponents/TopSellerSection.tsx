@@ -1,6 +1,7 @@
 import React from "react";
 import ProductCard from "../ProductCard"; // Import the card component
 import Heading from "../shared/Heading";
+import Container from "../shared/Container";
 
 // Sample data for the products. Replace imageUrls with your actual asset paths.
 const topSellersData = [
@@ -29,7 +30,7 @@ const topSellersData = [
 const TopSellers: React.FC = () => {
   return (
     <section className="bg-[#F2F1F2] py-10 sm:py-20">
-      <div className="container mx-auto  px-4">
+      <Container>
         {/* Section Heading */}
 
         <Heading>Our Top Sellers</Heading>
@@ -50,7 +51,7 @@ const TopSellers: React.FC = () => {
             View more products
           </a>
         </div>
-      </div>
+      </Container>
     </section>
   );
 };

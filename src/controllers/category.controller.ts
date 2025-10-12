@@ -9,6 +9,7 @@ import { errorHandler } from "@/lib/errorHandler";
 import { APIError, APIResponse } from "@/lib/ApiResponse";
 import { CategoryType } from "@/types/category";
 import { connectDB } from "@/lib/mongoose";
+import { syncCategoriesToFile } from "@/lib/syncCategories";
 
 const categorySchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -86,6 +87,10 @@ export const createCategory = asyncWrapper(async (req: NextRequest) => {
   }
 
   const category = await Category.create(parsed);
+
+  // Sync categories to JSON file for quick loading
+  await syncCategoriesToFile();
+
   return APIResponse.success(category, "Category created successfully");
 });
 
@@ -115,6 +120,9 @@ export const updateCategory = async (
     });
     if (!updated) throw APIError.notFound("Category not found");
 
+    // Sync categories to JSON file for quick loading
+    await syncCategoriesToFile();
+
     return APIResponse.success(updated, "Category updated successfully");
   } catch (error) {
     return errorHandler(error);
@@ -132,6 +140,9 @@ export const deleteCategory = async (
 
     const deleted = await Category.findByIdAndDelete(id);
     if (!deleted) throw APIError.badRequest("Category not found");
+
+    // Sync categories to JSON file for quick loading
+    await syncCategoriesToFile();
 
     return APIResponse.success(null, "Category deleted successfully");
   } catch (error) {

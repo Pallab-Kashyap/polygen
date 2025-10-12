@@ -4,20 +4,23 @@ import { categoryService } from "@/services/categoryService";
 import { CategoryType } from "@/types/category";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import cachedCategories from "@/data/categories.json";
 
 const CategoriesDropdown = () => {
-  const [categories, setCategories] = useState<CategoryType[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState<CategoryType[]>(
+    cachedCategories as any as CategoryType[]
+  );
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // Start with cached categories, then fetch fresh data
     (async () => {
       try {
-        setLoading(true);
         const categories = await categoryService.getCategories();
         setCategories(categories || []);
       } catch (error) {
         console.error("Error fetching categories:", error);
-        setCategories([]);
+        // Keep cached categories on error
       } finally {
         setLoading(false);
       }

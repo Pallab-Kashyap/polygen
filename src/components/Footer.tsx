@@ -8,6 +8,7 @@ import {
   LucideProps,
 } from "lucide-react";
 import Heading from "./shared/Heading";
+import Container from "./shared/Container";
 
 // A simple Whatsapp icon component as it's not in lucide-react by default
 const WhatsappIcon = (props: LucideProps) => (
@@ -31,12 +32,13 @@ const Footer: React.FC = () => {
   return (
     <>
       <section className="relative bg-[#F2F1F2] py-16 sm:py-20">
-        <div className="container mx-auto max-w-6xl px-4">
+        <Container className="relative">
           {/* Main Heading */}
-            <Heading>Contact Us</Heading>
+          <Heading>Contact Us</Heading>
 
           {/* Grid Layout for the main content - adjusted proportions */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 max-w-5xl mx-auto">
+
             {/* Left Column: Contact Form Card */}
             <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg h-fit">
               <h2 className="text-2xl md:text-3xl font-bold text-black mb-6">
@@ -180,21 +182,21 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Floating Red Seal Icon */}
-          <div className="absolute top-[12vh] right-4 sm:right-[8vh] lg:right-16 hidden md:block">
+          {/* Floating Red Seal Icon - positioned with consistent margins */}
+          <div className="absolute top-[10vh] right-6 hidden md:block">
             <Image
               src="/assets/redseal.svg"
               alt="Red Seal Quality"
-              width={110}
-              height={110}
+              width={80}
+              height={100}
             />
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Bottom Footer Bar */}
       <footer className="bg-[#de1448] text-white py-4">
-        <div className="container md:mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center sm:text-left">
+        <Container className="flex flex-col md:flex-row justify-between items-center text-center sm:text-left">
           <div className="mb-2 sm:mb-0">
             <Image
               src="/assets/logo-white.svg"
@@ -209,7 +211,7 @@ const Footer: React.FC = () => {
             </p>
             <p>All rights reserved by Mataji Agencies</p>
           </div>
-        </div>
+        </Container>
       </footer>
     </>
   );

@@ -1,6 +1,7 @@
 import React from "react";
 import { ChevronRight, MoveRight } from "lucide-react"; // Icon for the button
 import Heading from "../shared/Heading";
+import Container from "../shared/Container";
 
 const AboutSection: React.FC = () => {
   return (
@@ -9,9 +10,9 @@ const AboutSection: React.FC = () => {
       // Subtle gradient from a light grey to a light pink, as seen in the image
       className=" relative bg-white py-10 sm:py-24 overflow-hidden"
     >
-      <div className="relative container mx-auto max-w px-4 flex flex-col items-center text-center z-10">
+      <Container className="relative flex flex-col items-center text-center z-10">
         {/* Main Heading */}
-          <Heading>About Us</Heading>
+        <Heading>About Us</Heading>
 
         {/* Introductory Paragraph */}
         <p className="text-lg md:text-2xl text-gray-700 leading-relaxed ">
@@ -56,7 +57,7 @@ const AboutSection: React.FC = () => {
             <ChevronRight className=" transition-transform group-hover:translate-x-1" />
           </button>
         </div>
-      </div>
+      </Container>
       {/* Red Overlay */}
       {/* <div
         className="absolute z-10"

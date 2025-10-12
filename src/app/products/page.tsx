@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import Breadcrumb from "@/components/Breadcrumb";
+import Container from "@/components/shared/Container";
 import { useApi } from "@/hooks/useApi";
 import { productService } from "@/services/productService";
 import { ProductType } from "@/types/product";
@@ -63,7 +64,7 @@ export default function AllProductsPage() {
 
   return (
     <main className="bg-gray-50 pt-32 pb-20">
-      <div className="container mx-auto px-4">
+      <Container>
         <Breadcrumb items={[{ name: "All Products", link: "/products" }]} />
 
         <div className="text-center mb-16">
@@ -84,7 +85,7 @@ export default function AllProductsPage() {
             ))}
           </div>
         )}
-      </div>
+      </Container>
     </main>
   );
 }

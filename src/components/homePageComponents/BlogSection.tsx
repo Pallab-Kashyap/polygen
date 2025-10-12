@@ -1,6 +1,7 @@
 import React from "react";
 import BlogPostCard from "./BlogPostCard";
 import Heading from "../shared/Heading";
+import Container from "../shared/Container";
 
 // Sample data for the blog posts. Replace with your actual data from a CMS or API.
 const blogPostsData = [
@@ -42,9 +43,9 @@ const blogPostsData = [
 const BlogSection: React.FC = () => {
   return (
     <section className="bg-gray-50 py-20 sm:py-24">
-      <div className="container mx-auto  px-4">
+      <Container>
         {/* Section Heading */}
-          <Heading>Blogs</Heading>
+        <Heading>Blogs</Heading>
 
         {/* Blog Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -62,7 +63,7 @@ const BlogSection: React.FC = () => {
             View all posts
           </button>
         </div> */}
-      </div>
+      </Container>
     </section>
   );
 };
