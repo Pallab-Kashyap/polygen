@@ -50,7 +50,7 @@ export default function AllProductsPage() {
             <p>No products available at the moment.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
             {products.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}

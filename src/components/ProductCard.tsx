@@ -11,9 +11,9 @@ type ProductCardProps = {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <Link href={`/products/id/${product._id}`} className="block group h-full">
-      <div className="bg-white rounded-2xl border border-gray-200/80 p-4 shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 h-full flex flex-col">
+      <div className="bg-white rounded-2xl border border-gray-200/80 p-1 md:p-4 shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 h-full flex flex-col">
         {/* Image container with fixed aspect ratio */}
-        <div className="relative w-full aspect-square mb-4 overflow-hidden rounded-lg bg-gray-50">
+        <div className="relative w-full aspect-[3/4] md:aspect-square mb-2 md:mb-4 overflow-hidden rounded-lg bg-gray-50">
           <Image
             src={product.images?.[0] ?? "/assets/product.svg"}
             alt={product.name ?? "Product image"}
@@ -24,9 +24,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
 
         {/* Content area - grows to fill space */}
-        <div className="flex flex-col flex-1">
+        <div className="flex px-2 md:px-0 flex-col flex-1">
           {/* Product name with 2-line truncation */}
-          <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 line-clamp-2 min-h-[3.5rem]">
+          <h3 className="text-lg md:text-lg lg:text-xl font-bold text-gray-900 mb-2 md:mb-3 line-clamp-2 min-h-[2.5rem] md:min-h-[3.5rem]">
             {product.name}
           </h3>
 
@@ -34,9 +34,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <div className="flex-1"></div>
 
           {/* Explore link at bottom */}
-          <div className="text-right">
-            <span className="text-sm text-gray-500 group-hover:text-[#de1448] transition-colors inline-flex items-center">
-              Explore to upgrade <ChevronRight className="ml-1 h-4 w-4" />
+          <div className="md:text-right">
+            <span className="text-sm md:text-sm text-gray-500 group-hover:text-[#de1448] transition-colors inline-flex items-center whitespace-nowrap">
+              Explore to upgrade{" "}
+              <ChevronRight className="ml-1 h-3 w-3 md:h-4 md:w-4" />
             </span>
           </div>
         </div>
