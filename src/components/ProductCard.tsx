@@ -13,7 +13,7 @@ type ProductCardProps = {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     // Card container with hover effects
-    <div className="bg-white shrink-0 rounded-2xl border border-gray-200/80 shadow-xl overflow-hidden cursor-pointer">
+    <div className="bg-white shrink-0 rounded-2xl border border-gray-200/80 shadow-md md:shadow-xl overflow-hidden cursor-pointer">
       {/* Image container with a subtle gradient background */}
       <div className="w-[100%] p-4">
         <Image

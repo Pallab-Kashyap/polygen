@@ -57,7 +57,7 @@ function Banner({ category }: { category: CategoryType }) {
           <img
             src="/assets/Product/banner.jpeg"
             alt="Background"
-            className="hidden md:block w-full h-full object-contain"
+            className="hidden md:block w-full h-full object-cover"
           />
           <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-[#5c1c2e]/80 to-transparent"></div>
         </div>
