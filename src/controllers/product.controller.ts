@@ -7,10 +7,7 @@ import Product from "@/models/Product";
 import { ProductType } from "@/types/product";
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import formidable from "formidable";
 import * as XLSX from "xlsx";
-import { unlink } from "node:fs/promises";
-import validator from "validator";
 
 // Schema for a single product parameter
 const ProductParameterSchema = z.object({
@@ -213,32 +210,38 @@ export const bulkCreateProducts = async (req: NextRequest) => {
     await requireAdminFromRequest(req);
     await connectDB();
 
-    const form = formidable({
-      multiples: false,
-      keepExtensions: true,
-      maxFileSize: 5 * 1024 * 1024,
-      filter: ({ mimetype }) =>
-        mimetype === "text/csv" ||
-        mimetype ===
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-        mimetype === "application/vnd.ms-excel",
-    });
+    // Get FormData from request
+    const formData = await req.formData();
+    const file = formData.get("file") as File;
 
-    const { files }: any = await new Promise((resolve, reject) => {
-      form.parse(req as any, (err, _fields, files) => {
-        if (err) reject(err);
-        else resolve({ files });
-      });
-    });
-
-    if (!files.file) {
-      throw APIError.badRequest("No valid file uploaded");
+    if (!file) {
+      throw APIError.badRequest("No file uploaded");
     }
 
-    const filePath = files.file.filepath;
+    // Validate file type
+    const allowedTypes = [
+      "text/csv",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      throw APIError.badRequest(
+        "Invalid file type. Only CSV and Excel files are allowed."
+      );
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      throw APIError.badRequest("File size exceeds 5MB limit");
+    }
+
+    // Convert File to Buffer
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
 
     // Read and parse Excel/CSV
-    const workbook = XLSX.readFile(filePath);
+    const workbook = XLSX.read(buffer, { type: "buffer" });
     const sheetName = workbook.SheetNames[0];
     const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
@@ -247,52 +250,151 @@ export const bulkCreateProducts = async (req: NextRequest) => {
 
     sheetData.forEach((row: any, index: number) => {
       try {
+        const productData: any = {};
+
         // Sanitize all string fields
         Object.keys(row).forEach((key) => {
           if (typeof row[key] === "string") {
-            row[key] = validator.escape(row[key].trim());
+            row[key] = row[key].trim();
           }
         });
 
-        // Map 'category' field to 'categoryId' if present
-        if (row.category && !row.categoryId) {
-          row.categoryId = row.category;
-          delete row.category; // Remove the category field since we have categoryId
-        }
+        // Basic fields
+        productData.slug = row.slug;
+        productData.name = row.name;
+        productData.about = row.about;
+        productData.categoryId = row.categoryId || row.category;
+        productData.price = row.price ? parseFloat(row.price) : null;
+        productData.isTopSeller =
+          row.isTopSeller === "true" ||
+          row.isTopSeller === "1" ||
+          row.isTopSeller === true;
 
-        // Parse arrays from strings if needed
+        // Parse arrays from comma-separated strings
         if (row.applications && typeof row.applications === "string") {
-          row.applications = row.applications
+          productData.applications = row.applications
             .split(",")
             .map((s: string) => s.trim())
             .filter(Boolean);
         }
 
         if (row.images && typeof row.images === "string") {
-          row.images = row.images
+          productData.images = row.images
             .split(",")
             .map((s: string) => s.trim())
             .filter(Boolean);
         }
 
-        // Handle boolean fields
-        if (row.isTopSeller !== undefined) {
-          if (typeof row.isTopSeller === "string") {
-            row.isTopSeller =
-              row.isTopSeller.toLowerCase() === "true" ||
-              row.isTopSeller === "1";
+        // Parse Parameters (dynamic columns: Parameter Label N, Parameter Values N)
+        const parameters: any[] = [];
+        const parameterLabels = Object.keys(row).filter((key) =>
+          key.match(/^Parameter Label \d+$/)
+        );
+
+        parameterLabels.forEach((labelKey) => {
+          const num = labelKey.match(/\d+$/)?.[0];
+          const valuesKey = `Parameter Values ${num}`;
+          const label = row[labelKey];
+          const valuesStr = row[valuesKey];
+
+          if (label && valuesStr) {
+            const values = valuesStr
+              .split(",")
+              .map((v: string) => v.trim())
+              .filter(Boolean);
+            if (values.length > 0) {
+              parameters.push({ label, values });
+            }
           }
+        });
+
+        if (parameters.length > 0) {
+          productData.parameters = parameters;
+        }
+
+        // Parse Description Blocks (dynamic columns: Description Heading N, Bullet Highlight N.M, Bullet Text N.M, Description Text N)
+        const description: any[] = [];
+        const headingKeys = Object.keys(row)
+          .filter((key) => key.match(/^Description Heading \d+$/))
+          .sort();
+
+        headingKeys.forEach((headingKey) => {
+          const blockNum = headingKey.match(/\d+$/)?.[0];
+          const block: any = {};
+
+          const heading = row[headingKey];
+          const descText = row[`Description Text ${blockNum}`];
+
+          if (heading) block.heading = heading;
+          if (descText) block.text = descText;
+
+          // Find all bullet points for this block
+          const bulletKeys = Object.keys(row)
+            .filter((key) =>
+              key.match(new RegExp(`^Bullet Highlight ${blockNum}\\.\\d+$`))
+            )
+            .sort();
+
+          const bulletPoints: any[] = [];
+          bulletKeys.forEach((highlightKey) => {
+            const bulletNum = highlightKey.match(/\.(\d+)$/)?.[1];
+            const textKey = `Bullet Text ${blockNum}.${bulletNum}`;
+
+            const highlight = row[highlightKey];
+            const text = row[textKey];
+
+            if (highlight || text) {
+              bulletPoints.push({
+                ...(highlight && { highlight }),
+                ...(text && { text }),
+              });
+            }
+          });
+
+          if (bulletPoints.length > 0) {
+            block.bulletPoints = bulletPoints;
+          }
+
+          // Only add block if it has content
+          if (Object.keys(block).length > 0) {
+            description.push(block);
+          }
+        });
+
+        if (description.length > 0) {
+          productData.description = description;
+        }
+
+        // Parse Metadata (dynamic columns: Metadata Key N, Metadata Value N)
+        const metadata: Record<string, any> = {};
+        const metadataKeys = Object.keys(row)
+          .filter((key) => key.match(/^Metadata Key \d+$/))
+          .sort();
+
+        metadataKeys.forEach((keyCol) => {
+          const num = keyCol.match(/\d+$/)?.[0];
+          const valueCol = `Metadata Value ${num}`;
+          const key = row[keyCol];
+          const value = row[valueCol];
+
+          if (key && value !== undefined && value !== null && value !== "") {
+            metadata[key] = value;
+          }
+        });
+
+        if (Object.keys(metadata).length > 0) {
+          productData.metadata = metadata;
         }
 
         // Generate slug if not provided
-        if (!row.slug && row.name) {
-          row.slug = row.name
+        if (!productData.slug && productData.name) {
+          productData.slug = productData.name
             .toLowerCase()
             .replace(/\s+/g, "-")
             .replace(/[^a-z0-9-]/g, "");
         }
 
-        const parseResult = ProductSchema.safeParse(row);
+        const parseResult = ProductSchema.safeParse(productData);
         if (parseResult.success) {
           validProducts.push(parseResult.data);
         } else {
@@ -316,8 +418,6 @@ export const bulkCreateProducts = async (req: NextRequest) => {
     if (validProducts.length > 0) {
       await Product.insertMany(validProducts, { ordered: false });
     }
-
-    await unlink(filePath);
 
     return APIResponse.success({
       inserted: validProducts.length,

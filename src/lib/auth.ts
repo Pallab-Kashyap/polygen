@@ -12,7 +12,7 @@ if (!JWT_SECRET) {
 export function createAdminToken(payload: { adminId: string }) {
   try {
     console.log("Creating JWT token for admin:", payload.adminId);
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "10d" });
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "10m" });
     console.log("JWT token created successfully");
     return token;
   } catch (error) {

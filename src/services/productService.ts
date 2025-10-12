@@ -15,5 +15,5 @@ export const productService = {
     axiosInstance.put(`/products/${id}`, data),
   deleteProduct: (id: string) => axiosInstance.delete(`/products/${id}`),
   bulkCreateProducts: (formData: FormData) =>
-    axiosInstance.post("/products/bulk", formData),
+    axiosInstance.post("/products/bulk-create", formData),
 };
