@@ -131,12 +131,21 @@ export default function ProductsPage() {
         if (errors && errors.length > 0) {
           const errorMessages = errors
             .slice(0, 5)
-            .map(
-              (err: any) =>
-                `Row ${err.row !== -1 ? err.row : "N/A"}: ${
-                  err.name ? `"${err.name}" - ` : ""
-                }${err.issues.join(", ")}`
-            )
+            .map((err: any) => {
+              // Simplify error message for duplicate products
+              if (err.issues && err.issues.length > 0) {
+                const issue = err.issues[0];
+                if (issue.includes("already exists")) {
+                  return `Error: Product with name "${err.name}" already exists`;
+                }
+                if (issue.includes("duplicate slug")) {
+                  return `Error: Product with name "${err.name}" has duplicate slug`;
+                }
+                // For other errors, show simplified format
+                return `Error: ${err.name ? `"${err.name}" - ` : ""}${issue}`;
+              }
+              return `Error: ${err.name || "Unknown product"}`;
+            })
             .join("\n");
 
           const additionalErrors =
@@ -145,7 +154,7 @@ export default function ProductsPage() {
               : "";
 
           setToast({
-            message: `Upload completed with errors:\n${message}\n\nErrors:\n${errorMessages}${additionalErrors}`,
+            message: `Upload completed with errors:\n${message}\n\n${errorMessages}${additionalErrors}`,
             type: "error",
           });
         } else {

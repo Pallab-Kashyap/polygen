@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import { connectDB } from "../lib/mongoose.js";
 import mongoose from "mongoose";
-import { CategoryType } from "../types/category.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";

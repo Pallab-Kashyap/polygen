@@ -48,7 +48,7 @@ export default function AdminLayoutClient({
     if (toast.message) {
       const timer = setTimeout(() => {
         handleCloseToast();
-      }, 8000);
+      }, 10000);
       return () => clearTimeout(timer);
     }
   }, [toast.key]);
