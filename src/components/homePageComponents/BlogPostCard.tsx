@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-// Define the type for a single blog post's props
 type BlogPost = {
   id: number;
   title: string;
@@ -11,7 +10,7 @@ type BlogPost = {
   excerpt: string;
   imageUrl: string;
   tags: string[];
-  slug: string; // e.g., "/blog/the-future-of-farming"
+  slug: string;
 };
 
 type BlogPostCardProps = {
@@ -20,7 +19,6 @@ type BlogPostCardProps = {
 
 const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   return (
-    // The card uses flex-col and h-full to ensure cards in a row have equal height
     <div className="bg-white shadow-xl overflow-hidden flex flex-col h-full rounded-2xl">
       <Link href={post.slug} className="block overflow-hidden">
         <div className="p-4">
@@ -64,7 +62,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
 
         <div className="text-right mt-2">
           <a
-            href="/products" // Link to your all products page
+            href="/products"
             className="text-md underline underline-offset-4 text-[#de1448] font-medium hover:text-red-700 transition-colors"
           >
             Read more

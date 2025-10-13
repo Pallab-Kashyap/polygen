@@ -19,29 +19,23 @@ export default function Header() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Load categories from cache immediately, then update with fresh data
     if (!menuOpen) return;
 
-    // If cached categories are empty, we already have them from import
     if (categories.length === 0) {
       setCategories(cachedCategories);
     }
 
-    // Fetch fresh categories in background to update cache
     (async () => {
       try {
         const data = await categoryService.getCategories();
         setCategories(data || []);
       } catch (e) {
         console.error("Failed to load categories for mobile menu", e);
-        // Keep cached categories on error
       }
     })();
   }, [menuOpen]);
 
-  // Add scroll listener to detect when user scrolls to About section (only on home page)
   useEffect(() => {
-    // If not on home page, always show white header
     if (pathname !== "/") {
       setIsScrolled(true);
       setIsBlackHeader(false);
@@ -52,30 +46,25 @@ export default function Header() {
       const scrollPosition = window.scrollY;
       const windowHeight = window.innerHeight;
 
-      // First scroll: turn black (after scrolling a bit, e.g., 50px)
       if (scrollPosition > 50) {
         setIsBlackHeader(true);
       } else {
         setIsBlackHeader(false);
       }
 
-      // Try to find the About section element
       const aboutSection =
         document.querySelector("#about") ||
         document.querySelector('[id*="about"]') ||
-        document.querySelector("section:nth-child(2)"); // Fallback to second section
+        document.querySelector("section:nth-child(2)");
 
       if (aboutSection instanceof HTMLElement) {
         const aboutTop = aboutSection.offsetTop;
-        // Change header to white when About section is near the top (within 100px)
         setIsScrolled(scrollPosition >= aboutTop - 100);
       } else {
-        // Fallback: change to white when scrolled past full viewport height
         setIsScrolled(scrollPosition >= windowHeight);
       }
     };
 
-    // Initial check
     handleScroll();
 
     window.addEventListener("scroll", handleScroll);
@@ -86,7 +75,6 @@ export default function Header() {
     setMenuOpen(false);
   };
 
-  // Render category tree recursively so mobile menu shows all nested categories
   const renderCategoryTree = (cat: any, level = 0) => {
     return (
       <div

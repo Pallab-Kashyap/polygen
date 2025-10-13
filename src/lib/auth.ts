@@ -1,9 +1,7 @@
-// src/lib/auth.ts
 import jwt from "jsonwebtoken";
 import { serialize, parse } from "cookie";
 import { jwtVerify } from "jose";
 
-// Use server-side only JWT secret (no NEXT_PUBLIC_ prefix)
 const JWT_SECRET = process.env.JWT_SECRET as string;
 if (!JWT_SECRET) {
   throw new Error("JWT_SECRET must be set in environment variables");
@@ -40,7 +38,7 @@ export function setAuthCookie(token: string) {
     secure: isProduction,
     sameSite: "lax" as const,
     path: "/",
-    maxAge: 10 * 24 * 60 * 60, // 10 days in seconds
+    maxAge: 10 * 60, 
   };
 
   console.log("Cookie options:", cookieOptions);

@@ -10,7 +10,6 @@ import {
 import Heading from "./shared/Heading";
 import Container from "./shared/Container";
 
-// A simple Whatsapp icon component as it's not in lucide-react by default
 const WhatsappIcon = (props: LucideProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

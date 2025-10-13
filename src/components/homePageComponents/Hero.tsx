@@ -35,7 +35,6 @@ export default function Hero() {
   }, [videoIndex]);
 
   return (
-    // <section className="relative flex-1 w-full overflow-hidden">
     <section className="relative flex md:block justify-evenly flex-col bg-black h-screen w-full overflow-hidden">
       {/* Video Background */}
       <video
@@ -52,15 +51,6 @@ export default function Hero() {
       {/* Red Overlay */}
       <div
         className="absolute z-10 md:hidden bg-black h- w-full"
-        // style={{
-        //   top: 0,
-        //   left: 0,
-        //   width: "1000px",
-        //   height: "1500px",
-        //   background:
-        //     "radial-gradient(circle at top left, rgba(0, 0, 0), transparent 70%)",
-        //   pointerEvents: "none",
-        // }}
       />
 
       {/* Content */}

@@ -9,7 +9,10 @@ type TopSellerCardProps = {
 
 const TopSellerCard: React.FC<TopSellerCardProps> = ({ product }) => {
   return (
-    <Link href={`/products/id/${product._id}`} className="block group h-full">
+    <Link
+      href={`/products/id/${product._id}`}
+      className="block group h-full md:h-fit"
+    >
       <div className="bg-white rounded-2xl border border-gray-200/80 p-1 md:p-4 pb-2 md:pb-2 shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 h-full flex flex-col">
         {/* Image container with fixed aspect ratio */}
         <div className="relative w-full aspect-[3/4] md:aspect-square mb-2 md:mb-3 overflow-hidden rounded-lg bg-gray-50">
@@ -24,8 +27,8 @@ const TopSellerCard: React.FC<TopSellerCardProps> = ({ product }) => {
 
         {/* Content area */}
         <div className="px-2 md:px-0">
-          {/* Product name with 2-line truncation */}
-          <h3 className="text-base md:text-lg lg:text-xl font-bold text-gray-900 mb-1 line-clamp-2">
+          {/* Product name with single line truncation */}
+          <h3 className="text-base md:text-lg lg:text-xl font-bold text-gray-900 mb-1 truncate overflow-hidden whitespace-nowrap">
             {product.name}
           </h3>
 

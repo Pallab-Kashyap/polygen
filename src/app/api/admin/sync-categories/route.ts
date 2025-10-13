@@ -5,8 +5,6 @@ import { APIResponse, APIError } from "@/lib/ApiResponse";
 import { connectDB } from "@/lib/mongoose";
 
 export const GET = asyncWrapper(async (req: NextRequest) => {
-  // Note: Remove admin requirement for easier testing
-  // requireAdminFromRequest(req);
 
   await connectDB();
   const success = await syncCategoriesToFile();

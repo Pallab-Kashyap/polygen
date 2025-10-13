@@ -25,8 +25,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
         {/* Content area - grows to fill space */}
         <div className="flex px-2 md:px-0 flex-col flex-1">
-          {/* Product name with 2-line truncation */}
-          <h3 className="text-lg md:text-lg lg:text-xl font-bold text-gray-900 mb-2 md:mb-3 line-clamp-2 min-h-[2.5rem] md:min-h-[3.5rem]">
+          {/* Product name with single line truncation */}
+          <h3 className="text-lg md:text-lg lg:text-xl font-bold text-gray-900 mb-2 md:mb-3 truncate overflow-hidden whitespace-nowrap">
             {product.name}
           </h3>
 

@@ -13,14 +13,12 @@ const CategoriesDropdown = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Start with cached categories, then fetch fresh data
     (async () => {
       try {
         const categories = await categoryService.getCategories();
         setCategories(categories || []);
       } catch (error) {
         console.error("Error fetching categories:", error);
-        // Keep cached categories on error
       } finally {
         setLoading(false);
       }

@@ -90,7 +90,6 @@ const ProductForm = ({
         .replace(/[^a-z0-9-]/g, "");
     }
 
-    // Handle checkbox input
     const inputValue =
       type === "checkbox" ? (e.target as HTMLInputElement).checked : value;
 
@@ -136,7 +135,6 @@ const ProductForm = ({
     }));
   };
 
-  // --- DESCRIPTION-SPECIFIC HANDLERS ---
   const handleDescriptionChange = (
     blockIndex: number,
     field: "heading" | "text",
@@ -209,7 +207,6 @@ const ProductForm = ({
     e.preventDefault();
     const dataToSave = {
       ...formData,
-      // price: formData.price === '' || formData.price === null ? null : Number(formData.price),
       price: formData.price,
     };
     onSave(dataToSave);

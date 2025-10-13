@@ -3,7 +3,6 @@ import BlogPostCard from "./BlogPostCard";
 import Heading from "../shared/Heading";
 import Container from "../shared/Container";
 
-// Sample data for the blog posts. Replace with your actual data from a CMS or API.
 const blogPostsData = [
   {
     id: 1,
@@ -12,7 +11,7 @@ const blogPostsData = [
     readTime: 5,
     excerpt:
       "Discover how smart irrigation systems are leveraging technology to conserve water and increase crop yields. Simple maintenance tips that can help you extend the life of your Direct-On-Line motor starters and prevent downtime.",
-    imageUrl: "/assets/blog.svg", // Replace with your image path
+    imageUrl: "/assets/blog.svg",
     tags: ["Irrigation", "Technology", "Farming"],
     slug: "/blog/future-of-farming",
   },
@@ -23,7 +22,7 @@ const blogPostsData = [
     readTime: 4,
     excerpt:
       "A comprehensive guide to selecting the most durable and efficient wires and cables for your farm equipment. Simple maintenance tips that can help you extend the life of your Direct-On-Line motor starters and prevent downtime.",
-    imageUrl: "/assets/blog.svg", // Replace with your image path
+    imageUrl: "/assets/blog.svg",
     tags: ["Electrical", "Safety", "Wires"],
     slug: "/blog/choosing-wires",
   },
@@ -34,7 +33,7 @@ const blogPostsData = [
     readTime: 6,
     excerpt:
       "Simple maintenance tips that can help you extend the life of your Direct-On-Line motor starters and prevent downtime. Simple maintenance tips that can help you extend the life of your Direct-On-Line motor starters and prevent downtime.",
-    imageUrl: "/assets/blog.svg", // Replace with your image path
+    imageUrl: "/assets/blog.svg", 
     tags: ["Maintenance", "Starters", "Tips"],
     slug: "/blog/maintaining-starter",
   },

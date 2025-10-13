@@ -123,15 +123,51 @@ export default function ProductsPage() {
 
   const handleBulkUpload = async (formData: FormData) => {
     try {
-      const result = await bulkUploadApi(formData);
-      setToast({
-        message: `${result} products uploaded successfully!`,
-        type: "success",
-      });
+      const result: any = await bulkUploadApi(formData);
+
+      if (result && typeof result === "object" && "inserted" in result) {
+        const { inserted, errors, totalProcessed, message } = result;
+
+        if (errors && errors.length > 0) {
+          const errorMessages = errors
+            .slice(0, 5)
+            .map(
+              (err: any) =>
+                `Row ${err.row !== -1 ? err.row : "N/A"}: ${
+                  err.name ? `"${err.name}" - ` : ""
+                }${err.issues.join(", ")}`
+            )
+            .join("\n");
+
+          const additionalErrors =
+            errors.length > 5
+              ? `\n...and ${errors.length - 5} more errors`
+              : "";
+
+          setToast({
+            message: `Upload completed with errors:\n${message}\n\nErrors:\n${errorMessages}${additionalErrors}`,
+            type: "error",
+          });
+        } else {
+          setToast({
+            message: message || `${inserted} products uploaded successfully!`,
+            type: "success",
+          });
+        }
+      } else {
+        setToast({
+          message: `Upload completed successfully!`,
+          type: "success",
+        });
+      }
+
       setIsUploadModalOpen(false);
       loadData();
     } catch (e: any) {
-      setToast({ message: `Upload failed: ${e.message}`, type: "error" });
+      setToast({
+        message: `Upload failed: ${e.message || "Unknown error occurred"}`,
+        type: "error",
+      });
     }
   };
 
@@ -182,7 +218,6 @@ export default function ProductsPage() {
       {fetchLoading ? (
         <Spinner />
       ) : !filteredProducts ? (
-        // categories is null/undefined — show error
         <div className="text-red-600">err</div>
       ) : (
         <div className="bg-white shadow-md rounded-lg overflow-hidden">

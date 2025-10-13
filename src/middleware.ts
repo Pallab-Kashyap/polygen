@@ -4,11 +4,11 @@ import { verifyAdminToken } from "@/lib/auth";
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Protect admin UI (everything under /admin) except /admin/login
+
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
     const token = req.cookies.get("admin_token")?.value;
     if (!token) {
-      // redirect to login (client will land on login page)
+
       const url = req.nextUrl.clone();
       url.pathname = "/admin/login";
       return NextResponse.redirect(url);
@@ -18,7 +18,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.next();
     } catch (err) {
       console.error("Token verification failed:", err);
-      // Clear the invalid token
+
       const response = NextResponse.redirect(new URL("/admin/login", req.url));
       response.cookies.set("admin_token", "", {
         httpOnly: true,
@@ -31,7 +31,7 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Protect mutating APIs: POST, PUT, DELETE under /api/products and /api/categories
+  
   if (
     pathname.startsWith("/api/products") ||
     pathname.startsWith("/api/categories")

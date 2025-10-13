@@ -1,4 +1,3 @@
-// src/app/api/categories/controller.ts
 import { NextRequest } from "next/server";
 import Category from "@/models/Category";
 import { z } from "zod";
@@ -72,23 +71,22 @@ export const createCategory = asyncWrapper(async (req: NextRequest) => {
   await connectDB();
   requireAdminFromRequest(req);
   const body = await req.json();
-  // make parsed mutable so we can normalize fields
+
   let parsed = categorySchema.parse(body);
 
-  // If parentId is an empty string (from the client select) remove it so Mongoose won't try to cast "" to an ObjectId
   if (!parsed.parentId || parsed.parentId === "") {
-    // remove the property to let Mongoose treat it as undefined/null
     delete (parsed as any).parentId;
   }
 
   const exists = await Category.findOne({ slug: parsed.slug });
   if (exists) {
-    throw APIError.badRequest("Category with this slug already exists");
+    throw APIError.badRequest(
+      `Category with slug "${parsed.slug}" already exists`
+    );
   }
 
   const category = await Category.create(parsed);
 
-  // Sync categories to JSON file for quick loading
   await syncCategoriesToFile();
 
   return APIResponse.success(category, "Category created successfully");
@@ -102,10 +100,8 @@ export const updateCategory = async (
     requireAdminFromRequest(req);
     await connectDB();
     const body = await req.json();
-    // make parsed mutable so we can normalize fields
     let parsed = categorySchema.partial().parse(body);
 
-    // if parentId is provided as empty string, remove it to avoid cast errors
     if (
       Object.prototype.hasOwnProperty.call(parsed, "parentId") &&
       (parsed as any).parentId === ""
@@ -115,12 +111,23 @@ export const updateCategory = async (
 
     const { id } = await params;
 
+    if (parsed.slug) {
+      const exists = await Category.findOne({
+        slug: parsed.slug,
+        _id: { $ne: id },
+      });
+      if (exists) {
+        throw APIError.badRequest(
+          `Category with slug "${parsed.slug}" already exists`
+        );
+      }
+    }
+
     const updated = await Category.findByIdAndUpdate(id, parsed, {
       new: true,
     });
     if (!updated) throw APIError.notFound("Category not found");
 
-    // Sync categories to JSON file for quick loading
     await syncCategoriesToFile();
 
     return APIResponse.success(updated, "Category updated successfully");
@@ -138,10 +145,24 @@ export const deleteCategory = async (
     await connectDB();
     const { id } = await params;
 
-    const deleted = await Category.findByIdAndDelete(id);
-    if (!deleted) throw APIError.badRequest("Category not found");
+    const childCategories = await Category.find({ parentId: id });
+    if (childCategories.length > 0) {
+      throw APIError.badRequest(
+        `Cannot delete category. It has ${childCategories.length} subcategory(ies). Please delete or reassign subcategories first.`
+      );
+    }
 
-    // Sync categories to JSON file for quick loading
+    const Product = await import("@/models/Product").then((m) => m.default);
+    const products = await Product.find({ categoryId: id });
+    if (products.length > 0) {
+      throw APIError.badRequest(
+        `Cannot delete category. It has ${products.length} product(s) assigned. Please reassign or delete products first.`
+      );
+    }
+
+    const deleted = await Category.findByIdAndDelete(id);
+    if (!deleted) throw APIError.notFound("Category not found");
+
     await syncCategoriesToFile();
 
     return APIResponse.success(null, "Category deleted successfully");

@@ -14,7 +14,6 @@ async function getTopSellerProducts(): Promise<
     await connectDB();
     const products = await Product.find({ isTopSeller: true }).lean();
 
-    // Fetch category names for all products
     const productsWithCategory = await Promise.all(
       products.map(async (product) => {
         if (product.categoryId) {
@@ -38,7 +37,6 @@ async function getTopSellerProducts(): Promise<
 const TopSellers: React.FC = async () => {
   const topSellersData = await getTopSellerProducts();
 
-  // If no top sellers found, don't render the section
   if (!topSellersData || topSellersData.length === 0) {
     return null;
   }
@@ -50,7 +48,7 @@ const TopSellers: React.FC = async () => {
         <Heading>Our Top Sellers</Heading>
 
         {/* Products Grid */}
-        <div className="hide-scrollbar flex overflow-x-auto gap-4 pb-3 md:gap-8 md:overflow-visible md:pb-0 md:flex-wrap md:justify-center">
+        <div className="hide-scrollbar flex overflow-x-auto gap-4 pb-3 md:gap-4 md:overflow-visible md:pb-0 md:flex-wrap md:justify-center">
           {topSellersData.map((product) => (
             <div
               key={product._id || product.slug}

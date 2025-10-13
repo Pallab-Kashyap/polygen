@@ -1,4 +1,4 @@
-// /data/products.ts
+
 
 export interface ProductItem {
   name: string;
@@ -15,7 +15,6 @@ export interface ProductCategory {
   items: ProductItem[];
 }
 
-// Main data for the header dropdown
 export const productCategories: ProductCategory[] = [
   {
     title: "Starter & Spares",
@@ -155,7 +154,6 @@ export const productCategories: ProductCategory[] = [
   },
 ];
 
-// A map to easily find a category by its slug for the product page
 export const productsByCategory = new Map(
   productCategories.map((category) => [category.slug, category])
 );

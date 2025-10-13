@@ -1,4 +1,3 @@
-// src/lib/adminApi.ts
 import { ProductType } from "@/types/product";
 
 const JSON_HEADERS = { "Content-Type": "application/json" };
@@ -43,12 +42,8 @@ export async function deleteProduct(slug: string) {
   return res.json();
 }
 
-/**
- * Attempt server bulk deletion, fallback to sequential deletes if endpoint missing.
- * payload: array of slugs
- */
+
 export async function bulkDeleteProducts(slugs: string[]) {
-  // try server endpoint first
   const res = await fetch("/api/products/bulk-delete", {
     method: "POST",
     headers: JSON_HEADERS,
@@ -58,7 +53,6 @@ export async function bulkDeleteProducts(slugs: string[]) {
 
   if (res.ok) return res.json();
 
-  // fallback: delete one by one
   for (const s of slugs) {
     await deleteProduct(s);
   }

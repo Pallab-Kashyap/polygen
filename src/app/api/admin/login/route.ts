@@ -8,7 +8,6 @@ export async function POST(req: Request) {
   try {
     console.log("Admin login attempt started");
 
-    // Check environment variables
     if (!process.env.JWT_SECRET) {
       console.error("JWT_SECRET not found in environment variables");
       return NextResponse.json(

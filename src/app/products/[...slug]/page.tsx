@@ -84,7 +84,6 @@ function Banner({ category }: { category: CategoryType }) {
   );
 }
 
-// Main page component for category-specific products
 export default function CategoryProductsPage() {
   const { slug } = useParams<{ slug: string[] }>();
 
@@ -114,7 +113,6 @@ export default function CategoryProductsPage() {
     const categorySlug = slug[0];
     console.log("categorySlug:", categorySlug);
 
-    // Fetch category info and products simultaneously
     Promise.all([
       fetchCategory(categorySlug),
       fetchProducts(categorySlug),
@@ -137,13 +135,11 @@ export default function CategoryProductsPage() {
       });
   }, [slug]);
 
-  // Build breadcrumb items
   const buildBreadcrumbs = () => {
     if (!category || !categories) return [];
 
     const breadcrumbs = [{ name: "All Products", link: "/products" }];
 
-    // Find parent hierarchy
     const findParentChain = (cat: CategoryType): CategoryType[] => {
       if (!cat.parentId) return [cat];
 
@@ -180,8 +176,6 @@ export default function CategoryProductsPage() {
     return (
       <div className="h-screen w-screen tex-9xl text-black">NOT FOUND</div>
     );
-    // notFound();
-    // return null;
   }
 
   const breadcrumbs = buildBreadcrumbs();

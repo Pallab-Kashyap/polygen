@@ -1,4 +1,3 @@
-// src/models/Admin.ts
 import mongoose, { Document, Model, Schema } from "mongoose";
 
 export interface AdminDoc extends Document {

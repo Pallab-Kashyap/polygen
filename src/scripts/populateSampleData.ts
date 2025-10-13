@@ -9,11 +9,9 @@ async function populateSampleData() {
   try {
     await connectDB();
 
-    // Clear existing data
     await Category.deleteMany({});
     await Product.deleteMany({});
 
-    // Create parent categories
     const wiresCategory = await Category.create({
       name: "Wires & Cables",
       slug: "wires-and-cables",
@@ -33,7 +31,6 @@ async function populateSampleData() {
       description: "Electrical fuses and protection equipment",
     });
 
-    // Create subcategories
     const copperWiresCategory = await Category.create({
       name: "VIR Copper",
       slug: "vir-copper",
@@ -55,7 +52,6 @@ async function populateSampleData() {
       parentId: wiresCategory._id,
     });
 
-    // Create sample products
     const products = [
       {
         name: "VIR Copper Wire 2.5mm",
@@ -192,7 +188,6 @@ async function populateSampleData() {
   }
 }
 
-// Run if this script is executed directly
 if (require.main === module) {
   populateSampleData().then(() => process.exit(0));
 }

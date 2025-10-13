@@ -61,7 +61,7 @@ export default function CategoriesPage() {
         setCategories(
           isHierarchical ? allCategories : buildHierarchy(allCategories)
         );
-        // setCategories(data);
+
       })
       .catch((err) => setToast({ message: `err`, type: "error" }));
   }, [fetchCategories, setToast]);
@@ -137,7 +137,6 @@ export default function CategoriesPage() {
       {fetchLoading ? (
         <Spinner />
       ) : !categories ? (
-        // categories is null/undefined — show error
         <div className="text-red-600">err</div>
       ) : (
         <div className="bg-gray-100 p-4 rounded-lg">

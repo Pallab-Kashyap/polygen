@@ -10,15 +10,12 @@ function getMongoUri(): string {
   return uri;
 }
 
-// Slightly more explicit cache typing
 type MongooseCache = {
   conn: mongoose.Mongoose | null;
   promise: Promise<mongoose.Mongoose> | null;
 };
 
-// Extend globalThis so we don't create multiple connections in dev
 declare global {
-  // eslint-disable-next-line no-var
   var _mongooseCache: MongooseCache | undefined;
 }
 
@@ -34,7 +31,6 @@ export async function connectDB(): Promise<mongoose.Mongoose> {
   }
 
   if (!cached.promise) {
-    // <-- USING getMongoUri() here guarantees a `string` to the compiler
     cached.promise = mongoose.connect(getMongoUri()).then((m) => m);
   }
 

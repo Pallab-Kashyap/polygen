@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || '/api',
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "/api",
   withCredentials: true,
 });
 
@@ -13,7 +13,14 @@ axiosInstance.interceptors.response.use(
     }
     return payload;
   },
-  (err) => Promise.reject(err)
+  (err) => {
+    if (err.response?.data?.message) {
+      const error = new Error(err.response.data.message);
+      (error as any).response = err.response;
+      return Promise.reject(error);
+    }
+    return Promise.reject(err);
+  }
 );
 
 export default axiosInstance;

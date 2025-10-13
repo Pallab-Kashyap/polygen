@@ -9,37 +9,31 @@ import { NextRequest } from "next/server";
 import { z } from "zod";
 import * as XLSX from "xlsx";
 
-// Schema for a single product parameter
 const ProductParameterSchema = z.object({
   label: z.string().min(1, "Parameter label cannot be empty"),
   values: z.array(z.string()).min(1, "Parameter must have at least one value"),
 });
 
-// Schema for a single bullet point in the description
 const DescriptionBulletSchema = z.object({
   highlight: z.string().optional(),
   text: z.string().optional(),
 });
 
-// Schema for a block of description content
 const ProductDescriptionBlockSchema = z.object({
   heading: z.string().optional(),
   bulletPoints: z.array(DescriptionBulletSchema).optional(),
   text: z.string().optional(),
 });
 
-// The main, updated Product Schema
 export const ProductSchema = z.object({
   slug: z.string().optional(),
   name: z.string().min(1, "Name is required"),
-  about: z.string().optional(), // Updated to be optional
+  about: z.string().optional(),
   categoryId: z.string().min(1, "Category is required"),
 
-  // Updated to use the new nested schemas
   parameters: z.array(ProductParameterSchema).optional(),
   description: z.array(ProductDescriptionBlockSchema).optional(),
 
-  // Unchanged fields
   applications: z.array(z.string()).optional(),
   images: z.array(z.string()).optional(),
   price: z.number().nullable().optional(),
@@ -145,7 +139,6 @@ export const getProductsByCategorySlug = async (
       throw APIError.badRequest("Category slug needed");
     }
 
-    // First, find the category by slug
     const Category = await import("@/models/Category").then((m) => m.default);
     const category = await Category.findOne({ slug });
 
@@ -153,7 +146,6 @@ export const getProductsByCategorySlug = async (
       throw APIError.notFound("Category not found");
     }
 
-    // Get all subcategories recursively
     const getAllSubcategoryIds = async (
       parentId: string
     ): Promise<string[]> => {
@@ -170,7 +162,6 @@ export const getProductsByCategorySlug = async (
 
     const categoryIds = await getAllSubcategoryIds(category._id.toString());
 
-    // Find products in this category and all its subcategories
     const products = await Product.find({
       categoryId: { $in: categoryIds },
     }).populate("categoryId");
@@ -197,6 +188,13 @@ export const createNewProduct = asyncWrapper(async (req: NextRequest) => {
       throw APIError.badRequest(message);
     }
 
+    const existingProduct = await Product.findOne({ slug: parsed.data.slug });
+    if (existingProduct) {
+      throw APIError.badRequest(
+        `Product with slug "${parsed.data.slug}" already exists`
+      );
+    }
+
     const product = await Product.create(parsed.data);
 
     return APIResponse.created(product);
@@ -210,7 +208,6 @@ export const bulkCreateProducts = async (req: NextRequest) => {
     await requireAdminFromRequest(req);
     await connectDB();
 
-    // Get FormData from request
     const formData = await req.formData();
     const file = formData.get("file") as File;
 
@@ -218,7 +215,6 @@ export const bulkCreateProducts = async (req: NextRequest) => {
       throw APIError.badRequest("No file uploaded");
     }
 
-    // Validate file type
     const allowedTypes = [
       "text/csv",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -231,16 +227,13 @@ export const bulkCreateProducts = async (req: NextRequest) => {
       );
     }
 
-    // Validate file size (5MB max)
     if (file.size > 5 * 1024 * 1024) {
       throw APIError.badRequest("File size exceeds 5MB limit");
     }
 
-    // Convert File to Buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Read and parse Excel/CSV
     const workbook = XLSX.read(buffer, { type: "buffer" });
     const sheetName = workbook.SheetNames[0];
     const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
@@ -248,18 +241,18 @@ export const bulkCreateProducts = async (req: NextRequest) => {
     const validProducts: any[] = [];
     const errors: any[] = [];
 
+    const processedSlugs = new Set<string>();
+
     sheetData.forEach((row: any, index: number) => {
       try {
         const productData: any = {};
 
-        // Sanitize all string fields
         Object.keys(row).forEach((key) => {
           if (typeof row[key] === "string") {
             row[key] = row[key].trim();
           }
         });
 
-        // Basic fields
         productData.slug = row.slug;
         productData.name = row.name;
         productData.about = row.about;
@@ -270,7 +263,6 @@ export const bulkCreateProducts = async (req: NextRequest) => {
           row.isTopSeller === "1" ||
           row.isTopSeller === true;
 
-        // Parse arrays from comma-separated strings
         if (row.applications && typeof row.applications === "string") {
           productData.applications = row.applications
             .split(",")
@@ -285,7 +277,6 @@ export const bulkCreateProducts = async (req: NextRequest) => {
             .filter(Boolean);
         }
 
-        // Parse Parameters (dynamic columns: Parameter Label N, Parameter Values N)
         const parameters: any[] = [];
         const parameterLabels = Object.keys(row).filter((key) =>
           key.match(/^Parameter Label \d+$/)
@@ -312,7 +303,6 @@ export const bulkCreateProducts = async (req: NextRequest) => {
           productData.parameters = parameters;
         }
 
-        // Parse Description Blocks (dynamic columns: Description Heading N, Bullet Highlight N.M, Bullet Text N.M, Description Text N)
         const description: any[] = [];
         const headingKeys = Object.keys(row)
           .filter((key) => key.match(/^Description Heading \d+$/))
@@ -328,7 +318,6 @@ export const bulkCreateProducts = async (req: NextRequest) => {
           if (heading) block.heading = heading;
           if (descText) block.text = descText;
 
-          // Find all bullet points for this block
           const bulletKeys = Object.keys(row)
             .filter((key) =>
               key.match(new RegExp(`^Bullet Highlight ${blockNum}\\.\\d+$`))
@@ -355,7 +344,6 @@ export const bulkCreateProducts = async (req: NextRequest) => {
             block.bulletPoints = bulletPoints;
           }
 
-          // Only add block if it has content
           if (Object.keys(block).length > 0) {
             description.push(block);
           }
@@ -365,7 +353,6 @@ export const bulkCreateProducts = async (req: NextRequest) => {
           productData.description = description;
         }
 
-        // Parse Metadata (dynamic columns: Metadata Key N, Metadata Value N)
         const metadata: Record<string, any> = {};
         const metadataKeys = Object.keys(row)
           .filter((key) => key.match(/^Metadata Key \d+$/))
@@ -386,7 +373,6 @@ export const bulkCreateProducts = async (req: NextRequest) => {
           productData.metadata = metadata;
         }
 
-        // Generate slug if not provided
         if (!productData.slug && productData.name) {
           productData.slug = productData.name
             .toLowerCase()
@@ -394,18 +380,32 @@ export const bulkCreateProducts = async (req: NextRequest) => {
             .replace(/[^a-z0-9-]/g, "");
         }
 
+        if (processedSlugs.has(productData.slug)) {
+          errors.push({
+            row: index + 2,
+            name: productData.name,
+            issues: [
+              `Product with name "${productData.name}" has duplicate slug in the file`,
+            ],
+          });
+          return;
+        }
+
         const parseResult = ProductSchema.safeParse(productData);
         if (parseResult.success) {
+          processedSlugs.add(productData.slug);
           validProducts.push(parseResult.data);
         } else {
           errors.push({
             row: index + 2,
+            name: productData.name,
             issues: parseResult.error.issues.map((issue) => issue.message),
           });
         }
       } catch (error) {
         errors.push({
           row: index + 2,
+          name: row.name,
           issues: [
             `Processing error: ${
               error instanceof Error ? error.message : "Unknown error"
@@ -416,13 +416,89 @@ export const bulkCreateProducts = async (req: NextRequest) => {
     });
 
     if (validProducts.length > 0) {
-      await Product.insertMany(validProducts, { ordered: false });
+      const slugsToCheck = validProducts.map((p) => p.slug);
+      const existingProducts = await Product.find({
+        slug: { $in: slugsToCheck },
+      });
+
+      if (existingProducts.length > 0) {
+        const existingSlugs = new Set(existingProducts.map((p) => p.slug));
+
+        const productsToInsert = validProducts.filter((p) => {
+          if (existingSlugs.has(p.slug)) {
+            errors.push({
+              row: -1,
+              name: p.name,
+              issues: [
+                `Product with name "${p.name}" already exists in database`,
+              ],
+            });
+            return false;
+          }
+          return true;
+        });
+
+        if (productsToInsert.length > 0) {
+          try {
+            await Product.insertMany(productsToInsert, { ordered: false });
+          } catch (insertError: any) {
+            if (insertError.code === 11000) {
+              const duplicateKey = insertError.keyValue?.slug || "unknown";
+              errors.push({
+                row: -1,
+                name: "Unknown",
+                issues: [`Duplicate slug detected: ${duplicateKey}`],
+              });
+            } else {
+              throw insertError;
+            }
+          }
+        }
+
+        return APIResponse.success({
+          inserted: productsToInsert.length,
+          errors,
+          totalProcessed: sheetData.length,
+          message:
+            productsToInsert.length > 0
+              ? `Successfully inserted ${productsToInsert.length} product(s). ${errors.length} error(s) occurred.`
+              : `No products inserted. ${errors.length} error(s) occurred.`,
+        });
+      } else {
+        try {
+          await Product.insertMany(validProducts, { ordered: false });
+        } catch (insertError: any) {
+          if (insertError.code === 11000) {
+            const duplicateKey = insertError.keyValue?.slug || "unknown";
+            errors.push({
+              row: -1,
+              name: "Unknown",
+              issues: [`Duplicate slug detected: ${duplicateKey}`],
+            });
+
+            return APIResponse.success({
+              inserted: 0,
+              errors,
+              totalProcessed: sheetData.length,
+              message: `Insert failed due to duplicate slugs. ${errors.length} error(s) occurred.`,
+            });
+          } else {
+            throw insertError;
+          }
+        }
+      }
     }
 
     return APIResponse.success({
       inserted: validProducts.length,
       errors,
       totalProcessed: sheetData.length,
+      message:
+        validProducts.length > 0
+          ? `Successfully inserted ${validProducts.length} product(s)${
+              errors.length > 0 ? `. ${errors.length} error(s) occurred.` : "."
+            }`
+          : `No products inserted. ${errors.length} error(s) occurred.`,
     });
   } catch (error) {
     return errorHandler(error);
@@ -448,15 +524,26 @@ export const updateProduct = async (
       throw APIError.badRequest(message);
     }
 
-    await connectDB();
+    if (parsed.data.slug) {
+      const existingProduct = await Product.findOne({
+        slug: parsed.data.slug,
+        _id: { $ne: id },
+      });
+      if (existingProduct) {
+        throw APIError.badRequest(
+          `Product with slug "${parsed.data.slug}" already exists`
+        );
+      }
+    }
+
     const updated = await Product.findByIdAndUpdate(id, parsed.data, {
       new: true,
     });
 
     if (!updated) throw APIError.notFound("Product not found");
-    return APIResponse.success(updated);
+    return APIResponse.success(updated, "Product updated successfully");
   } catch (error) {
-    errorHandler(error);
+    return errorHandler(error);
   }
 };
 
@@ -472,9 +559,12 @@ export const deleteProduct = async (
     const deleted = await Product.findByIdAndDelete(id);
     if (!deleted) throw APIError.notFound("Product not found");
 
-    return APIResponse.success({ message: "Product deleted successfully" });
+    return APIResponse.success(
+      { message: "Product deleted successfully" },
+      "Product deleted successfully"
+    );
   } catch (error) {
-    errorHandler(error);
+    return errorHandler(error);
   }
 };
 

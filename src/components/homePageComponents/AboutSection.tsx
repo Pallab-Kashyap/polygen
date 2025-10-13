@@ -1,5 +1,5 @@
 import React from "react";
-import { ChevronRight, MoveRight } from "lucide-react"; // Icon for the button
+import { ChevronRight, MoveRight } from "lucide-react"; 
 import Heading from "../shared/Heading";
 import Container from "../shared/Container";
 
@@ -7,7 +7,6 @@ const AboutSection: React.FC = () => {
   return (
     <section
       id="about"
-      // Subtle gradient from a light grey to a light pink, as seen in the image
       className=" relative bg-white py-10 sm:py-24 overflow-hidden"
     >
       <Container className="relative flex flex-col items-center text-center z-10">

@@ -1,4 +1,3 @@
-// Script to sync categories from database to JSON file
 import dotenv from "dotenv";
 import { connectDB } from "../lib/mongoose.js";
 import mongoose from "mongoose";
@@ -7,13 +6,11 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Load environment variables
 dotenv.config({ path: ".env.local" });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Define the schema inline to avoid module loading issues
 const CategorySchema = new mongoose.Schema(
   {
     slug: { type: String, required: true, unique: true },

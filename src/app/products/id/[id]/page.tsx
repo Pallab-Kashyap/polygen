@@ -40,7 +40,6 @@ function ProductView() {
         if (productData) {
           setProduct(productData);
 
-          // Fetch category and all categories for breadcrumb
           const [categoryData, categoriesData] = await Promise.all([
             getCategory(productData.categoryId),
             getCategories(),
@@ -76,14 +75,12 @@ function ProductView() {
 
   const images = product.images || [];
 
-  // Build breadcrumb items
   const buildBreadcrumbs = (): BreadcrumbType[] => {
     const breadcrumbs: BreadcrumbType[] = [
       { name: "All Products", link: "/products" },
     ];
 
     if (category && categories.length > 0) {
-      // Find parent hierarchy
       const findParentChain = (cat: CategoryType): CategoryType[] => {
         if (!cat.parentId) return [cat];
 
@@ -104,7 +101,6 @@ function ProductView() {
       });
     }
 
-    // Add current product
     breadcrumbs.push({
       name: product.name,
       link: `/products/id/${product._id}`,
@@ -183,7 +179,6 @@ function ProductView() {
                   width={80}
                   height={80}
                   className="h-[60px] w-[60px] md:h-[100px] md:w-[100px]"
-                  // className="h-[80px] w-[80px]"
                 />
               </div>
 
@@ -313,7 +308,6 @@ function ProductView() {
 
 export default ProductView;
 
-// Your interfaces (no changes needed)
 export interface ProductParameter {
   label: string;
   values: string[];

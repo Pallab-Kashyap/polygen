@@ -48,7 +48,7 @@ export default function AdminLayoutClient({
     if (toast.message) {
       const timer = setTimeout(() => {
         handleCloseToast();
-      }, 5000);
+      }, 8000);
       return () => clearTimeout(timer);
     }
   }, [toast.key]);
@@ -111,7 +111,6 @@ export default function AdminLayoutClient({
                   window.location.href = "/admin/login";
                 } catch (error) {
                   console.error("Logout failed:", error);
-                  // Force logout even if API fails
                   window.location.href = "/admin/login";
                 }
               }}
