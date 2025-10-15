@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductType } from "@/types/product";
 import { CategoryType } from "@/types/category";
@@ -13,9 +12,14 @@ import { categoryService } from "@/services/categoryService";
 import Container from "@/components/shared/Container";
 import Spinner from "@/components/shared/Spinner";
 import Breadcrumb, { BreadcrumbType } from "@/components/Breadcrumb";
+import Modal from "@/components/shared/Modal";
+import RequestPricingForm from "@/components/RequestPricingForm";
+import sendMail from "@/services/mailService";
+import { useToast } from "@/contexts/ToastContext";
 
 function ProductView() {
   const { id } = useParams<{ id: string }>();
+  const { showToast } = useToast();
 
   const { execute: getProduct, loading: isLoading } = useApi(
     productService.getProductById
@@ -32,6 +36,8 @@ function ProductView() {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [l, setL] = useState<boolean>(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -119,6 +125,42 @@ function ProductView() {
     setCurrentImageIndex(
       (prevIndex) => (prevIndex - 1 + images.length) % images.length
     );
+  };
+
+  const handleRequestSubmit = async (data: {
+    selectedOptions: { [key: string]: string };
+    message: string;
+  }) => {
+    setIsSubmitting(true);
+
+    try {
+      // Format the selected options into a readable string
+      const optionsText = Object.entries(data.selectedOptions)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join("<br />");
+
+      // Send email with product inquiry details
+      await sendMail({
+        type: "product-inquiry",
+        productName: product?.name,
+        selectedOptions: optionsText,
+        message: data.message,
+      });
+
+      // Show success toast
+      showToast(
+        "Request sent successfully! We will contact you soon.",
+        "success"
+      );
+
+      // Close the modal
+      setIsRequestModalOpen(false);
+    } catch (error) {
+      console.error("Error sending request:", error);
+      showToast("Failed to send request. Please try again later.", "error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -210,7 +252,7 @@ function ProductView() {
                     </h3>
                     {product.parameters.map((param, index) => (
                       <div key={index} className="mb-4">
-                        <h4 className="text-md font-medium text-gray-700 mb-2">
+                        <h4 className="text-[1rem] font-medium text-black mb-2">
                           {param.label}
                         </h4>
                         <div className="flex flex-wrap gap-3">
@@ -247,7 +289,10 @@ function ProductView() {
 
               {/* Request button - Always visible at bottom */}
               <div className="flex-shrink-0 mt-6">
-                <button className="w-full bg-red-600 text-white font-bold py-4 px-6 rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                <button
+                  onClick={() => setIsRequestModalOpen(true)}
+                  className="w-full bg-red-600 text-white font-bold py-4 px-6 rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                >
                   Request pricing & details
                 </button>
               </div>
@@ -302,6 +347,21 @@ function ProductView() {
           )}
         </Container>
       </main>
+
+      {/* Request Pricing Modal */}
+      <Modal
+        isOpen={isRequestModalOpen}
+        onClose={() => setIsRequestModalOpen(false)}
+        title="Request Pricing & Details"
+      >
+        <RequestPricingForm
+          productName={product.name}
+          parameters={product.parameters || []}
+          onSubmit={handleRequestSubmit}
+          onCancel={() => setIsRequestModalOpen(false)}
+          isSubmitting={isSubmitting}
+        />
+      </Modal>
     </div>
   );
 }

@@ -2,6 +2,9 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
+    "./src/app/**/*.{ts,tsx}",
+    "./src/components/**/*.{ts,tsx}",
+    "./src/pages/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./pages/**/*.{ts,tsx}",
@@ -18,7 +21,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };
 
 export default config;

@@ -59,7 +59,7 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col justify-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
+    <div className=" bg-slate-100 mt-[12vh] flex flex-col justify-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
       {/* Form Container */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-2xl sm:text-3xl font-extrabold text-gray-900">

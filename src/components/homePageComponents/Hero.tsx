@@ -67,9 +67,9 @@ export default function Hero() {
               designed toexplore new possibilities
             </p> */}
             </div>
-            <button className="w-full md:w-max bg-white text-xl md:text-2xl text-black  px-4 md:px-8 py-3 md:py-5 rounded-2xl font-medium hover:bg-red-700 hover:text-white transition-all duration-500  cursor-pointer">
+            {/* <button className="w-full md:w-max bg-white text-xl md:text-2xl text-black  px-4 md:px-8 py-3 md:py-5 rounded-2xl font-medium hover:bg-red-700 hover:text-white transition-all duration-500  cursor-pointer">
               Explore to upgrade
-            </button>
+            </button> */}
 
 
             {/* Red Seal Badge - positioned within container margins */}

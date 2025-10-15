@@ -6,6 +6,7 @@ import { ProductType } from "@/types/product";
 import { connectDB } from "@/lib/mongoose";
 import Product from "@/models/Product";
 import Category from "@/models/Category";
+import Link from "next/link";
 
 async function getTopSellerProducts(): Promise<
   (ProductType & { categoryName?: string })[]
@@ -42,7 +43,7 @@ const TopSellers: React.FC = async () => {
   }
 
   return (
-    <section className="bg-[#F2F1F2] py-10 sm:py-20">
+    <section className="bg-[#F2F1F2] py-16 sm:py-24">
       <Container>
         {/* Section Heading */}
         <Heading>Our Top Sellers</Heading>
@@ -52,7 +53,7 @@ const TopSellers: React.FC = async () => {
           {topSellersData.map((product) => (
             <div
               key={product._id || product.slug}
-              className="min-w-[280px] max-w-[280px] h-[350px] flex-shrink-0 md:min-w-0 md:max-w-[400px] md:w-[calc(50%-1rem)] md:h-[380px] lg:w-[calc(25%-1.5rem)] lg:max-w-none"
+              className="min-w-[280px] max-w-[280px] h-[350px] flex-shrink-0 md:min-w-0 md:max-w-[400px] md:w-[calc(35%-1rem)] md:h-[380px] lg:w-[calc(25%-0.8rem)] lg:max-w-none"
             >
               <TopSellerCard product={product} />
             </div>
@@ -61,12 +62,12 @@ const TopSellers: React.FC = async () => {
 
         {/* View More Link */}
         <div className="text-right mt-12">
-          <a
+          <Link
             href="/products"
             className="text-md underline underline-offset-4 text-[#de1448] font-medium hover:text-red-700 transition-colors"
           >
             View more products
-          </a>
+          </Link>
         </div>
       </Container>
     </section>

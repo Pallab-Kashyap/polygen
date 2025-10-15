@@ -18,31 +18,32 @@ import Heading from "@/components/shared/Heading";
 function Banner({ category }: { category: CategoryType }) {
   return (
     <>
-      <section className="relative pt-32 w-full h-fit bg-gray-900 text-white overflow-hidden">
+      <section className="relative pt-28 w-full h-fit bg-gray-900 text-white overflow-hidden">
+        <div className="bg-glow hidden md:block"></div>
         {/* Background image */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 w-full h-full">
           {/* Mobile image */}
           <img
             src="/assets/Mobile/product-banner.png"
             alt="Background"
-            className="md:hidden "
+            className="md:hidden"
           />
           {/* Desktop image */}
           <img
             src="/assets/Product/banner.jpeg"
             alt="Background"
-            className="hidden md:block w-full h-full object-cover"
+            className="hidden md:block w-full h-full object-cover mt-5"
           />
-          <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-[#5c1c2e]/80 to-transparent"></div>
+          {/* <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-[#5c1c2e]/80 to-transparent"></div> */}
         </div>
 
         {/* Foreground (all visible content) */}
         <div className="relative z-10">
           {/* Main content */}
-          <Container className="relative flex flex-col md:flex-row items-center justify-between pt-32 md:py-20">
+          <Container className="relative flex flex-col md:flex-row items-center justify-between pt-32 md:py-20 ">
             {/* Left text */}
-            <div className="max-w-xl text-center md:text-left mt-auto md:mt-0 bg-black/50 md:bg-transparent p-4 md:p-0 rounded-lg md:rounded-none w-full md:w-auto">
-              <h1 className="text-3xl md:text-5xl font-bold text-white">
+            <div className="max-w-xl text-center md:text-left mt-auto md:mt-0  md:bg-transparent p-4 md:p-0 rounded-lg md:rounded-none w-full md:w-auto">
+              <h1 className="text-3xl md:text-5xl mt-4 md:mt-0 font-bold text-white">
                 {category.name}
               </h1>
               <p className="hidden md:block mt-4 text-lg md:text-xl text-gray-200">
@@ -58,7 +59,7 @@ function Banner({ category }: { category: CategoryType }) {
             </div>
 
             {/* Red Seal Badge */}
-            <div className="absolute hidden md:block md:top-20 right-0 h-[80px] w-[80px] md:h-[120px] md:w-[120px] transform -translate-y-1/2 z-20">
+            <div className="absolute hidden md:block md:top-0 right-6 h-[80px] w-[80px] md:h-[120px] md:w-[120px] transform -translate-y-1/2 z-20">
               <Image
                 src="/assets/redseal.svg"
                 alt="Red Seal"
@@ -182,6 +183,7 @@ export default function CategoryProductsPage() {
 
   return (
     <main className="bg-gray-50 pb-20 mt-20">
+
       <Banner category={category} />
       <Container className="pt-4">
         <Breadcrumb items={breadcrumbs} />

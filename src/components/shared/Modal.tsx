@@ -14,9 +14,15 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
 
   return (
     <>
-      <BackgroundLayout z={"50"} />
-      <div className="fixed inset-0 z-50 flex justify-center items-center p-4">
-        <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+      <BackgroundLayout z="9998" />
+      <div
+        className="fixed inset-0 flex justify-center items-center p-4"
+        style={{ zIndex: 9999 }}
+      >
+        <div
+          className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col relative"
+          style={{ zIndex: 10000 }}
+        >
           <div className="flex justify-between items-center p-4 border-b">
             <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
             <button

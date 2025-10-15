@@ -113,22 +113,20 @@ export default function Header() {
       }`}
     >
       <Container className="flex items-center justify-between py-4">
-        <div className="flex items-center gap-2">
-          <Link href="/" onClick={() => setMenuOpen(false)}>
-            <Image
-              src={
-                isScrolled
-                  ? "/assets/logo.svg"
-                  : isBlackHeader
-                  ? "/assets/logo-white.svg"
-                  : "/assets/logo-white.svg"
-              }
-              alt="Polygen Logo"
-              width={150}
-              height={40}
-            />
-          </Link>
-        </div>
+        <Link href="/" onClick={() => setMenuOpen(false)}>
+          <Image
+            src={
+              isScrolled
+                ? "/assets/logo.svg"
+                : isBlackHeader
+                ? "/assets/logo-white.svg"
+                : "/assets/logo-white.svg"
+            }
+            alt="Polygen Logo"
+            width={150}
+            height={40}
+          />
+        </Link>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-10 text-lg font-semibold">
@@ -139,12 +137,12 @@ export default function Header() {
             <span className="absolute left-0 -bottom-1 h-[2px] w-0 group-hover:w-full bg-[#de1448] transition-all duration-300"></span>
           </div>
           <div className="group relative">
-            <Link
-              href="/about"
-              className="hover:text-[#de1448] transition-colors"
+            <a
+              href="/#about"
+              className="hover:text-[#de1448] transition-colors cursor-pointer"
             >
               About Us
-            </Link>
+            </a>
             <span className="absolute left-0 -bottom-1 h-[2px] w-0 group-hover:w-full bg-[#de1448] transition-all duration-300"></span>
           </div>
 
@@ -163,19 +161,22 @@ export default function Header() {
           </div>
 
           <div className="group relative">
-            <button className="hover:text-[#de1448] transition-colors flex items-center">
-              Brands <ChevronDown className="inline ml-1 h-5 w-5" />
-            </button>
+            <a
+              href="/#blogs"
+              className="hover:text-[#de1448] transition-colors flex items-center cursor-pointer"
+            >
+              Blogs
+            </a>
             <span className="absolute left-0 -bottom-1 h-[2px] w-0 group-hover:w-full bg-[#de1448] transition-all duration-300"></span>
           </div>
         </nav>
 
-        <Link
-          href="/contact"
+        <a
+          href="/#contact-us"
           className="hidden md:inline-block bg-[#de1448] text-white px-6 py-2.5 rounded-lg hover:bg-red-700 transition-colors text-lg font-semibold"
         >
           Contact us
-        </Link>
+        </a>
 
         {/* Mobile menu button */}
         <button
@@ -231,13 +232,13 @@ export default function Header() {
               </Link>
             </li>
             <li>
-              <Link
-                href="/about"
+              <a
+                href="/#about"
                 onClick={handleNavigate}
-                className="block py-3 text-lg font-semibold hover:text-[#de1448]"
+                className="block py-3 text-lg font-semibold hover:text-[#de1448] w-full text-left"
               >
                 About Us
-              </Link>
+              </a>
             </li>
 
             {/* Products - accordion with categories loaded dynamically */}
@@ -275,23 +276,23 @@ export default function Header() {
             </li>
 
             <li>
-              <Link
-                href="/brands"
+              <a
+                href="/#blogs"
                 onClick={handleNavigate}
-                className="block py-3 text-lg font-semibold hover:text-[#de1448]"
+                className="block py-3 text-lg font-semibold hover:text-[#de1448] w-full text-left"
               >
-                Brands
-              </Link>
+                Blogs
+              </a>
             </li>
 
             <li>
-              <Link
-                href="/contact"
+              <a
+                href="/#contact-us"
                 onClick={handleNavigate}
                 className="block text-lg font-semibold text-white bg-[#de1448] px-4 py-3 rounded-lg mt-4 w-full text-center"
               >
                 Contact us
-              </Link>
+              </a>
             </li>
           </ul>
         </nav>

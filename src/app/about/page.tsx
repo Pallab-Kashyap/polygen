@@ -10,16 +10,21 @@ function page() {
         <img
           src="/assets/About/about-banner.png"
           alt="Background"
-          className="w-full h-[20vh] md:h-full"
+          className="w-full h-[16vh] md:h-[20vh]"
         />
       </div>
 
       {/* Header Section */}
       <section className="relative bg-white py-6 sm:py-10 overflow-hidden">
-        <Container className="relative flex flex-col items-center text-center z-10">
-          <Heading className="">
+        <Container className="relative flex flex-col items-center text-center z-10 space-y-6 md:space-y-8">
+          <h1
+            className="relative inline-block font-bold text-gray-900
+        text-2xl sm:text-3xl md:text-4xl lg:text-5xl
+        after:content-[''] after:block after:w-[50%] after:h-1
+        after:bg-[#de1448] after:rounded-full after:mx-auto after:mt-2"
+          >
             The Reliability Your Irrigation System Needs
-          </Heading>
+          </h1>
           <p className="text-lg md:text-2xl text-gray-700 leading-relaxed">
             Founded in 2023, Polygen brings precision and reliability to
             irrigation systems through a curated range of essential products —
@@ -33,12 +38,12 @@ function page() {
 
       {/* Red Seal Quality Section */}
       <section className="relative bg-white py-6 sm:py-10 overflow-hidden">
-        <Container className="relative flex flex-col items-center text-center z-10">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#de1448] mb-6">
+        <Container className="relative flex flex-col items-center text-center z-10 space-y-6 md:space-y-8">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#de1448]">
             RED SEAL QUALITY
           </h2>
 
-          <div className="flex flex-col lg:flex-row items-center gap-8  mx-auto">
+          <div className="flex flex-col lg:flex-row items-center gap-8 mx-auto">
             <div className="flex-1 text-lg md:text-2xl text-gray-700 leading-relaxed space-y-6">
               <p>
                 At Polygen, quality isn't left to chance — it's built in from
@@ -58,7 +63,7 @@ function page() {
             </div>
 
             {/* Red Seal Logo */}
-            <div className=" hidden md:block flex-shrink-0 self-start">
+            <div className="hidden md:block flex-shrink-0 self-start">
               <Image
                 src="/assets/redseal.svg"
                 alt="Red Seal Quality Logo"
@@ -73,12 +78,12 @@ function page() {
       </section>
 
       {/* Certified Section */}
-      <section className="relative  py-6 sm:py-10 overflow-hidden">
-        <Container className="relative flex flex-col items-center text-center z-10">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6">
+      <section className="relative py-6 sm:py-10 overflow-hidden">
+        <Container className="relative flex flex-col items-center text-center z-10 space-y-6 md:space-y-10">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-gray-900">
             Certified for a Higher Standard
           </h2>
-          <p className="text-lg md:text-2xl text-gray-700 leading-relaxed mb-10 max-w-6xl mx-auto">
+          <p className="text-lg md:text-2xl text-gray-700 leading-relaxed max-w-6xl mx-auto">
             We believe quality results come from quality processes. By using
             superior materials and a zero-tolerance approach to flaws, we ensure
             every cable and wire outlasts industry standards. Our official
@@ -125,14 +130,14 @@ function page() {
       </section>
 
       {/* Quality Priority Section with Dark Background */}
-      <section className="relative py-16 overflow-hidden">
+      <section className="relative py-6 md:py-8 overflow-hidden">
         <Container className="relative z-10">
           <div className="flex flex-col lg:flex-row mx-[4vw] md:mx-auto md:items-center justify-between gap-8">
             <div className="text-white text-left md:text-center lg:text-left">
-              <h2 className="text-xl md:text-5xl lg:text-6xl font-black mb-2">
+              <h2 className="text-xl md:text-3xl lg:text-4xl font-black mb-2">
                 Quality is No.1
               </h2>
-              <h2 className="text-xl md:text-5xl lg:text-6xl font-black">
+              <h2 className="text-xl md:text-3xl lg:text-4xl font-black">
                 Priority
               </h2>
             </div>
@@ -144,18 +149,18 @@ function page() {
             src="/assets/About/mid-banner-about-us.jpeg"
             alt="Quality Priority - Cable/Wire Product"
             fill
-            className="w-full h-full "
+            className="w-ful h-fit"
           />
         </div>
       </section>
 
       {/* Our Family of Brands Section */}
       <section className="relative bg-white py-10 sm:py-24 overflow-hidden">
-        <Container className="relative flex flex-col items-center text-center z-10">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-4">
+        <Container className="relative flex flex-col items-center text-center z-10 space-y-6 md:space-y-8">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-gray-900">
             Our Family of Brands
           </h2>
-          <p className="text-lg md:text-xl text-gray-700 leading-relaxed mb-8">
+          <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
             Explore our range of trusted brands, each committed to quality and
             performance.
           </p>

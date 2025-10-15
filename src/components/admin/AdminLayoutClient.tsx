@@ -67,34 +67,45 @@ export default function AdminLayoutClient({
     </Link>
   );
 
+  useEffect(() => {
+    // Prevent body scroll when admin layout is mounted
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   return (
     <ToastContext.Provider value={{ setToast: handleSetToast }}>
-      <div className="flex h-screen bg-gray-100 font-sans mt-20">
+      <div className="fixed inset-0 flex bg-gray-100 font-sans">
         {/* Mobile Menu Button */}
         <button
           onClick={toggleSidebar}
-          className="fixed top-24 right-4 z-50 md:hidden bg-blue-600 text-white p-1 rounded-lg shadow-lg hover:bg-blue-700 transition"
+          className="fixed top-4 right-4 md:hidden bg-blue-600 text-white p-1 rounded-lg shadow-lg hover:bg-blue-700 transition"
+          style={{ zIndex: 9997 }}
         >
           {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
 
         {/* Overlay for mobile */}
-        {isSidebarOpen && (
+        {/* {isSidebarOpen && (
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+            className="fixed inset-0 bg-black bg-opacity-50 md:hidden"
             onClick={closeSidebar}
+            style={{ zIndex: 9996 }}
           />
-        )}
+        )} */}
 
         {/* Sidebar */}
         <aside
           className={`
             fixed md:relative md:translate-x-0
             w-64 bg-white p-4 border-r border-gray-200 flex-shrink-0
-            h-full z-40 transition-transform duration-300 ease-in-out
+            h-full transition-transform duration-300 ease-in-out
             ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-            md:block
+            md:block overflow-y-auto
           `}
+          style={{ zIndex: 9995 }}
         >
           <h2 className="text-2xl font-bold text-blue-700 mb-8 px-2">
             Admin Panel
@@ -102,6 +113,7 @@ export default function AdminLayoutClient({
           <nav className="space-y-2 flex flex-col">
             <NavLink href="/admin/products" label="Products" />
             <NavLink href="/admin/categories" label="Categories" />
+            <NavLink href="/admin/blogs" label="Blogs" />
 
             {/* Logout Button */}
             <button
@@ -121,11 +133,11 @@ export default function AdminLayoutClient({
           </nav>
         </aside>
 
-        <main className="flex-1 p-3 sm:p-6 md:p-10 overflow-y-auto ml-0 md:ml-0">
+        <main className="flex-1 p-3 sm:p-6 md:p-10 overflow-y-auto">
           {children}
         </main>
 
-        <div className="fixed top-5 right-5 z-50 w-full max-w-sm">
+        <div className="fixed top-5 right-2 left-2 sm:left-auto sm:right-5 w-auto sm:w-full sm:max-w-sm z-[99999]">
           <Alert
             message={toast.message}
             type={toast.type}

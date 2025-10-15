@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
 
-const BackgroundLayout = ({z = "0"}: {z: string}) => {
+const BackgroundLayout = ({ z = "0" }: { z?: string }) => {
   return (
-    <div className={`fixed inset-0 bg-black opacity-25 z-${z}`}></div>
+    <div
+      className={`fixed inset-0 bg-black opacity-25`}
+      style={{ zIndex: z }}
+    ></div>
   );
-}
+};
 
-export default BackgroundLayout
+export default BackgroundLayout;

@@ -19,6 +19,18 @@ export function useApi<T, Args extends any[]>(
 
         return response as T;
       } catch (err: any) {
+        // Handle 401 errors - redirect to login
+        if (err?.response?.status === 401) {
+          if (
+            typeof window !== "undefined" &&
+            window.location.pathname.startsWith("/admin")
+          ) {
+            if (!window.location.pathname.includes("/admin/login")) {
+              window.location.href = "/admin/login";
+            }
+          }
+        }
+
         const message =
           err?.response?.data?.message ||
           err?.message ||

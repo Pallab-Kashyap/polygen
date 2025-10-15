@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
 import {
   Instagram,
@@ -9,6 +11,8 @@ import {
 } from "lucide-react";
 import Heading from "./shared/Heading";
 import Container from "./shared/Container";
+import sendMail from "@/services/mailService";
+import { useToast } from "@/contexts/ToastContext";
 
 const WhatsappIcon = (props: LucideProps) => (
   <svg
@@ -28,8 +32,63 @@ const WhatsappIcon = (props: LucideProps) => (
 );
 
 const Footer: React.FC = () => {
+  const { showToast } = useToast();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if (formData.email && !emailRegex.test(formData.email)) {
+      showToast("Please enter a valid email address.", "error");
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      await sendMail({
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        type: "contact",
+      });
+
+      showToast(
+        "Thank you! Your message has been sent successfully.",
+        "success"
+      );
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (error: any) {
+      console.error("Error sending email:", error);
+      showToast(
+        error?.message || "Failed to send message. Please try again later.",
+        "error"
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <>
+    <div id="contact-us">
       <section className="relative bg-[#F2F1F2] py-16 sm:py-20">
         <Container className="relative">
           {/* Main Heading */}
@@ -37,25 +96,27 @@ const Footer: React.FC = () => {
 
           {/* Grid Layout for the main content - adjusted proportions */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 max-w-5xl mx-auto">
-
             {/* Left Column: Contact Form Card */}
             <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg h-fit">
               <h2 className="text-2xl md:text-3xl font-bold text-black mb-6">
                 Get In Touch
               </h2>
-              <form action="#" method="POST" className="space-y-4 text-black">
+              <form onSubmit={handleSubmit} className="space-y-4 text-black">
                 <div>
                   <label
-                    htmlFor="full-name"
+                    htmlFor="name"
                     className="block text-sm font-medium text-gray-600 mb-1"
                   >
                     Full Name
                   </label>
                   <input
                     type="text"
-                    name="full-name"
-                    id="full-name"
+                    name="name"
+                    id="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     placeholder="Rohan Singh"
+                    required
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:border-[#de1448] focus:outline-none"
                   />
                 </div>
@@ -70,7 +131,12 @@ const Footer: React.FC = () => {
                     type="email"
                     name="email"
                     id="email"
-                    placeholder="someone@some.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="someone@example.com"
+                    required
+                    pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
+                    title="Please enter a valid email address"
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:border-[#de1448] focus:outline-none"
                   />
                 </div>
@@ -85,7 +151,10 @@ const Footer: React.FC = () => {
                     type="text"
                     name="subject"
                     id="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
                     placeholder="Startup spotlight"
+                    required
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:border-[#de1448] focus:outline-none"
                   />
                 </div>
@@ -100,16 +169,20 @@ const Footer: React.FC = () => {
                     name="message"
                     id="message"
                     rows={3}
+                    value={formData.message}
+                    onChange={handleChange}
                     placeholder="I want to know about...."
+                    required
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm resize-none focus:border-[#de1448] focus:outline-none"
                   ></textarea>
                 </div>
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full bg-[#de1448] text-white font-bold py-3 rounded-lg text-lg hover:bg-red-700 transition-colors shadow-md hover:shadow-lg"
+                    disabled={isSubmitting}
+                    className="w-full bg-[#de1448] text-white font-bold py-3 rounded-lg text-lg hover:bg-red-700 transition-colors shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Submit
+                    {isSubmitting ? "Sending..." : "Submit"}
                   </button>
                 </div>
               </form>
@@ -122,7 +195,7 @@ const Footer: React.FC = () => {
                 <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
                   Follow us on
                 </h3>
-                <div className="flex items-center justify-around">
+                <div className="flex items-center justify-between md:justify-around">
                   <a
                     href="#"
                     aria-label="Instagram"
@@ -162,7 +235,7 @@ const Footer: React.FC = () => {
               </div>
 
               {/* Reach Us Card - Larger map */}
-              <div className="flex flex-col bg-white p-3 md:p-6 rounded-2xl shadow-lg flex-1">
+              <div className="flex flex-col bg-white p-6 rounded-2xl shadow-lg flex-1">
                 <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 md:mb-4 ">
                   Reach us at
                 </h3>
@@ -212,7 +285,7 @@ const Footer: React.FC = () => {
           </div>
         </Container>
       </footer>
-    </>
+    </div>
   );
 };
 

@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import { ProductType } from "@/types/product";
 
 type ProductCardProps = {
@@ -11,9 +10,9 @@ type ProductCardProps = {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <Link href={`/products/id/${product._id}`} className="block group h-full">
-      <div className="bg-white rounded-2xl border border-gray-200/80 p-1 md:p-4 shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 h-full flex flex-col">
+      <div className="md:bg-white md:rounded-2xl md:border md:border-gray-200/80 md:p-4 md:shadow-md overflow-hidden md:transition-all md:duration-300 md:hover:shadow-xl md:hover:-translate-y-2 h-full flex flex-col">
         {/* Image container with fixed aspect ratio */}
-        <div className="relative w-full aspect-[3/4] md:aspect-square mb-2 md:mb-4 overflow-hidden rounded-lg bg-gray-50">
+        <div className="relative w-full aspect-[3/4] md:aspect-square mb-2 md:mb-4 overflow-hidden md:rounded-lg bg-gray-50">
           <Image
             src={product.images?.[0] ?? "/assets/product.svg"}
             alt={product.name ?? "Product image"}
@@ -24,22 +23,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
 
         {/* Content area - grows to fill space */}
-        <div className="flex px-2 md:px-0 flex-col flex-1">
+        <div className="flex flex-col flex-1">
           {/* Product name with single line truncation */}
-          <h3 className="text-lg md:text-lg lg:text-xl font-bold text-gray-900 mb-2 md:mb-3 truncate overflow-hidden whitespace-nowrap">
+          <h3 className="text-sm md:text-lg lg:text-xl font-bold text-gray-900 mb-1 md:mb-2 truncate overflow-hidden whitespace-nowrap">
             {product.name}
           </h3>
 
-          {/* Spacer to push button to bottom */}
-          <div className="flex-1"></div>
-
-          {/* Explore link at bottom */}
-          <div className="md:text-right">
-            <span className="text-sm md:text-sm text-gray-500 group-hover:text-[#de1448] transition-colors inline-flex items-center whitespace-nowrap">
-              Explore to upgrade{" "}
-              <ChevronRight className="ml-1 h-3 w-3 md:h-4 md:w-4" />
-            </span>
-          </div>
+          {/* About text with single line truncation */}
+          {product.about && (
+            <p className="text-xs md:text-sm text-gray-600 truncate overflow-hidden whitespace-nowrap">
+              {product.about}
+            </p>
+          )}
         </div>
       </div>
     </Link>
