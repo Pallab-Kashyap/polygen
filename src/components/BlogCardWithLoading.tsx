@@ -45,7 +45,7 @@ const BlogCardWithLoading: React.FC<BlogCardProps> = ({ blog }) => {
           </div>
         )}
 
-        <div className="p-2 pt-3 flex flex-col flex-grow">
+        <div className="p-2 mt-3 flex flex-col flex-grow">
           <div className="flex flex-wrap gap-2 mb-3">
             {blog.tags?.slice(0, 2).map((tag, index) => (
               <span
