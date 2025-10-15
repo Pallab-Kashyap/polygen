@@ -4,7 +4,7 @@
 
 ## Overview
 
-Create CSV/Excel files to upload multiple products at once. Reference file: `bulk_upload_final(Sheet1).csv`
+Create CSV/Excel files to upload multiple products at once. Reference file: [click here](https://1drv.ms/x/c/006999d64f58197a/Eb3bCFCDSWFHrc5lur91zWMBRtcfjgzve_UsUYIAAT9xNQ?e=bR13Se)
 
 **File Requirements:**
 
