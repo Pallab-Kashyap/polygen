@@ -7,24 +7,12 @@ import remarkGfm from "remark-gfm";
 import { notFound } from "next/navigation";
 import { ArrowBigLeft, ArrowLeft } from "lucide-react";
 import Container from "@/components/shared/Container";
+import { BlogService } from "@/services/blogService";
 
 async function getBlog(slug: string): Promise<BlogType | null> {
   try {
-    const response = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-      }/api/blogs/slug/${slug}`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = await response.json();
-    return data.success ? data.data : null;
+    const blog = await BlogService.getBlogBySlug(slug, true);
+    return blog ? JSON.parse(JSON.stringify(blog)) : null;
   } catch (error) {
     console.error("Error fetching blog:", error);
     return null;
@@ -33,21 +21,8 @@ async function getBlog(slug: string): Promise<BlogType | null> {
 
 async function getAllBlogs(): Promise<BlogType[]> {
   try {
-    const response = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-      }/api/blogs`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (!response.ok) {
-      return [];
-    }
-
-    const data = await response.json();
-    return data.success ? data.data : [];
+    const blogs = await BlogService.getAllBlogs(true);
+    return JSON.parse(JSON.stringify(blogs)) as BlogType[];
   } catch (error) {
     console.error("Error fetching blogs:", error);
     return [];

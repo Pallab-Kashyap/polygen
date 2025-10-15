@@ -4,24 +4,12 @@ import { BlogType } from "@/types/blog";
 import formatDate from "@/lib/formatDate";
 import Heading from "@/components/shared/Heading";
 import BlogCardWithLoading from "@/components/BlogCardWithLoading";
+import { BlogService } from "@/services/blogService";
 
 async function getAllBlogs(): Promise<BlogType[]> {
   try {
-    const response = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-      }/api/blogs`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (!response.ok) {
-      return [];
-    }
-
-    const data = await response.json();
-    return data.success ? data.data : [];
+    const blogs = await BlogService.getAllBlogs(true);
+    return JSON.parse(JSON.stringify(blogs)) as BlogType[];
   } catch (error) {
     console.error("Error fetching blogs:", error);
     return [];
