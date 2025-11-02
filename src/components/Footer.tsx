@@ -35,7 +35,7 @@ const Footer: React.FC = () => {
   const { showToast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
+    contact: "",
     subject: "",
     message: "",
   });
@@ -54,10 +54,16 @@ const Footer: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Validate email format
+    // Validate contact field (email or phone number)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-    if (formData.email && !emailRegex.test(formData.email)) {
-      showToast("Please enter a valid email address.", "error");
+    const isEmail = emailRegex.test(formData.contact);
+    const isPhone = /^[0-9+\-\s()]{10,}$/.test(formData.contact.trim());
+
+    if (!isEmail && !isPhone) {
+      showToast(
+        "Please enter a valid email address or contact number.",
+        "error"
+      );
       setIsSubmitting(false);
       return;
     }
@@ -65,7 +71,8 @@ const Footer: React.FC = () => {
     try {
       await sendMail({
         name: formData.name,
-        email: formData.email,
+        email: isEmail ? formData.contact : undefined,
+        contactNumber: isPhone ? formData.contact : undefined,
         subject: formData.subject,
         message: formData.message,
         type: "contact",
@@ -75,7 +82,7 @@ const Footer: React.FC = () => {
         "Thank you! Your message has been sent successfully.",
         "success"
       );
-      setFormData({ name: "", email: "", subject: "", message: "" });
+      setFormData({ name: "", contact: "", subject: "", message: "" });
     } catch (error: any) {
       console.error("Error sending email:", error);
       showToast(
@@ -122,21 +129,19 @@ const Footer: React.FC = () => {
                 </div>
                 <div>
                   <label
-                    htmlFor="email"
+                    htmlFor="contact"
                     className="block text-sm font-medium text-gray-600 mb-1"
                   >
-                    E-Mail
+                    Email or Contact No
                   </label>
                   <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    value={formData.email}
+                    type="text"
+                    name="contact"
+                    id="contact"
+                    value={formData.contact}
                     onChange={handleChange}
-                    placeholder="someone@example.com"
+                    placeholder="someone@example.com or +91 9876543210"
                     required
-                    pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
-                    title="Please enter a valid email address"
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:border-[#de1448] focus:outline-none"
                   />
                 </div>

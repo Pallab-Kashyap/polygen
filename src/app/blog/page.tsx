@@ -3,8 +3,11 @@ import Image from "next/image";
 import { BlogType } from "@/types/blog";
 import formatDate from "@/lib/formatDate";
 import Heading from "@/components/shared/Heading";
-import BlogCardWithLoading from "@/components/BlogCardWithLoading";
+import BlogCard from "@/components/BlogCard";
 import { BlogService } from "@/services/blogService";
+
+// Revalidate on-demand only (when admin makes changes)
+export const revalidate = 0;
 
 async function getAllBlogs(): Promise<BlogType[]> {
   try {
@@ -51,7 +54,7 @@ export default async function BlogsPage() {
             <div className="max-w-6xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {blogs.map((blog) => (
-                  <BlogCardWithLoading key={blog._id} blog={blog} />
+                  <BlogCard key={blog._id} blog={blog} />
                 ))}
               </div>
             </div>

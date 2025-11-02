@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sync-categories": "node --loader tsx --no-warnings src/scripts/syncCategories.ts"
+    "sync-categories": "node --import tsx --no-warnings src/scripts/syncCategories.ts"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.19",

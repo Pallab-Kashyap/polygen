@@ -8,6 +8,8 @@ import { ProductType } from "@/types/product";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 import * as XLSX from "xlsx";
+import { convertDriveLink } from "@/lib/convertDriveLink";
+import { revalidatePath } from "next/cache";
 
 const ProductParameterSchema = z.object({
   label: z.string().min(1, "Parameter label cannot be empty"),
@@ -38,6 +40,7 @@ export const ProductSchema = z.object({
   images: z.array(z.string()).optional(),
   price: z.number().nullable().optional(),
   isTopSeller: z.boolean().optional(),
+  status: z.enum(["published", "draft"]).default("published"),
   metadata: z.record(z.any(), z.any()).optional(),
 });
 
@@ -54,6 +57,7 @@ function formatProduct(doc: any): ProductType {
     images: doc.images ?? [],
     price: typeof doc.price === "number" ? doc.price : null,
     isTopSeller: doc.isTopSeller ?? false,
+    status: doc.status,
     metadata: doc.metadata ?? {},
     createdAt: doc.createdAt
       ? new Date(doc.createdAt).toISOString()
@@ -66,13 +70,27 @@ function formatProduct(doc: any): ProductType {
 
 export const getAllProducts = asyncWrapper(async (req: NextRequest) => {
   await connectDB();
-  const products = await Product.find();
+  // Return published products OR products without a status field (backward compatibility)
+  const products = await Product.find({
+    $or: [{ status: "published" }, { status: { $exists: false } }],
+  });
+  return APIResponse.success(products);
+});
+
+// Admin endpoint - returns all products including drafts
+export const getAllProductsAdmin = asyncWrapper(async (req: NextRequest) => {
+  await connectDB();
+  const products = await Product.find().sort({ createdAt: -1 }); // Sort by latest first
   return APIResponse.success(products);
 });
 
 export const getTopSellerProducts = asyncWrapper(async (req: NextRequest) => {
   await connectDB();
-  const products = await Product.find({ isTopSeller: true });
+  // Return published top sellers OR top sellers without a status field
+  const products = await Product.find({
+    isTopSeller: true,
+    $or: [{ status: "published" }, { status: { $exists: false } }],
+  });
   return APIResponse.success(products);
 });
 
@@ -95,6 +113,11 @@ export const getProductById = async (
       throw APIError.badRequest("No product found");
     }
 
+    // Only return if published or status doesn't exist (backward compatibility)
+    if (product.status === "draft") {
+      throw APIError.notFound("Product not found");
+    }
+
     return APIResponse.success(product);
   } catch (error) {
     return errorHandler(error);
@@ -110,7 +133,11 @@ export const getProductsByCategory = async (
 
     const { id } = await params;
 
-    const products = await Product.find({ categoryId: id });
+    // Return published products OR products without a status field
+    const products = await Product.find({
+      categoryId: id,
+      $or: [{ status: "published" }, { status: { $exists: false } }],
+    });
 
     if (!products) {
       throw APIError.notFound("No product found");
@@ -162,8 +189,10 @@ export const getProductsByCategorySlug = async (
 
     const categoryIds = await getAllSubcategoryIds(category._id.toString());
 
+    // Return published products OR products without a status field
     const products = await Product.find({
       categoryId: { $in: categoryIds },
+      $or: [{ status: "published" }, { status: { $exists: false } }],
     }).populate("categoryId");
 
     return APIResponse.success(products);
@@ -195,7 +224,16 @@ export const createNewProduct = asyncWrapper(async (req: NextRequest) => {
       );
     }
 
+    // Convert Google Drive links in images array
+    if (parsed.data.images && parsed.data.images.length > 0) {
+      parsed.data.images = parsed.data.images.map(convertDriveLink);
+    }
+
     const product = await Product.create(parsed.data);
+
+    // Revalidate the homepage and products page to reflect changes
+    revalidatePath("/");
+    revalidatePath("/products");
 
     return APIResponse.created(product);
   } catch (error) {
@@ -263,6 +301,14 @@ export const bulkCreateProducts = async (req: NextRequest) => {
           row.isTopSeller === "1" ||
           row.isTopSeller === true;
 
+        // Handle status field
+        if (row.status) {
+          const statusLower = row.status.toLowerCase();
+          productData.status = statusLower === "draft" ? "draft" : "published";
+        } else {
+          productData.status = "published"; // Default to published
+        }
+
         if (row.applications && typeof row.applications === "string") {
           productData.applications = row.applications
             .split(",")
@@ -274,7 +320,8 @@ export const bulkCreateProducts = async (req: NextRequest) => {
           productData.images = row.images
             .split(",")
             .map((s: string) => s.trim())
-            .filter(Boolean);
+            .filter(Boolean)
+            .map(convertDriveLink);
         }
 
         const parameters: any[] = [];
@@ -536,11 +583,21 @@ export const updateProduct = async (
       }
     }
 
+    // Convert Google Drive links in images array
+    if (parsed.data.images && parsed.data.images.length > 0) {
+      parsed.data.images = parsed.data.images.map(convertDriveLink);
+    }
+
     const updated = await Product.findByIdAndUpdate(id, parsed.data, {
       new: true,
     });
 
     if (!updated) throw APIError.notFound("Product not found");
+
+    // Revalidate the homepage and products page to reflect changes
+    revalidatePath("/");
+    revalidatePath("/products");
+
     return APIResponse.success(updated, "Product updated successfully");
   } catch (error) {
     return errorHandler(error);
@@ -558,6 +615,10 @@ export const deleteProduct = async (
     const { id } = await params;
     const deleted = await Product.findByIdAndDelete(id);
     if (!deleted) throw APIError.notFound("Product not found");
+
+    // Revalidate the homepage and products page to reflect changes
+    revalidatePath("/");
+    revalidatePath("/products");
 
     return APIResponse.success(
       { message: "Product deleted successfully" },
@@ -579,6 +640,10 @@ export const bulkDeleteProducts = asyncWrapper(async (req: NextRequest) => {
   }
 
   const result = await Product.deleteMany({ _id: { $in: ids } });
+
+  // Revalidate the homepage and products page to reflect changes
+  revalidatePath("/");
+  revalidatePath("/products");
 
   return APIResponse.success(
     { deletedCount: result.deletedCount },

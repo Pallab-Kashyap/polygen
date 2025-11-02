@@ -16,6 +16,7 @@ export interface ProductDoc extends Document {
   images: string[];
   price?: number | null;
   isTopSeller?: boolean;
+  status: "published" | "draft";
   metadata?: any;
   createdAt: Date;
   updatedAt: Date;
@@ -58,6 +59,12 @@ const ProductSchema = new Schema<ProductDoc>(
     images: { type: [String], default: [] },
     price: { type: Number, default: null },
     isTopSeller: { type: Boolean, default: false },
+    status: {
+      type: String,
+      enum: ["published", "draft"],
+      required: true,
+      default: "published",
+    },
     metadata: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true }

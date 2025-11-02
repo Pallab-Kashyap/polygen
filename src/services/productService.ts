@@ -3,6 +3,8 @@ import axiosInstance from "../lib/axios";
 
 export const productService = {
   getAllProducts: (): Promise<ProductType[]> => axiosInstance.get("/products"),
+  getAllProductsAdmin: (): Promise<ProductType[]> =>
+    axiosInstance.get("/admin/products"), // Admin endpoint for all products
   getTopSellerProducts: (): Promise<ProductType[]> =>
     axiosInstance.get("/products/top-sellers"),
   getProductById: (id: string): Promise<ProductType> =>

@@ -9,6 +9,9 @@ import { ArrowBigLeft, ArrowLeft } from "lucide-react";
 import Container from "@/components/shared/Container";
 import { BlogService } from "@/services/blogService";
 
+// Revalidate on-demand only (when admin makes changes)
+export const revalidate = 0;
+
 async function getBlog(slug: string): Promise<BlogType | null> {
   try {
     const blog = await BlogService.getBlogBySlug(slug, true);

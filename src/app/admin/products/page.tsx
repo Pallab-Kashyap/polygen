@@ -28,7 +28,7 @@ export default function ProductsPage() {
   const { setToast } = useContext(ToastContext);
 
   const { execute: fetchProducts, loading: fetchLoading } = useApi(
-    productService.getAllProducts
+    productService.getAllProductsAdmin // Use admin endpoint to get all products
   );
   const { execute: fetchCategories } = useApi(categoryService.getCategories);
   const { execute: saveProductApi, loading: saveLoading } = useApi(
@@ -270,6 +270,20 @@ export default function ProductsPage() {
                     </span>
                   </div>
                   <div className="flex justify-between">
+                    <span>Status:</span>
+                    <span
+                      className={`font-medium text-xs ${
+                        (product.status || "published") === "published"
+                          ? "text-green-600"
+                          : "text-orange-600"
+                      }`}
+                    >
+                      {(product.status || "published") === "published"
+                        ? "Published"
+                        : "Draft"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
                     <span>Top Seller:</span>
                     <span
                       className={`font-medium text-xs ${
@@ -305,6 +319,9 @@ export default function ProductsPage() {
                     Price
                   </th>
                   <th scope="col" className="px-6 py-3">
+                    Status
+                  </th>
+                  <th scope="col" className="px-6 py-3">
                     Top Seller
                   </th>
                   <th scope="col" className="px-6 py-3">
@@ -329,6 +346,19 @@ export default function ProductsPage() {
                     </td>
                     <td className="px-6 py-4">
                       ${product.price?.toFixed(2) ?? "N/A"}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          (product.status || "published") === "published"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-orange-100 text-orange-800"
+                        }`}
+                      >
+                        {(product.status || "published") === "published"
+                          ? "Published"
+                          : "Draft"}
+                      </span>
                     </td>
                     <td className="px-6 py-4">
                       <span

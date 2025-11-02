@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
         hostname:
           "plus.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname:
+          "drive.google.com",
+      },
     ],
   },
 };

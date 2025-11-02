@@ -8,6 +8,7 @@ interface RequestPricingFormProps {
   parameters: ProductParameter[];
   onSubmit: (data: {
     selectedOptions: { [key: string]: string };
+    contact: string;
     message: string;
   }) => void;
   onCancel: () => void;
@@ -24,6 +25,7 @@ const RequestPricingForm = ({
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: string]: string;
   }>({});
+  const [contact, setContact] = useState("");
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -52,6 +54,18 @@ const RequestPricingForm = ({
       }
     });
 
+    // Validate contact field (email or phone number)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const isEmail = emailRegex.test(contact);
+    const isPhone = /^[0-9+\-\s()]{10,}$/.test(contact.trim());
+
+    if (!contact.trim()) {
+      newErrors.contact = "Please enter your email or contact number";
+    } else if (!isEmail && !isPhone) {
+      newErrors.contact =
+        "Please enter a valid email address or contact number";
+    }
+
     if (!message.trim()) {
       newErrors.message = "Please enter a message";
     }
@@ -64,7 +78,11 @@ const RequestPricingForm = ({
     e.preventDefault();
 
     if (validateForm()) {
-      onSubmit({ selectedOptions, message });
+      onSubmit({
+        selectedOptions,
+        contact,
+        message,
+      });
     }
   };
 
@@ -104,6 +122,36 @@ const RequestPricingForm = ({
           )}
         </div>
       ))}
+
+      {/* Contact Input */}
+      <div>
+        <label
+          htmlFor="contact"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
+          Email or Contact No <span className="text-red-500">*</span>
+        </label>
+        <input
+          id="contact"
+          type="text"
+          value={contact}
+          onChange={(e) => {
+            setContact(e.target.value);
+            if (errors.contact) {
+              setErrors((prev) => {
+                const newErrors = { ...prev };
+                delete newErrors.contact;
+                return newErrors;
+              });
+            }
+          }}
+          placeholder="someone@example.com or +91 9876543210"
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent"
+        />
+        {errors.contact && (
+          <p className="mt-1 text-sm text-red-600">{errors.contact}</p>
+        )}
+      </div>
 
       {/* Message Input */}
       <div>

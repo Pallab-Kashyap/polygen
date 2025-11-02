@@ -8,6 +8,9 @@ import Product from "@/models/Product";
 import Category from "@/models/Category";
 import Link from "next/link";
 
+// Revalidate on-demand only (when admin makes changes)
+export const revalidate = 0;
+
 async function getTopSellerProducts(): Promise<
   (ProductType & { categoryName?: string })[]
 > {

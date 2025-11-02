@@ -7,7 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, subject, message, type } = body;
+    const { name, email, subject, message, type, contactNumber } = body;
 
     // Validate required fields
     if (!message) {
@@ -17,13 +17,34 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // For contact forms, require name and email
+    // For contact forms, require name and at least email or contact number
     if (type !== "product-inquiry") {
-      if (!name || !email) {
+      if (!name) {
         return NextResponse.json(
           {
             success: false,
-            error: "Name and email are required for contact form",
+            error: "Name is required for contact form",
+          },
+          { status: 400 }
+        );
+      }
+      if (!email && !contactNumber) {
+        return NextResponse.json(
+          {
+            success: false,
+            error:
+              "Either email or contact number is required for contact form",
+          },
+          { status: 400 }
+        );
+      }
+    } else {
+      // For product inquiries, require at least email or contact number
+      if (!email && !contactNumber) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Either email or contact number is required",
           },
           { status: 400 }
         );
@@ -110,19 +131,29 @@ export async function POST(req: NextRequest) {
                 }</div>
               </div>
 
-              ${
-                email
-                  ? `
               <div class="section">
                 <div class="section-title">Contact Information</div>
+                ${
+                  contactNumber
+                    ? `
+                <div class="info-row">
+                  <div class="info-label">📞 Contact Number:</div>
+                  <div class="info-value"><a href="tel:${contactNumber}">${contactNumber}</a></div>
+                </div>
+                `
+                    : ""
+                }
+                ${
+                  email
+                    ? `
                 <div class="info-row">
                   <div class="info-label">📧 Email Address:</div>
                   <div class="info-value"><a href="mailto:${email}">${email}</a></div>
                 </div>
+                `
+                    : ""
+                }
               </div>
-              `
-                  : ""
-              }
             </div>
             <div class="footer">
               <p style="margin: 0 0 8px 0; font-weight: 500;">📩 This inquiry was submitted from <strong>Polygen Website</strong></p>
@@ -149,7 +180,10 @@ ${
 
 Customer Message:
 ${message || "No message provided"}
-${email ? `\nContact Email: ${email}` : ""}
+
+Contact Information:
+${contactNumber ? `Contact Number: ${contactNumber}` : ""}
+${email ? `Email: ${email}` : ""}
 
 ---
 This inquiry was submitted from the Polygen Website.
@@ -193,12 +227,26 @@ This inquiry was submitted from the Polygen Website.
                   <div class="info-label">👤 Name:</div>
                   <div class="info-value">${name || "Not provided"}</div>
                 </div>
+                ${
+                  email
+                    ? `
                 <div class="info-row">
                   <div class="info-label">📧 Email:</div>
-                  <div class="info-value"><a href="mailto:${email}">${
-        email || "Not provided"
-      }</a></div>
+                  <div class="info-value"><a href="mailto:${email}">${email}</a></div>
                 </div>
+                `
+                    : ""
+                }
+                ${
+                  contactNumber
+                    ? `
+                <div class="info-row">
+                  <div class="info-label">📞 Contact Number:</div>
+                  <div class="info-value"><a href="tel:${contactNumber}">${contactNumber}</a></div>
+                </div>
+                `
+                    : ""
+                }
                 <div class="info-row">
                   <div class="info-label">📋 Subject:</div>
                   <div class="info-value">${subject || "No subject"}</div>
@@ -228,7 +276,8 @@ New Contact Message from Polygen Website
 
 Contact Information:
 Name: ${name || "Not provided"}
-Email: ${email || "Not provided"}
+${email ? `Email: ${email}` : ""}
+${contactNumber ? `Contact Number: ${contactNumber}` : ""}
 Subject: ${subject || "No subject"}
 
 Message:

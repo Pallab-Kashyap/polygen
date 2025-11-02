@@ -10,7 +10,7 @@ if (!JWT_SECRET) {
 export function createAdminToken(payload: { adminId: string }) {
   try {
     console.log("Creating JWT token for admin:", payload.adminId);
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "10m" });
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
     console.log("JWT token created successfully");
     return token;
   } catch (error) {
@@ -38,7 +38,7 @@ export function setAuthCookie(token: string) {
     secure: isProduction,
     sameSite: "lax" as const,
     path: "/",
-    maxAge: 10 * 60, 
+    maxAge: 1 * 60 * 60,
   };
 
   console.log("Cookie options:", cookieOptions);

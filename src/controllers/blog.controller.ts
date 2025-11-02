@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BlogService } from "@/services/blogService";
 import { APIError } from "@/lib/ApiResponse";
+import { convertDriveLink } from "@/lib/convertDriveLink";
+import { revalidatePath } from "next/cache";
 
 export class BlogController {
   static async getAllBlogs(req: NextRequest) {
@@ -100,7 +102,16 @@ export class BlogController {
         blogData.slug = BlogService.generateSlug(blogData.title);
       }
 
+      // Convert Google Drive link in image field
+      if (blogData.image) {
+        blogData.image = convertDriveLink(blogData.image);
+      }
+
       const blog = await BlogService.createBlog(blogData);
+
+      // Revalidate pages to reflect the new blog
+      revalidatePath("/");
+      revalidatePath("/blog");
 
       return NextResponse.json(
         {
@@ -157,6 +168,11 @@ export class BlogController {
         blogData.slug = BlogService.generateSlug(blogData.title);
       }
 
+      // Convert Google Drive link in image field
+      if (blogData.image) {
+        blogData.image = convertDriveLink(blogData.image);
+      }
+
       const blog = await BlogService.updateBlog(id, blogData);
 
       if (!blog) {
@@ -165,6 +181,11 @@ export class BlogController {
           { status: 404 }
         );
       }
+
+      // Revalidate pages to reflect the updated blog
+      revalidatePath("/");
+      revalidatePath("/blog");
+      revalidatePath(`/blog/${blog.slug}`);
 
       return NextResponse.json({
         success: true,
@@ -219,6 +240,10 @@ export class BlogController {
           { status: 404 }
         );
       }
+
+      // Revalidate pages to reflect the deleted blog
+      revalidatePath("/");
+      revalidatePath("/blog");
 
       return NextResponse.json({
         success: true,

@@ -26,6 +26,7 @@ export interface ProductType {
   images?: string[];
   price?: number | null;
   isTopSeller?: boolean;
+  status: "published" | "draft";
   metadata?: Record<string, any>;
   createdAt?: string;
   updatedAt?: string;

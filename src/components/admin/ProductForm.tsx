@@ -27,6 +27,7 @@ const ProductForm = ({
     categoryId: "",
     price: null,
     isTopSeller: false,
+    status: "published",
     parameters: [],
     applications: [],
     description: [],
@@ -55,6 +56,7 @@ const ProductForm = ({
         categoryId: product.categoryId || "",
         price: product.price ?? null,
         isTopSeller: product.isTopSeller ?? false,
+        status: product.status || "published",
         parameters: product.parameters || [],
         applications: product.applications || [],
         description: product.description || [],
@@ -68,6 +70,7 @@ const ProductForm = ({
         categoryId: "",
         price: null,
         isTopSeller: false,
+        status: "published",
         parameters: [],
         applications: [],
         description: [],
@@ -305,6 +308,22 @@ const ProductForm = ({
           <label htmlFor="isTopSeller" className={`ml-2 ${labelStyle}`}>
             Mark as Top Seller
           </label>
+        </div>
+
+        {/* Status */}
+        <div>
+          <label htmlFor="status" className={labelStyle}>
+            Status
+          </label>
+          <select
+            name="status"
+            value={formData.status || "published"}
+            onChange={handleChange}
+            className={inputStyle}
+          >
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
         </div>
       </div>
 

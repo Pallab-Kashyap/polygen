@@ -129,6 +129,7 @@ function ProductView() {
 
   const handleRequestSubmit = async (data: {
     selectedOptions: { [key: string]: string };
+    contact: string;
     message: string;
   }) => {
     setIsSubmitting(true);
@@ -139,11 +140,17 @@ function ProductView() {
         .map(([key, value]) => `${key}: ${value}`)
         .join("<br />");
 
+      // Determine if contact is email or phone number
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      const isEmail = emailRegex.test(data.contact);
+
       // Send email with product inquiry details
       await sendMail({
         type: "product-inquiry",
         productName: product?.name,
         selectedOptions: optionsText,
+        email: isEmail ? data.contact : undefined,
+        contactNumber: !isEmail ? data.contact : undefined,
         message: data.message,
       });
 
