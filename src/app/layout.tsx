@@ -3,6 +3,8 @@ import "../styles/globals.css";
 import type { ReactNode } from "react";
 import Footer from "@/components/Footer";
 import { ToastProvider } from "@/contexts/ToastContext";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata = {
   title: "Polygen",
@@ -18,6 +20,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <main className="min-h-screen">{children}</main>
           <Footer />
         </ToastProvider>
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
