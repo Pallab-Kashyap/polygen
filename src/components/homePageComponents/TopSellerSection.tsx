@@ -16,7 +16,10 @@ async function getTopSellerProducts(): Promise<
 > {
   try {
     await connectDB();
-    const products = await Product.find({ isTopSeller: true }).lean();
+    const products = await Product.find({ 
+      isTopSeller: true,
+      status: "published" 
+    }).lean();
 
     const productsWithCategory = await Promise.all(
       products.map(async (product) => {

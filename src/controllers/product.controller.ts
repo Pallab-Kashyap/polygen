@@ -70,10 +70,7 @@ function formatProduct(doc: any): ProductType {
 
 export const getAllProducts = asyncWrapper(async (req: NextRequest) => {
   await connectDB();
-  // Return published products OR products without a status field (backward compatibility)
-  const products = await Product.find({
-    $or: [{ status: "published" }, { status: { $exists: false } }],
-  });
+  const products = await Product.find({ status: "published" });
   return APIResponse.success(products);
 });
 
@@ -86,10 +83,9 @@ export const getAllProductsAdmin = asyncWrapper(async (req: NextRequest) => {
 
 export const getTopSellerProducts = asyncWrapper(async (req: NextRequest) => {
   await connectDB();
-  // Return published top sellers OR top sellers without a status field
   const products = await Product.find({
     isTopSeller: true,
-    $or: [{ status: "published" }, { status: { $exists: false } }],
+    status: "published",
   });
   return APIResponse.success(products);
 });
@@ -113,7 +109,6 @@ export const getProductById = async (
       throw APIError.badRequest("No product found");
     }
 
-    // Only return if published or status doesn't exist (backward compatibility)
     if (product.status === "draft") {
       throw APIError.notFound("Product not found");
     }
@@ -133,10 +128,9 @@ export const getProductsByCategory = async (
 
     const { id } = await params;
 
-    // Return published products OR products without a status field
     const products = await Product.find({
       categoryId: id,
-      $or: [{ status: "published" }, { status: { $exists: false } }],
+      status: "published",
     });
 
     if (!products) {
@@ -189,10 +183,9 @@ export const getProductsByCategorySlug = async (
 
     const categoryIds = await getAllSubcategoryIds(category._id.toString());
 
-    // Return published products OR products without a status field
     const products = await Product.find({
       categoryId: { $in: categoryIds },
-      $or: [{ status: "published" }, { status: { $exists: false } }],
+      status: "published",
     }).populate("categoryId");
 
     return APIResponse.success(products);

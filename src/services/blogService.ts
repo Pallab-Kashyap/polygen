@@ -8,9 +8,13 @@ export class BlogService {
     return Blog.find(query).sort({ createdAt: -1 }).lean();
   }
 
-  static async getBlogById(id: string): Promise<any | null> {
+  static async getBlogById(
+    id: string,
+    published: boolean = true
+  ): Promise<any | null> {
     await connectDB();
-    return Blog.findById(id).lean();
+    const query = published ? { _id: id, isPublished: true } : { _id: id };
+    return Blog.findOne(query).lean();
   }
 
   static async getBlogBySlug(

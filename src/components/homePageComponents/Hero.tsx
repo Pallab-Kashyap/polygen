@@ -43,6 +43,7 @@ export default function Hero() {
         muted
         autoPlay
         playsInline
+        preload="auto"
       />
 
       {/* Dark Overlay */}
