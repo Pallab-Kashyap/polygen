@@ -246,7 +246,7 @@ const Footer: React.FC = () => {
                 </h3>
                 <div className="rounded-lg overflow-hidden border border-gray-200 flex-1">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d111624.23438812674!2d75.64799984335937!3d29.144415500000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391232d807664687%3A0x7dfe694665457a6!2sHisar%2C%20Haryana!5e0!3m2!1sen!2sin!4v1722953282421!5m2!1sen!2sin"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.5274604737538!2d78.48923697588108!3d17.434450701446192!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9a1be5f4ac6d%3A0x93aba3ab3fc32f0b!2sMataji%20Agencies!5e0!3m2!1sen!2sin!4v1763737736680!5m2!1sen!2sin"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}

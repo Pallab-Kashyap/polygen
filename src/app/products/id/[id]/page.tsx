@@ -334,7 +334,9 @@ function ProductView() {
                           key={bulletIndex}
                           className="text-gray-600 leading-relaxed flex items-start"
                         >
-                          <span className="text-black mr-2 mt-1">&#8226;</span>
+                          <span className="text-black mr-2 flex-shrink-0 leading-relaxed">
+                            &#8226;
+                          </span>
                           <span>
                             {bullet.highlight && (
                               <strong className="font-semibold text-gray-800">
