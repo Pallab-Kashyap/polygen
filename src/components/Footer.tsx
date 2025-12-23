@@ -283,9 +283,9 @@ const Footer: React.FC = () => {
             />
           </div>
           <div className="text-sm md:text-md space-y-1 sm:space-y-0 sm:text-right">
-            <p className="hidden md:block">
+            {/* <p className="hidden md:block">
               Developed by Pallab Kashyap Designed By Rohit Tiwari
-            </p>
+            </p> */}
             <p>All rights reserved by Mataji Agencies</p>
           </div>
         </Container>
